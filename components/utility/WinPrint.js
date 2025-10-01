@@ -11,7 +11,7 @@ const WinPrint = () => {
     // Set document title for better PDF filename
     const originalTitle = document.title;
     const userName = resumeData?.name || "Resume";
-    document.title = `${userName} - Resume by Profocto`;
+    document.title =`${userName} - Resume by Profocto`;
     
     window.print();
     

@@ -267,7 +267,7 @@ const Preview = () => {
           <div className="relative" ref={toggleRef}>
             <button
               onClick={() => setShowSectionToggle(!showSectionToggle)}
-              className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-3 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors shadow-lg text-xs sm:text-sm"
+              className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-3 bg-[linear-gradient(45deg,red,purple)] text-white rounded-lg hover:bg-pink-700 transition-colors shadow-lg text-xs sm:text-sm"
               title="Toggle Sections"
             >
               <FaTh className="w-3 h-3 sm:w-4 sm:h-4" />

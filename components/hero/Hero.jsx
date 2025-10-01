@@ -104,7 +104,7 @@ export default function Hero() {
     };
 
     return (
-        <div className="relative w-full h-screen overflow-hidden bg-black">
+        <div className="relative w-full h-screen overflow-hidden bg-black font-poppins">
 
             {/* Animated gradient background that shows before video loads */}
             <div 
@@ -224,7 +224,7 @@ export default function Hero() {
                 </div>
 
                 {/* Main Typography with subtle parallax */}
-                <div className="text-center mb-12 sm:mb-16 transform transition-transform duration-1000" style={textTransform}>
+                <div className="text-center mb-12 lg:mb-7 sm:mb-16 transform transition-transform duration-1000" style={textTransform}>
                     <div className="relative">
                         {/* Side decorative text */}
                         <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-full hidden xl:block">
@@ -277,9 +277,14 @@ export default function Hero() {
                     <button
                         ref={ctaRef}
                         onClick={handleCreateResume}
-                        className={`inline-flex h-10 sm:h-12 items-center justify-center rounded-lg bg-white text-black px-6 sm:px-8 text-sm sm:text-base font-semibold transition-all duration-300 hover:bg-gray-100 hover:shadow-lg ${inter.className}`}
+                       className={`inline-flex h-10 sm:h-12 items-center justify-center 
+                                rounded-full hover:bg-zinc-800 hover:text-white
+                                bg-white text-black px-6 sm:px-8 text-sm sm:text-base font-semibold 
+                                transition-all duration-300 ease-in-out 
+                                 hover:shadow-lg ${inter.className}`}
+
                     >
-                        Create Resume
+                        Start Building
                     </button>
                 )}
             </div>

@@ -68,6 +68,7 @@ export default function BuilderPage() {
 
   // Profile picture handler
   const handleProfilePicture = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("json")
     const file = e.target.files?.[0];
 
     if (file instanceof Blob) {
@@ -153,7 +154,7 @@ export default function BuilderPage() {
                     {/* Clean Header */}
                     <div className="mb-6 lg:mb-8">
                       <h1
-                        className="text-2xl sm:text-3xl font-light mb-2"
+                        className="text-2xl sm:text-3xl font-extrabold mb-2"
                         style={{ color: "hsl(0 0% 98%)" }}
                       >
                         Resume Builder
