@@ -121,7 +121,7 @@ const TemplateTwo = ({
     { id: "projects", title: customSectionTitles.projects || "Projects", content: projectsdata },
     { id: "experience", title: customSectionTitles.experience || "Work Experience", content: workExperiencedata },
     { id: "skills", title: customSectionTitles.skills || "Technical Skills", content: skillsdata },
-    { id: "softskills", title: customSectionTitles.softskills || "Soft Skills", content: skillsdata.find(skill => skill.title === "Soft Skills")?.skills || [] },
+    { id: "softskills", title: customSectionTitles.softskills || "Soft Skills", content: skillsdata?.find(skill => skill.title === "Soft Skills")?.skills || [] },
     { id: "languages", title: customSectionTitles.languages || "Languages", content: languagesdata },
     { id: "certifications", title: customSectionTitles.certifications || "Certifications", content: certificationsdata }
   ];
