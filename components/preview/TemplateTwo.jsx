@@ -192,10 +192,10 @@ const TemplateTwo = ({
       case "certifications":
         return (
           <div>
-            <h2 className="section-title border-b-2 border-gray-300 mb-1">
+            <h2 className="section-title text-xl font-bold text-pink-700 border-b-2 border-pink-200 mb-3 pb-1 tracking-wide">
               {customSectionTitles.certifications || "Certifications"}
             </h2>
-            <ul className="list-disc pl-4 content">
+        <ul className="list-disc pl-4 content text-gray-700">
               {certificationsdata && certificationsdata.map((cert, i) => (
                 <li key={i} className="content">
                   <div className="flex items-center gap-2">
@@ -224,26 +224,26 @@ const TemplateTwo = ({
       case "summary":
         return (
           <div>
-            <h2 className="section-title border-b-2 border-gray-300 mb-1">
+            <h2 className="section-title text-xl font-bold text-pink-700 border-b-2 border-pink-200 mb-3 pb-1 tracking-wide">
               {customSectionTitles.summary || "Summary"}
             </h2>
-            <p className="content">{summarydata}</p>
+            <p className="content text-gray-800 text-base leading-relaxed">{summarydata}</p>
           </div>
         );
       case "education":
         return (
           <div>
-            <h2 className="section-title border-b-2 border-gray-300 mb-1">
+            <h2 className="section-title text-xl font-bold text-pink-700 border-b-2 border-pink-200 mb-3 pb-1 tracking-wide">
               {customSectionTitles.education || "Education"}
             </h2>
             {educationdata && educationdata.map((edu, idx) => (
               <div key={idx} className="mb-1 flex justify-between items-start">
                 <div className="flex-1">
-                  <p className="content font-semibold">{edu.school}</p>
-                  <p className="content">{edu.degree}</p>
+                  <p className="content font-semibold text-gray-900">{edu.school}</p>
+                  <p className="content text-gray-700">{edu.degree}</p>
                 </div>
                 <div className="ml-4 text-right">
-                  <p className="sub-content font-medium text-gray-600">
+                  <p className="sub-content font-medium text-pink-600">
                     {new Date(edu.startYear).getFullYear()} - {new Date(edu.endYear).getFullYear()}
                   </p>
                 </div>
@@ -254,7 +254,7 @@ const TemplateTwo = ({
       case "projects":
         return (
           <div>
-            <h2 className="section-title border-b-2 border-gray-300 mb-1">
+            <h2 className="section-title text-xl font-bold text-pink-700 border-b-2 border-pink-200 mb-3 pb-1 tracking-wide">
               {customSectionTitles.projects || "Projects"}
             </h2>
             <DndContext
@@ -270,7 +270,7 @@ const TemplateTwo = ({
                   <SortableItem key={`project-${idx}`} id={`project-${idx}`}>
                     <div className="flex justify-between items-center">
                       <div className="flex items-center gap-2">
-                        <p className="content i-bold">{project.name}</p>
+                        <p className="content i-bold text-gray-900 font-semibold">{project.name}</p>
                         {project.link && (
                           <Link
                             href={project.link}
@@ -283,15 +283,15 @@ const TemplateTwo = ({
                           </Link>
                         )}
                       </div>
-                      <p className="sub-content font-medium text-gray-600">
+                      <p className="sub-content font-medium text-pink-600">
                         {new Date(project.startYear).getFullYear()} - {new Date(project.endYear).getFullYear()}
                       </p>
                     </div>
-                    <p className="content">{project.description}</p>
+                    <p className="content text-gray-700">{project.description}</p>
                     {project.keyAchievements && (
                       <ul className="list-disc pl-4 content">
                         {project.keyAchievements.split('\n').map((achievement, i) => (
-                          <li key={i} className="content">{achievement}</li>
+                          <li key={i} className="content text-gray-700">{achievement}</li>
                         ))}
                       </ul>
                     )}
@@ -304,7 +304,7 @@ const TemplateTwo = ({
       case "experience":
         return (
           <div>
-            <h2 className="section-title border-b-2 border-gray-300 mb-1">
+            <h2 className="section-title text-xl font-bold text-pink-700 border-b-2 border-pink-200 mb-3 pb-1 tracking-wide">
               {customSectionTitles.experience || "Work Experience"}
             </h2>
             <DndContext
@@ -319,17 +319,17 @@ const TemplateTwo = ({
                 {workExperiencedata && workExperiencedata.map((work, idx) => (
                   <SortableItem key={`work-${idx}`} id={`work-${idx}`}>
                     <div className="flex justify-between items-center">
-                      <p className="content">
-                        <span className="font-bold">{work.company}</span>
+                      <p className="content text-gray-900 font-semibold">
+                        <span>{work.company}</span>
                         <span className="mx-1">-</span>
-                        <span>{work.position}</span>
+                        <span className="text-pink-700">{work.position}</span>
                       </p>
-                      <p className="sub-content font-medium text-gray-600">
+                      <p className="sub-content font-medium text-pink-600">
                         {new Date(work.startYear).getFullYear()} - {new Date(work.endYear).getFullYear()}
                       </p>
                     </div>
-                    <p className="content">{work.description}</p>
-                    <p className="content">{work.keyAchievements}</p>
+                    <p className="content text-gray-700">{work.description}</p>
+                    <p className="content text-gray-700">{work.keyAchievements}</p>
                   </SortableItem>
                 ))}
               </SortableContext>
@@ -339,18 +339,18 @@ const TemplateTwo = ({
       case "skills":
         return (
           <div>
-            <h2 className="section-title border-b-2 border-gray-300 mb-1">
+            <h2 className="section-title text-xl font-bold text-pink-700 border-b-2 border-pink-200 mb-3 pb-1 tracking-wide">
               {customSectionTitles.skills || "Technical Skills"}
             </h2>
-            <div className="content">
+            <div className="content text-gray-700">
               {skillsdata && skillsdata
                 .filter(skill => skill.title !== "Soft Skills")
                 .map((skillCategory, index) => (
                   <div key={index} className="mb-3">
-                    <h3 className="font-semibold text-sm text-gray-700 mb-1">
+                    <h3 className="font-semibold text-sm text-pink-700 mb-1">
                       {skillCategory.title}
                     </h3>
-                    <p className="text-gray-600">
+                    <p className="text-gray-700">
                       {skillCategory.skills && skillCategory.skills.join(", ")}
                     </p>
                   </div>
@@ -361,10 +361,10 @@ const TemplateTwo = ({
       case "softskills":
         return (
           <div>
-            <h2 className="section-title border-b-2 border-gray-300 mb-1">
+            <h2 className="section-title text-xl font-bold text-pink-700 border-b-2 border-pink-200 mb-3 pb-1 tracking-wide">
               {customSectionTitles.softskills || "Soft Skills"}
             </h2>
-            <p className="content">
+            <p className="content text-gray-700">
               {skillsdata && skillsdata.find(skill => skill.title === "Soft Skills")?.skills?.join(", ")}
             </p>
           </div>
@@ -372,10 +372,10 @@ const TemplateTwo = ({
       case "languages":
         return (
           <div>
-            <h2 className="section-title border-b-2 border-gray-300 mb-1">
+            <h2 className="section-title text-xl font-bold text-pink-700 border-b-2 border-pink-200 mb-3 pb-1 tracking-wide">
               {customSectionTitles.languages || "Languages"}
             </h2>
-            <p className="content">
+            <p className="content text-gray-700">
               {section.content && Array.isArray(section.content) ? section.content.join(", ") : ""}
             </p>
           </div>
@@ -419,14 +419,23 @@ const TemplateTwo = ({
   }
 
   return (
-    <div className="w-full h-full bg-white p-4">
+  <div className="w-full h-full bg-gradient-to-br from-gray-50 via-pink-50 to-white p-4 min-h-screen">
       {/* Header Section */}
-      <div className="text-center mb-2">
-        <h1 className="name">{namedata}</h1>
-        <p className="profession">{positiondata}</p>
+  <div className="text-center mb-6 p-6 rounded-xl shadow-2xl bg-gradient-to-r from-white via-pink-50 to-white border border-pink-100 relative transition-all duration-500">
+        {/* Profile Picture */}
+        {resumeData?.profilePicture && resumeData.profilePicture.trim() !== "" && (
+          <img
+            src={resumeData.profilePicture}
+            alt="Profile"
+            className="mx-auto mb-3 w-24 h-24 rounded-full object-cover border-4 border-pink-300 shadow-2xl transition-all duration-500 hover:scale-105"
+            style={{ fontFamily: '"Playfair Display", serif' }}
+          />
+        )}
+  <h1 className="name text-4xl font-extrabold text-pink-800 tracking-tight mb-1" style={{ fontFamily: '"Playfair Display", serif' }}>{namedata}</h1>
+  <p className="profession text-lg text-pink-600 font-semibold mb-2" style={{ fontFamily: '"Montserrat", sans-serif' }}>{positiondata}</p>
         <ContactInfo
-          mainclass="flex flex-row gap-1 contact justify-center"
-          linkclass="inline-flex items-center gap-1"
+          mainclass="flex flex-row gap-3 contact justify-center mb-2"
+          linkclass="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white hover:bg-pink-100 transition-all duration-300 text-gray-700 shadow-sm border border-pink-100"
           teldata={contactdata}
           emaildata={emaildata}
           addressdata={addressdata}
@@ -434,7 +443,7 @@ const TemplateTwo = ({
           emailicon={emailicon}
           addressicon={addressicon}
         />
-        <div className="flex justify-center items-center gap-2 mt-1 text-sm">
+  <div className="flex justify-center items-center gap-2 mt-2 text-base">
           {resumeData && resumeData.socialMedia && resumeData.socialMedia.map((socialMedia, index) => {
             return (
               <a
@@ -444,14 +453,14 @@ const TemplateTwo = ({
                 title={socialMedia.socialMedia}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-[2px] text-blue-600 hover:text-blue-800 transition-colors"
+                className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-pink-100 hover:bg-pink-200 transition-all duration-300 text-pink-700 font-semibold shadow border border-pink-200"
               >
-                {icons.map((icon, index) => {
+                {icons.map((icon, idx) => {
                   if (icon.name === socialMedia.socialMedia.toLowerCase()) {
-                    return <span key={index} className="text-sm">{icon.icon}</span>;
+                    return <span key={idx} className="text-lg">{icon.icon}</span>;
                   }
                 })}
-                {getUsername(socialMedia.link)}
+                <span className="ml-1">{getUsername(socialMedia.link)}</span>
               </a>
             );
           })}
@@ -470,7 +479,9 @@ const TemplateTwo = ({
         >
           {orderedSections.map((section, index) => (
             <SortableSection key={section.id} id={section.id}>
-              {renderSection(section)}
+              <div className="bg-white rounded-2xl shadow-xl border border-pink-100 p-6 mb-8 transition-all duration-500 hover:shadow-2xl hover:-translate-y-1" style={{ fontFamily: '"Montserrat", sans-serif' }}>
+                {renderSection(section)}
+              </div>
             </SortableSection>
           ))}
         </SortableContext>

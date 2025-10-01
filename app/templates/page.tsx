@@ -65,6 +65,78 @@ const templates = [
       "Perfect spacing",
       "Traditional structure"
     ]
+  },
+  {
+    id: 6,
+    name: "Elegant Gradient",
+    image: "/assets/resume.jpg",
+    description: "Modern resume with soft gradients and card sections",
+    style: "gradient",
+    features: [
+      "Gradient backgrounds",
+      "Card-style sections",
+      "Subtle shadows"
+    ]
+  },
+  {
+    id: 7,
+    name: "Creative Portfolio",
+    image: "/assets/resume.jpg",
+    description: "Showcase creative work and skills with gallery layout",
+    style: "portfolio",
+    features: [
+      "Gallery for projects",
+      "Visual skill bars",
+      "Profile photo highlight"
+    ]
+  },
+  {
+    id: 8,
+    name: "Professional Timeline",
+    image: "/assets/resume.jpg",
+    description: "Timeline-based layout for career progression",
+    style: "timeline",
+    features: [
+      "Vertical timeline",
+      "Milestone highlights",
+      "Year markers"
+    ]
+  },
+  {
+    id: 9,
+    name: "Business Executive",
+    image: "/assets/resume.jpg",
+    description: "Executive style with bold headings and summary highlights",
+    style: "executive",
+    features: [
+      "Bold section headings",
+      "Summary highlights",
+      "Achievements spotlight"
+    ]
+  },
+  {
+    id: 10,
+    name: "Academic CV",
+    image: "/assets/resume.jpg",
+    description: "Detailed CV for academic and research positions",
+    style: "academic",
+    features: [
+      "Publication list",
+      "Research experience",
+      "Education focus"
+    ]
+  },
+  {
+    id: 11,
+    name: "Infographic Resume",
+    image: "/assets/resume.jpg",
+    description: "Visual resume with charts and infographics",
+    style: "infographic",
+    features: [
+      "Skill charts",
+      "Infographic sections",
+      "Visual timeline"
+    ]
   }
 ];
 

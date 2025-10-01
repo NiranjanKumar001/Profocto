@@ -52,7 +52,7 @@
     }
 
     input[type="checkbox"]:checked {
-        background-color: #ec4899 !important;
+        background-color: #f33434 !important;
         border-color: #ec4899 !important;
     }
 
@@ -795,6 +795,35 @@ input[type="date"]:focus-within {
         box-sizing: border-box !important;
     }
     
+    .profile-card {
+        @apply rounded-2xl shadow-2xl bg-white/70 backdrop-blur-lg border border-pink-200 p-8 mb-8 transition-all duration-500;
+    }
+    .profile-header {
+        @apply text-4xl font-extrabold text-pink-700 tracking-tight mb-2 drop-shadow-lg font-serif;
+    }
+    .profile-subtitle {
+        @apply text-lg font-semibold text-blue-600 mb-4 font-sans;
+    }
+    .profile-section {
+        @apply bg-gradient-to-br from-pink-50 via-white to-blue-50 rounded-xl shadow-lg border border-pink-100 p-6 mb-6 transition-all duration-300;
+    }
+    .profile-avatar {
+        @apply w-24 h-24 rounded-full object-cover border-4 border-pink-300 shadow-xl mb-4 mx-auto transition-transform duration-300 hover:scale-105;
+    }
+    .profile-social {
+        @apply flex flex-wrap gap-3 justify-center mt-2;
+    }
+    .profile-social-link {
+        @apply inline-flex items-center gap-2 px-4 py-1 rounded-full bg-pink-100 hover:bg-pink-200 text-pink-700 font-semibold shadow border border-pink-200 transition-all duration-200;
+    }
+    .profile-skills {
+        @apply flex flex-wrap gap-2 mt-2;
+    }
+    .profile-skill-badge {
+        @apply px-4 py-1 rounded-full bg-gradient-to-r from-pink-100 via-blue-100 to-pink-100 text-pink-700 font-semibold shadow hover:scale-105 transition-transform duration-200 border border-pink-200 text-sm;
+    }
+
+
     /* Ensure content has no padding in print */
     .preview-content {
         padding: 0 !important;
