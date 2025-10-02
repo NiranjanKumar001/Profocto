@@ -1002,3 +1002,45 @@ input[type="week"] {
     @apply bg-background text-foreground;
     }
 }
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.tooltiptext {
+  visibility: hidden;
+  opacity: 0;
+  width: 140px;
+  background: rgba(20, 20, 20, 0.9);
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 6px 8px;
+  position: absolute;
+  z-index: 10;
+  bottom: 130%;  
+  left: 50%;
+  transform: translateX(-50%);
+  transition: opacity 0.25s ease-in-out;
+  font-size: 0.8rem;
+  pointer-events: none; 
+}
+
+.tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: rgba(20, 20, 20, 0.9) transparent transparent transparent;
+}
+
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
