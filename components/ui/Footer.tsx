@@ -21,10 +21,26 @@ export default function Footer() {
         <div>
           <h2 className="text-lg font-bold mb-2 text-indigo-600 dark:text-indigo-400">Quick Links</h2>
           <ul className="space-y-1">
-            <li><Link href="/" className="hover:text-indigo-600">Home</Link></li>
-            <li><Link href="/features" className="hover:text-indigo-600">Features</Link></li>
-            <li><Link href="/about" className="hover:text-indigo-600">About</Link></li>
-            <li><Link href="/contact" className="hover:text-indigo-600">Contact</Link></li>
+            <li>
+              <Link href="/" className="hover:text-indigo-600 transition-colors">
+                Home
+              </Link>
+            </li>
+            <li>
+              <Link href="/features" className="hover:text-indigo-600 transition-colors">
+                Features
+              </Link>
+            </li>
+            <li>
+              <Link href="/about" className="hover:text-indigo-600 transition-colors">
+                About
+              </Link>
+            </li>
+            <li>
+              <Link href="/contact" className="hover:text-indigo-600 transition-colors">
+                Contact
+              </Link>
+            </li>
           </ul>
         </div>
 
@@ -32,13 +48,31 @@ export default function Footer() {
         <div>
           <h2 className="text-lg font-bold mb-2 text-indigo-600 dark:text-indigo-400">Connect with us</h2>
           <div className="flex space-x-4">
-            <Link href="https://github.com/NiranjanKumar001" target="_blank" className="hover:text-indigo-600">
+            <Link
+              href="https://github.com/NiranjanKumar001"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub"
+              className="hover:text-indigo-600 transition-colors"
+            >
               <FaGithub size={20} />
             </Link>
-            <Link href="https://www.linkedin.com" target="_blank" className="hover:text-indigo-600">
+            <Link
+              href="https://www.linkedin.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+              className="hover:text-indigo-600 transition-colors"
+            >
               <FaLinkedin size={20} />
             </Link>
-            <Link href="https://twitter.com" target="_blank" className="hover:text-indigo-600">
+            <Link
+              href="https://twitter.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Twitter"
+              className="hover:text-indigo-600 transition-colors"
+            >
               <FaTwitter size={20} />
             </Link>
           </div>
@@ -47,7 +81,7 @@ export default function Footer() {
 
       {/* Bottom Info */}
       <div className="mt-8 border-t border-gray-300 dark:border-gray-700 pt-4 text-sm text-center text-gray-500 dark:text-gray-400">
-        &copy; {new Date().getFullYear()} Profocto. All rights reserved. Built with Next.js, TailwindCSS, and love 
+        &copy; {new Date().getFullYear()} Profocto. All rights reserved. Built with Next.js, TailwindCSS, and ❤️
       </div>
     </footer>
   );
