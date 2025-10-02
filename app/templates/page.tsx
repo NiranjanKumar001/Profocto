@@ -170,33 +170,29 @@ export default function TemplatesPage() {
 function TemplateCard({ template, index }: { template: Template, index: number }) {
   return (
     <motion.div
-      whileHover={{ scale: 1.05 }}
-      className="relative group rounded-xl border border-white/10 bg-black/50 backdrop-blur-sm overflow-hidden hover:border-pink-500/30 transition-all duration-300"
-    >
-      <div className="absolute inset-0 bg-gradient-to-br from-pink-500/5 via-transparent to-pink-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-      <div className="aspect-[4/3] relative">
-        <Image
-          src={template.image}
-          alt={`${template.name} resume template preview`}
-          width={400}
-          height={300}
-          priority={index < 2}
-          className="object-contain w-full h-full p-4 bg-white/5"
-        />
-        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-          <Link
-            href={`/builder?template=${template.id}`}
-            className="relative inline-flex h-12 items-center justify-center rounded-md border border-pink-500/20 bg-gradient-to-r from-pink-500/10 to-pink-600/10 backdrop-blur-sm px-6 font-medium text-pink-200 transition-all duration-300 hover:border-pink-500/40 hover:bg-gradient-to-r hover:from-pink-500/20 hover:to-pink-600/20 hover:text-white focus:outline-none focus:ring-2 focus:ring-pink-500/50"
-          >
-            Use Template
-          </Link>
-        </div>
-      </div>
-      <div className="relative p-4">
-        <h3 className="text-xl font-semibold text-white group-hover:text-pink-100 transition-colors duration-300">{template.name}</h3>
-        <p className="text-slate-400 group-hover:text-slate-300 mt-2 text-sm transition-colors duration-300">{template.description}</p>
-        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-pink-500/0 via-pink-500/50 to-pink-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-      </div>
-    </motion.div>
-  );
-}
+  whileHover={{ scale: 1.02 }}
+  className="relative group rounded-lg border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all duration-300"
+>
+  <div className="aspect-[4/3] relative">
+    <Image
+      src={template.image}
+      alt={`${template.name} resume template preview`}
+      width={400}
+      height={300}
+      priority={index < 2}
+      className="object-contain w-full h-full p-4 bg-gray-50"
+    />
+    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+      <Link
+        href={`/builder?template=${template.id}`}
+        className="rounded-md bg-gray-900 text-white px-5 py-2 text-sm font-medium hover:bg-gray-800 transition-colors"
+      >
+        Use Template
+      </Link>
+    </div>
+  </div>
+  <div className="p-4">
+    <h3 className="text-lg font-semibold text-gray-900">{template.name}</h3>
+    <p className="text-gray-600 mt-2 text-sm">{template.description}</p>
+  </div>
+</motion.div>

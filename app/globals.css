@@ -6,9 +6,24 @@
     
     /* Custom text selection color */
     ::selection {
-        background-color: hsl(330 81% 60% / 0.3);
-        color: hsl(0 0% 98%);
-    }
+    background-color: hsl(220 70% 80% / 0.4);
+    color: hsl(220 20% 10%);
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    @apply w-2.5 h-2.5;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-100 dark:bg-neutral-800;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-400 dark:bg-neutral-600 rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-500 dark:bg-neutral-500;
+  }
+
 
     ::-moz-selection {
         background-color: hsl(330 81% 60% / 0.3);
@@ -17,6 +32,7 @@
     
     body {
         @apply font-[sans-serif];
+         @apply font-sans bg-gray-50 text-gray-900 dark:bg-neutral-950 dark:text-gray-100;
     }
 
     ::-webkit-scrollbar {
@@ -39,6 +55,22 @@
         @apply focus:outline-none;
     }
 
+    :root {
+    --background: hsl(0 0% 98%);
+    --foreground: hsl(220 10% 15%);
+    --primary: hsl(220 70% 50%);
+    --primary-foreground: hsl(0 0% 100%);
+    --border: hsl(220 15% 85%);
+    --muted: hsl(220 10% 96%);
+  }
+
+  .dark {
+    --background: hsl(220 15% 10%);
+    --foreground: hsl(0 0% 98%);
+    --primary: hsl(220 70% 60%);
+    --border: hsl(220 10% 25%);
+  }
+}
     /* Custom Checkbox Styling */
     input[type="checkbox"] {
         @apply appearance-none;

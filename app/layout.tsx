@@ -1,11 +1,12 @@
-import './globals.css'
-import type { Metadata } from 'next'
-import { AuthProvider } from '@/components/providers/AuthProvider';
+import "./globals.css";
+import type { Metadata } from "next";
+import { AuthProvider } from "@/components/providers/AuthProvider";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
 
 export const metadata: Metadata = {
-  title: 'Profile Élegante',
-  description: 'ELEGANT AND MODERN RESUME BUILDER',
-}
+  title: "Profile Élegante",
+  description: "Sleek & Professional Resume Builder",
+};
 
 interface RootLayoutProps {
   children: React.ReactNode;
@@ -13,12 +14,12 @@ interface RootLayoutProps {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en">
-      <body suppressHydrationWarning={true}>
-        <AuthProvider>
-          {children}
-        </AuthProvider>
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <ThemeProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
-  )
+  );
 }
