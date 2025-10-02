@@ -41,19 +41,19 @@ const AuthModal = ({ isOpen, onClose }) => {
           exit={{ opacity: 0, scale: 0.95 }}
           transition={{ duration: 0.2 }}
         >
-          <div className="bg-white rounded-xl shadow-xl overflow-hidden">
+          <div className="bg-zinc-900 rounded-xl shadow-xl overflow-hidden">
             {/* Header */}
-            <div className="p-6 pb-4 border-b border-gray-100">
+            <div className="p-6 pb-4 border-b border-zinc-700">
               <div className="flex items-center justify-between">
-                <h2 className="text-xl font-semibold text-gray-900">
+                <h2 className="text-xl font-semibold text-zinc-200">
                   Sign In to Continue
                 </h2>
                 <button
                   onClick={onClose}
-                  className="p-1 rounded-lg hover:bg-gray-100 transition-colors"
+                  className="p-1 rounded-lg hover:bg-zinc-600 transition-colors"
                   disabled={loading}
                 >
-                  <FaTimes size={14} className="text-gray-400" />
+                  <FaTimes size={14} className="text-zinc-400" />
                 </button>
               </div>
             </div>
@@ -62,7 +62,7 @@ const AuthModal = ({ isOpen, onClose }) => {
             <div className="p-6">
               {/* Welcome Text */}
               <div className="text-center mb-6">
-                <p className="text-gray-600 text-sm">
+                <p className="text-zinc-300 text-sm">
                   Continue with Google to create and manage your professional resume.
                 </p>
               </div>
@@ -72,15 +72,15 @@ const AuthModal = ({ isOpen, onClose }) => {
                 <button
                   onClick={() => handleMethodSelect('google')}
                   disabled={loading}
-                  className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-white border border-zinc-300 rounded-full hover:bg-zinc-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   type="button"
                 >
                   {loading ? (
-                    <div className="w-4 h-4 border-2 border-gray-300 border-t-[#4285F4] rounded-full animate-spin"></div>
+                    <div className="w-4 h-4 border-2 border-zinc-300 border-t-[#4285F4] rounded-full animate-spin"></div>
                   ) : (
-                    <FaGoogle className="text-pink-500" />
+                    <FaGoogle className="text-black-500" />
                   )}
-                  <span className="text-gray-700">Continue with Google</span>
+                  <span className="text-zinc-700">Continue with Google</span>
                 </button>
 
 
@@ -88,7 +88,7 @@ const AuthModal = ({ isOpen, onClose }) => {
 
               {/* Security Notice */}
               <div className="mt-6 text-center">
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-zinc-500">
                   By continuing, you agree to our Terms of Service and Privacy Policy
                 </p>
               </div>
