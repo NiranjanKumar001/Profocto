@@ -41,16 +41,16 @@ const AuthModal = ({ isOpen, onClose }) => {
           exit={{ opacity: 0, scale: 0.95 }}
           transition={{ duration: 0.2 }}
         >
-         <div className="bg-zinc-900 rounded-xl shadow-xl overflow-hidden">
+         <div className="bg-zinc-50 rounded-xl shadow-xl overflow-hidden">
             {/* Header */}
-            <div className="p-6 pb-4 border-b border-zinc-700">
+            <div className="p-6 pb-4 border-b border-zinc-200">
               <div className="flex items-center justify-between">
-                <h2 className="text-xl font-semibold text-zinc-200">
+                <h2 className="text-xl font-semibold text-zinc-700">
                   Sign In to Continue
                 </h2>
                 <button
                   onClick={onClose}
-                  className="p-1 rounded-lg hover:bg-zinc-600 transition-colors"
+                  className="p-1 rounded-lg hover:bg-zinc-200 transition-colors"
                   disabled={loading}
                 >
                   <FaTimes size={14} className="text-zinc-400" />
@@ -62,7 +62,7 @@ const AuthModal = ({ isOpen, onClose }) => {
             <div className="p-6">
               {/* Welcome Text */}
               <div className="text-center mb-6">
-                <p className="text-zinc-300 text-sm">
+                <p className="text-zinc-800 text-sm">
                   Continue with Google to create and manage your professional resume.
                 </p>
               </div>
@@ -72,15 +72,15 @@ const AuthModal = ({ isOpen, onClose }) => {
                 <button
                   onClick={() => handleMethodSelect('google')}
                   disabled={loading}
-                  className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-white border border-zinc-300 rounded-full hover:bg-zinc-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-black border border-zinc-300 rounded-xl hover:bg-zinc-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   type="button"
                 >
                   {loading ? (
                     <div className="w-4 h-4 border-2 border-zinc-300 border-t-[#4285F4] rounded-full animate-spin"></div>
                   ) : (
-                    <FaGoogle className="text-black-500" />
+                    <FaGoogle className="text-zinc-50" />
                   )}
-                  <span className="text-zinc-700">Continue with Google</span>
+                  <span className="text-zinc-50">Continue with Google</span>
                 </button>
 
 
