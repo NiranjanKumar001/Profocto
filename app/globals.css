@@ -401,7 +401,6 @@
 
     /* Date field text styling */
     input[type="date"]::-webkit-datetime-edit-text {
-        color: hsl(330 81% 60%) !important;
         font-weight: 500;
     }
 
@@ -982,18 +981,18 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 /* Force pink theme on date picker popup */
 input[type="date"]::-webkit-datetime-edit {
-    display: none !important;
+  
 }
 
 /* WebKit date picker styling */
 input[type="date"]::-webkit-datetime-edit-fields-wrapper {
-    display: none !important;
+
 }
 
 input[type="date"]::-webkit-datetime-edit-month-field,
 input[type="date"]::-webkit-datetime-edit-day-field,
 input[type="date"]::-webkit-datetime-edit-year-field {
-    color: #ec4899 !important;
+    color: #fff !important;
 }
 
 input[type="date"]::-webkit-inner-spin-button,
@@ -1063,4 +1062,46 @@ input[type="week"] {
   body {
     @apply bg-background text-foreground;
     }
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.tooltiptext {
+  visibility: hidden;
+  opacity: 0;
+  width: 140px;
+  background: rgba(20, 20, 20, 0.9);
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 6px 8px;
+  position: absolute;
+  z-index: 10;
+  bottom: 130%;  
+  left: 50%;
+  transform: translateX(-50%);
+  transition: opacity 0.25s ease-in-out;
+  font-size: 0.8rem;
+  pointer-events: none; 
+}
+
+.tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: rgba(20, 20, 20, 0.9) transparent transparent transparent;
+}
+
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
 }

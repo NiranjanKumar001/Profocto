@@ -1,0 +1,74 @@
+name: Setup Hacktoberfest Labels
+
+on:
+  workflow_dispatch: # Manual trigger
+  push:
+    branches: [main]
+    paths: ['.github/workflows/setup-labels.yml']
+
+jobs:
+  setup-labels:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      contents: read
+    
+    steps:
+      - name: Create or update hacktoberfest labels
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const labels = [
+              {
+                name: 'hacktoberfest',
+                color: 'ff8c69',
+                description: 'Hacktoberfest 2025 - Open for contributions'
+              },
+              {
+                name: 'hacktoberfest-accepted',
+                color: '0e8a16',
+                description: 'Hacktoberfest 2025 - Accepted contribution'
+              },
+              {
+                name: 'good first issue',
+                color: '7057ff',
+                description: 'Good for newcomers'
+              },
+              {
+                name: 'help wanted',
+                color: '008672',
+                description: 'Looking for community help'
+              },
+              {
+                name: 'no-code',
+                color: 'fef2c0',
+                description: 'Non-coding contributions (design, documentation, etc.)'
+              }
+            ];
+
+            for (const label of labels) {
+              try {
+                await github.rest.issues.createLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  name: label.name,
+                  color: label.color,
+                  description: label.description
+                });
+                console.log(`✅ Created label: ${label.name}`);
+              } catch (error) {
+                if (error.status === 422) {
+                  // Label already exists, update it
+                  await github.rest.issues.updateLabel({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    name: label.name,
+                    color: label.color,
+                    description: label.description
+                  });
+                  console.log(`🔄 Updated label: ${label.name}`);
+                } else {
+                  console.error(`❌ Error with label ${label.name}:`, error.message);
+                }
+              }
+            }

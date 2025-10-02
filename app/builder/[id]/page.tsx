@@ -35,17 +35,19 @@ export default function BuilderPage() {
   const { data: session } = useSession();
 
   // Resume data state with localStorage persistence (hydration-safe)
-  const [resumeData, setResumeData] = useState<ResumeData>(DefaultResumeData as ResumeData);
+  const [resumeData, setResumeData] = useState<ResumeData>(
+    DefaultResumeData as ResumeData
+  );
   const [isHydrated, setIsHydrated] = useState(false);
 
   // Load from localStorage after hydration to prevent mismatches
   useEffect(() => {
-    const savedData = localStorage.getItem('resumeData');
+    const savedData = localStorage.getItem("resumeData");
     if (savedData) {
       try {
         setResumeData(JSON.parse(savedData));
       } catch (error) {
-        console.warn('Failed to parse saved resume data:', error);
+        console.warn("Failed to parse saved resume data:", error);
       }
     }
     setIsHydrated(true);
@@ -57,7 +59,7 @@ export default function BuilderPage() {
   // Save to localStorage whenever resumeData changes (only after hydration)
   useEffect(() => {
     if (isHydrated) {
-      localStorage.setItem('resumeData', JSON.stringify(resumeData));
+      localStorage.setItem("resumeData", JSON.stringify(resumeData));
     }
   }, [resumeData, isHydrated]);
 
@@ -65,7 +67,7 @@ export default function BuilderPage() {
   const handleSignOut = async () => {
     setIsLoggingOut(true);
     try {
-      await signOut({ callbackUrl: '/' });
+      await signOut({ callbackUrl: "/" });
     } catch {
       // Handle any errors
     } finally {
@@ -101,29 +103,25 @@ export default function BuilderPage() {
     setResumeData({ ...resumeData, [e.target.name]: e.target.value });
   };
 
-
-
   // Keyboard shortcut for sidebar toggle (Ctrl+B or Cmd+B)
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       // Check for Ctrl+B (Windows/Linux) or Cmd+B (Mac)
-      if ((event.ctrlKey || event.metaKey) && event.key === 'b') {
+      if ((event.ctrlKey || event.metaKey) && event.key === "b") {
         event.preventDefault();
         // Keyboard shortcut triggered
-        setFormClose(prev => !prev);
+        setFormClose((prev) => !prev);
       }
     };
 
     // Add event listener
-    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
 
     // Cleanup function to remove event listener
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener("keydown", handleKeyDown);
     };
   }, []); // No dependencies needed since we use functional setState
-
-
 
   // Render the main builder interface (unprotected)
   return (
@@ -186,28 +184,42 @@ export default function BuilderPage() {
 
                       {/* Technical Skills Section */}
                       <div className="form-section">
-                        <EditableFormTitle 
-                          sectionKey="skills" 
-                          defaultTitle="Technical Skills" 
+                        <EditableFormTitle
+                          sectionKey="skills"
+                          defaultTitle="Technical Skills"
                           className="input-title"
                         />
                         <div className="space-y-4">
                           {resumeData.skills
                             .filter(
-                              (skill: { title: string; skills: string[] }) => skill.title !== "Soft Skills"
+                              (skill: { title: string; skills: string[] }) =>
+                                skill.title !== "Soft Skills"
                             )
-                            .map((skill: { title: string; skills: string[] }, index: number) => (
-                              <Skill title={skill.title} key={index} />
-                            ))}
+                            .map(
+                              (
+                                skill: { title: string; skills: string[] },
+                                index: number
+                              ) => (
+                                <Skill title={skill.title} key={index} />
+                              )
+                            )}
                         </div>
                       </div>
 
                       {/* Soft Skills Section */}
                       {resumeData.skills
-                        .filter((skill: { title: string; skills: string[] }) => skill.title === "Soft Skills")
-                        .map((skill: { title: string; skills: string[] }, index: number) => (
-                          <Skill title={skill.title} key={index} />
-                        ))}
+                        .filter(
+                          (skill: { title: string; skills: string[] }) =>
+                            skill.title === "Soft Skills"
+                        )
+                        .map(
+                          (
+                            skill: { title: string; skills: string[] },
+                            index: number
+                          ) => (
+                            <Skill title={skill.title} key={index} />
+                          )
+                        )}
 
                       <Language />
                       <Certification />
@@ -215,86 +227,77 @@ export default function BuilderPage() {
 
                     {/* Floating Profile Pocket - Sticky at bottom */}
                     <div className="sticky bottom-0 left-0 right-0 p-4 z-30 mt-6">
-                      <div 
+                      <div
                         className="relative p-4 rounded-xl border backdrop-blur-sm"
-                        style={{ 
+                        style={{
                           backgroundColor: "hsla(240, 10%, 3.9%, 0.95)",
                           borderColor: "hsl(240 3.7% 25%)",
-                          boxShadow: "0 8px 32px rgba(0, 0, 0, 0.5)"
+                          boxShadow: "0 8px 32px rgba(0, 0, 0, 0.5)",
                         }}
                       >
                         {/* Enhanced decorative elements for floating pocket effect */}
-                        <div 
+                        <div
                           className="absolute -top-1 left-4 right-4 h-2 rounded-b-lg opacity-60"
                           style={{ backgroundColor: "hsl(240 3.7% 20%)" }}
                         ></div>
-                        <div 
+                        <div
                           className="absolute -top-0.5 left-6 right-6 h-1 rounded-b-lg opacity-40"
                           style={{ backgroundColor: "hsl(240 3.7% 25%)" }}
                         ></div>
-                        <div 
-                          className="absolute inset-0 rounded-xl border border-pink-500/20 animate-pulse"
-                        ></div>
+                        <div className="absolute inset-0 rounded-xl border border-pink-500/20 animate-pulse"></div>
 
                         <div className="flex items-center space-x-3">
                           {/* Profile Image */}
                           <div className="relative">
-                            <div 
+                            <div
                               className="w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold text-lg shadow-lg ring-2 ring-pink-500/30 overflow-hidden"
-                              style={{ 
-                                background: "linear-gradient(135deg, hsl(322, 84%, 60%) 0%, hsl(270, 84%, 60%) 100%)"
+                              style={{
+                                background:
+                                  "linear-gradient(135deg, hsl(322, 84%, 60%) 0%, hsl(270, 84%, 60%) 100%)",
                               }}
                             >
                               {session?.user?.image ? (
-                                <Image 
-                                  src={session.user.image} 
-                                  alt={session.user.name || 'User'}
-                                  width={40}
+                                <Image
+                                  src={session.user.image}
+                                  alt={session.user.name || "User"}
+                                  width={50}
                                   height={40}
                                   className="w-full h-full rounded-full object-cover"
                                   onError={(e) => {
-                                    // Hide the image and show fallback text when image fails to load
+                                    // Hide the image on error and show initials instead
                                     const target = e.target as HTMLImageElement;
                                     target.style.display = 'none';
-                                    const fallbackText = target.parentElement?.querySelector('.fallback-text');
-                                    if (fallbackText) {
-                                      (fallbackText as HTMLElement).style.display = 'block';
-                                    }
-                                  }}
-                                  onLoad={(e) => {
-                                    // Hide fallback text when image loads successfully
-                                    const target = e.target as HTMLImageElement;
-                                    const fallbackText = target.parentElement?.querySelector('.fallback-text');
-                                    if (fallbackText) {
-                                      (fallbackText as HTMLElement).style.display = 'none';
-                                    }
                                   }}
                                 />
-                              ) : null}
-                              <span 
-                                className={`fallback-text text-lg font-bold ${session?.user?.image ? 'hidden' : 'block'}`}
-                                style={{ display: session?.user?.image ? 'none' : 'block' }}
-                              >
-                                {session?.user?.name?.charAt(0).toUpperCase() || 'U'}
-                              </span>
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center text-white text-xl font-bold">
+                                  {session?.user?.name?.charAt(0).toUpperCase() || "U"}
+                                </div>
+                              )}
                             </div>
-                            <div 
-                              className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 animate-pulse" 
+                            <div
+                              className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 animate-pulse"
                               style={{ borderColor: "hsl(240 10% 3.9%)" }}
                             ></div>
                           </div>
-                          
+
                           {/* Name and Info */}
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium truncate" style={{ color: "hsl(0 0% 98%)" }}>
-                              {session?.user?.name || 'User'}
+                            <p
+                              className="text-sm font-medium truncate"
+                              style={{ color: "hsl(0 0% 98%)" }}
+                            >
+                              {session?.user?.name || "User"}
                             </p>
-                            <p className="text-xs truncate" style={{ color: "hsl(240 5% 64.9%)" }}>
+                            <p
+                              className="text-xs truncate"
+                              style={{ color: "hsl(240 5% 64.9%)" }}
+                            >
                               {/* Show Google email */}
-                              {session?.user?.email || 'Resume Builder'}
+                              {session?.user?.email || "Resume Builder"}
                             </p>
                           </div>
-                          
+
                           {/* Action Buttons */}
                           <div className="flex items-center space-x-2 relative z-50">
                             {/* Logout Button */}
@@ -302,10 +305,10 @@ export default function BuilderPage() {
                               onClick={handleSignOut}
                               disabled={isLoggingOut}
                               className="p-2 rounded-lg transition-all duration-200 hover:scale-105 group cursor-pointer relative z-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                              style={{ 
+                              style={{
                                 backgroundColor: "hsl(240 3.7% 20%)",
                                 border: "1px solid rgba(236, 72, 153, 0.2)",
-                                pointerEvents: "auto"
+                                pointerEvents: "auto",
                               }}
                               title={isLoggingOut ? "Signing out..." : "Logout"}
                               type="button"
@@ -334,26 +337,26 @@ export default function BuilderPage() {
                                 setFormClose(true);
                               }}
                               className="p-2 rounded-lg transition-all duration-200 hover:scale-105 group cursor-pointer relative z-50"
-                              style={{ 
+                              style={{
                                 backgroundColor: "hsl(240 3.7% 20%)",
                                 border: "1px solid rgba(236, 72, 153, 0.2)",
-                                pointerEvents: "auto"
+                                pointerEvents: "auto",
                               }}
                               title="Hide Sidebar"
                               type="button"
                             >
-                              <svg 
-                                className="w-4 h-4 transition-colors group-hover:text-pink-400 pointer-events-none" 
+                              <svg
+                                className="w-4 h-4 transition-colors group-hover:text-pink-400 pointer-events-none"
                                 style={{ color: "hsl(240 5% 64.9%)" }}
-                                fill="none" 
-                                stroke="currentColor" 
+                                fill="none"
+                                stroke="currentColor"
                                 viewBox="0 0 24 24"
                               >
-                                <path 
-                                  strokeLinecap="round" 
-                                  strokeLinejoin="round" 
-                                  strokeWidth={2} 
-                                  d="M11 19l-7-7 7-7m8 14l-7-7 7-7" 
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M11 19l-7-7 7-7m8 14l-7-7 7-7"
                                 />
                               </svg>
                             </button>
@@ -365,7 +368,7 @@ export default function BuilderPage() {
                 </div>
               </div>
             )}
-            
+
             {/* Show Sidebar Button - appears when sidebar is closed */}
             {formClose && (
               <button
@@ -380,25 +383,25 @@ export default function BuilderPage() {
                 style={{ zIndex: 9999, pointerEvents: "auto" }}
                 type="button"
               >
-                <svg 
-                  width="20" 
-                  height="20" 
-                  viewBox="0 0 24 24" 
-                  fill="none" 
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                   className="text-white pointer-events-none"
                 >
-                  <path 
-                    stroke="currentColor" 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    strokeWidth={2} 
-                    d="M13 17l5-5-5-5M6 17l5-5-5-5" 
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 17l5-5-5-5M6 17l5-5-5-5"
                   />
                 </svg>
               </button>
             )}
-            
+
             <div
               className={`${
                 formClose ? "w-full" : "w-full lg:w-[55%] xl:w-[60%]"
@@ -410,7 +413,7 @@ export default function BuilderPage() {
           <Print />
         </ResumeContext.Provider>
       </SectionTitleProvider>
-      
+
       {/* Logout Loading */}
       <LogoutLoader isVisible={isLoggingOut} />
     </>
