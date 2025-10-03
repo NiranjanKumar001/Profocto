@@ -47,7 +47,7 @@ const LogoutLoader = ({ isVisible }) => {
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
-          className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20"
+          className="bg-white/10 w-1/3 lg:w-1/5 backdrop-blur-md rounded-2xl p-8 border  border-white/20"
         >
           <div className="flex flex-col items-center space-y-4">
             {/* Simple loading spinner */}
@@ -60,7 +60,7 @@ const LogoutLoader = ({ isVisible }) => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="text-white text-lg font-medium text-center"
+                className="text-white text-lg  font-medium text-center"
               >
                 {studyMessages[currentMessageIndex]}
                 {'.'.repeat(dots)}
