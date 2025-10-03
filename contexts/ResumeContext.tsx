@@ -7,6 +7,12 @@ const ResumeContext = createContext<ResumeContextType>({
   setResumeData: () => {},
   handleProfilePicture: () => {},
   handleChange: () => {},
+  saveVersion: () => {},
+  listVersions: () => [],
+  restoreVersion: () => {},
+  darkMode: false,
+  toggleDarkMode: () => {},
 });
 
 export { ResumeContext };
+export default ResumeContext;

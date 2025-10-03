@@ -48,4 +48,10 @@ export interface ResumeContextType {
   setResumeData: React.Dispatch<React.SetStateAction<ResumeData>>;
   handleProfilePicture: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  // Additional helpers provided by the builder
+  saveVersion?: (name?: string) => void;
+  listVersions?: () => { id: string; name: string; timestamp: number }[];
+  restoreVersion?: (id: string) => void;
+  darkMode?: boolean;
+  toggleDarkMode?: () => void;
 }

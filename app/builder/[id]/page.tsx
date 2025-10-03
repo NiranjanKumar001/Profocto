@@ -23,6 +23,13 @@ import EditableFormTitle from "../../../components/form/EditableFormTitle";
 import { SectionTitleProvider } from "@/contexts/SectionTitleContext";
 import { ResumeContext } from "@/contexts/ResumeContext";
 import Squares from "@/components/ui/Squares";
+import AISuggestions from '@/components/features/AISuggestions';
+import JobMatchAnalyzer from '@/components/features/JobMatchAnalyzer';
+import ExportButtons from '@/components/features/ExportButtons';
+import VersionControl from '@/components/features/VersionControl';
+import AccessibilityAudit from '@/components/features/AccessibilityAudit';
+import ScoreCard from '@/components/features/ScoreCard';
+import DarkModeToggle from '@/components/ui/DarkModeToggle';
 import type { ResumeData } from "../../types/resume";
 import { FaChevronUp, FaOctopusDeploy } from "react-icons/fa";
 
@@ -62,6 +69,16 @@ export default function BuilderPage() {
     if (isHydrated) {
       localStorage.setItem("resumeData", JSON.stringify(resumeData));
     }
+    // Update word/char counters for live preview toolbar
+    try {
+      const text = [resumeData.summary, resumeData.workExperience.map(w=>w.description).join(' '), resumeData.projects.map(p=>p.description).join(' ')].join(' ');
+      const chars = text.length;
+      const words = (text.split(/\s+/).filter(Boolean) || []).length;
+      const wcEl = document.getElementById('word-count');
+      const ccEl = document.getElementById('char-count');
+      if (wcEl) wcEl.textContent = String(words);
+      if (ccEl) ccEl.textContent = String(chars);
+    } catch (e) {}
   }, [resumeData, isHydrated]);
 
   // Handle logout with loading state
@@ -165,7 +182,6 @@ export default function BuilderPage() {
                 <div
                   ref={divRef}
                   className='h-full border-r relative z-10 overflow-y-auto'
-                  style={{ borderColor: "hsl(240 3.7% 15.9%)" }}
                 >
                   <div className='p-4 sm:p-6 lg:p-5 relative z-20 backdrop-blur-[1.5px]'>
                     {/* Header */}
@@ -427,7 +443,28 @@ export default function BuilderPage() {
                 formClose ? "w-full" : "w-full lg:w-[55%] xl:w-[60%]"
               } transition-all duration-300 min-h-screen lg:min-h-0`}
             >
-              <Preview />
+              <div className="p-4 space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex gap-2 items-center">
+                    <DarkModeToggle />
+                    <ExportButtons />
+                  </div>
+                  <div className="text-sm text-gray-500">Words: <span id="word-count">0</span> • Chars: <span id="char-count">0</span></div>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                  <div className="col-span-2 space-y-4">
+                    <Preview />
+                  </div>
+                  <div className="col-span-1 space-y-4">
+                    <ScoreCard />
+                    <AISuggestions />
+                    <JobMatchAnalyzer />
+                    <AccessibilityAudit />
+                    <VersionControl />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           <Print />
