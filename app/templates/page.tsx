@@ -196,3 +196,5 @@ function TemplateCard({ template, index }: { template: Template, index: number }
     <p className="text-gray-600 mt-2 text-sm">{template.description}</p>
   </div>
 </motion.div>
+  );
+}

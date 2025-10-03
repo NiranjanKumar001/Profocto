@@ -55,6 +55,10 @@
         @apply focus:outline-none;
     }
 
+    body {
+  @apply bg-gradient-to-br from-purple-500 via-pink-500 to-indigo-500;
+}
+
     :root {
     --background: hsl(0 0% 98%);
     --foreground: hsl(220 10% 15%);
@@ -254,8 +258,7 @@
         --chart-3: 30 80% 55%;
         --chart-4: 280 65% 60%;
         --chart-5: 340 75% 55%;
-    }
-}
+  }
 
 @layer components{
     /* Shadcn-inspired Input System */
