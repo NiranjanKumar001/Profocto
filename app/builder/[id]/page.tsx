@@ -149,7 +149,7 @@ export default function BuilderPage() {
           <div className="flex flex-col lg:flex-row min-h-screen max-w-full overflow-hidden">
             {!formClose && (
               <div
-                className="w-full lg:w-[45%] xl:w-[40%] h-screen lg:h-screen md:h-auto exclude-print relative"
+                className="w-full lg:w-[45%] xl:w-[40%] h-auto lg:h-screen exclude-print relative"
                 style={{ backgroundColor: "hsl(240 10% 3.9%)" }}
               >
                 {/* Fixed Animated Background Grid */}
@@ -165,7 +165,7 @@ export default function BuilderPage() {
                 <div
                   
                   ref={divRef}
-                  className="h-full border-r relative z-10 overflow-y-auto"
+                  className="lg:h-full border-r relative z-10 overflow-y-auto"
                   style={{ borderColor: "hsl(240 3.7% 15.9%)" }}
                 >
                   <div className="p-4 sm:p-6 lg:p-8 relative z-20">
@@ -239,7 +239,7 @@ export default function BuilderPage() {
                     </div>
 
                     {/* Floating Profile Pocket - Sticky at bottom */}
-                    <div className="sticky bottom-0 left-0 right-0 p-4 z-30 mt-6">
+                    <div className="mt-6 p-4 z-30 lg:sticky lg:bottom-0 lg:left-0 lg:right-0">
                       <div
                         className="relative p-4 rounded-xl border backdrop-blur-sm"
                         style={{

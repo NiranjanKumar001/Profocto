@@ -268,7 +268,7 @@ const Preview = () => {
   };
 
   return (
-    <div className='w-full h-screen sticky top-0 preview rm-padding-print overflow-y-auto bg-gray-50'>
+    <div className='w-full lg:h-screen lg:sticky lg:top-0 preview rm-padding-print overflow-y-auto bg-gray-50'>
       {/* Template Dropdown */}
       <div className="absolute top-2   right-4 sm:right-6 z-50 exclude-print">
         <div className="flex flex-row  gap-2 sm:gap-3">
