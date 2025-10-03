@@ -58,6 +58,7 @@ const SocialMedia = () => {
         size={resumeData.socialMedia.length}
         add={addSocialMedia}
         remove={removeSocialMedia}
+        sectionName="social media"
       />
     </div>
   );

@@ -54,7 +54,8 @@ const Language = () => {
       <FormButton 
         size={resumeData[skillType].length} 
         add={addSkill} 
-        remove={removeSkill} 
+        remove={removeSkill}
+        sectionName="language"
       />
     </div>
   );

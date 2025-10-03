@@ -90,7 +90,8 @@ const Certification = () => {
       <FormButton 
         size={resumeData[skillType].length} 
         add={addCertification} 
-        remove={removeCertification} 
+        remove={removeCertification}
+        sectionName="certification"
       />
     </div>
   );

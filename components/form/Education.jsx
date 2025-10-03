@@ -101,7 +101,8 @@ const Education = () => {
         <FormButton 
           size={resumeData.education.length} 
           add={addEducation} 
-          remove={removeEducation} 
+          remove={removeEducation}
+          sectionName="education"
         />
       </div>
     )

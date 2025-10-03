@@ -105,6 +105,7 @@ const Skill = ({ title }) => {
         size={skillType.skills.length}
         add={() => addSkill(title)}
         remove={() => removeSkill(title)}
+        sectionName="skill"
       />
     </div>
   );

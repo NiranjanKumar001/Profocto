@@ -4,24 +4,17 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaGoogle, FaTimes } from 'react-icons/fa';
 import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
 
 const AuthModal = ({ isOpen, onClose }) => {
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   const handleMethodSelect = async (provider) => {
-    try {
-      setLoading(true);
-      await signIn(provider, {
-        callbackUrl: '/builder',
-        redirect: true
-      });
-    } catch (error) {
-      console.error('Authentication error:', error);
-      setLoading(false);
-      // Could add user notification here in the future
-    }
+    setLoading(true);
+    await signIn(provider, {
+      callbackUrl: '/builder',
+      redirect: true
+    });
+    setLoading(false);
   };
 
   if (!isOpen) return null;

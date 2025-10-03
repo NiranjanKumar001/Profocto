@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
 
 const SectionTitleContext = createContext();
 
@@ -15,7 +15,7 @@ export const useSectionTitles = () => {
 export const SectionTitleProvider = ({ children }) => {
   const [isClient, setIsClient] = useState(false);
   
-  const defaultTitles = {
+  const defaultTitles = useMemo(() => ({
     "summary": "Summary",
     "education": "Education", 
     "experience": "Professional Experience",
@@ -27,7 +27,7 @@ export const SectionTitleProvider = ({ children }) => {
       "softSkills": "Soft Skills",
     "languages": "Languages",
     "certifications": "Certifications"
-  };
+  }), []);
 
   const [customSectionTitles, setCustomSectionTitles] = useState(defaultTitles);
   const [editingSection, setEditingSection] = useState('');
@@ -46,7 +46,7 @@ export const SectionTitleProvider = ({ children }) => {
       // Fallback to default titles if loading fails
       setCustomSectionTitles(defaultTitles);
     }
-  }, []);
+  }, [defaultTitles]);
 
   const updateSectionTitle = (sectionKey, newTitle) => {
     setCustomSectionTitles(prev => {

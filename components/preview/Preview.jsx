@@ -11,6 +11,7 @@ import {
   FaFileAlt,
   FaTh,
   FaEyeSlash,
+  FaHackerrank,
 } from "react-icons/fa";
 import { MdEmail, MdLocationOn, MdPhone } from "react-icons/md";
 import { CgWebsite } from "react-icons/cg";
@@ -19,6 +20,7 @@ import Link from "next/link";
 import React, { useContext, useState, useEffect, useRef } from "react";
 import { ResumeContext } from "../../contexts/ResumeContext";
 import TemplateTwo from "./TemplateTwo";
+import TemplateFour from "./TemplateFour"
 import { useSectionTitles } from "../../contexts/SectionTitleContext";
 import {
   DndContext,
@@ -34,23 +36,22 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import {
-  useSortable,
-} from "@dnd-kit/sortable";
+import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { ImGithub } from "react-icons/im";
+import { SiCodeforces, SiLeetcode } from "react-icons/si";
 
 const Preview = () => {
   const { resumeData, setResumeData } = useContext(ResumeContext);
-  const { customSectionTitles } = useSectionTitles();
-  const [currentTemplate, setCurrentTemplate] = useState('template1');
+  const [currentTemplate, setCurrentTemplate] = useState("template1");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isClient, setIsClient] = useState(false);
 
   // Handle client-side initialization
   useEffect(() => {
     setIsClient(true);
-    if (typeof window !== 'undefined') {
-      const savedTemplate = localStorage.getItem('currentTemplate');
+    if (typeof window !== "undefined") {
+      const savedTemplate = localStorage.getItem("currentTemplate");
       if (savedTemplate) {
         setCurrentTemplate(savedTemplate);
       }
@@ -59,8 +60,8 @@ const Preview = () => {
 
   // Save template selection to localStorage
   useEffect(() => {
-    if (isClient && typeof window !== 'undefined') {
-      localStorage.setItem('currentTemplate', currentTemplate);
+    if (isClient && typeof window !== "undefined") {
+      localStorage.setItem("currentTemplate", currentTemplate);
     }
   }, [currentTemplate, isClient]);
 
@@ -70,14 +71,20 @@ const Preview = () => {
       id: "template1",
       name: "Classic Template",
       description: "Clean and professional layout",
-      icon: FaFileAlt
+      icon: FaFileAlt,
     },
     {
-      id: "template2", 
+      id: "template2",
       name: "Modern Template",
       description: "Dynamic with drag-and-drop sections",
-      icon: FaTh
-    }
+      icon: FaTh,
+    },
+    {
+      id: "template3",
+      name: "Classic Template II",
+      description: "Clean and ATS friendly",
+      icon: FaTh,
+    },
   ];
 
   const defaultSections = [
@@ -88,25 +95,25 @@ const Preview = () => {
     "skills",
     "softSkills",
     "languages",
-    "certifications"
+    "certifications",
   ];
 
   const sectionLabels = {
-    "summary": "Professional Summary",
-    "education": "Education",
-    "experience": "Professional Experience",
-    "projects": "Projects",
-    "skills": "Technical Skills",
-    "softSkills": "Soft Skills",
-    "languages": "Languages",
-    "certifications": "Certifications"
+    summary: "Professional Summary",
+    education: "Education",
+    experience: "Professional Experience",
+    projects: "Projects",
+    skills: "Technical Skills",
+    softSkills: "Soft Skills",
+    languages: "Languages",
+    certifications: "Certifications",
   };
 
   const [sectionOrder, setSectionOrder] = useState(defaultSections);
   const [enabledSections, setEnabledSections] = useState(() => {
     // All sections enabled by default
     const initial = {};
-    defaultSections.forEach(section => {
+    defaultSections.forEach((section) => {
       initial[section] = true;
     });
     return initial;
@@ -127,29 +134,29 @@ const Preview = () => {
     };
 
     const handleKeyDown = (event) => {
-      if (event.key === 'Escape') {
+      if (event.key === "Escape") {
         setIsDropdownOpen(false);
         setShowSectionToggle(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleKeyDown);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
 
   // Handle section toggle
   const toggleSection = (sectionId) => {
-    setEnabledSections(prev => {
+    setEnabledSections((prev) => {
       const updated = {
         ...prev,
-        [sectionId]: !prev[sectionId]
+        [sectionId]: !prev[sectionId],
       };
       if (isClient) {
-        localStorage.setItem('enabledSections', JSON.stringify(updated));
+        localStorage.setItem("enabledSections", JSON.stringify(updated));
       }
       return updated;
     });
@@ -162,6 +169,11 @@ const Preview = () => {
     { name: "instagram", icon: <FaInstagram /> },
     { name: "youtube", icon: <FaYoutube /> },
     { name: "website", icon: <CgWebsite /> },
+    { name: "github", icon: <ImGithub /> },
+    { name: "leetcode", icon: <SiLeetcode /> },
+    {name: "hackerrank", icon: <FaHackerrank />},
+    {name: "hacker rank", icon: <FaHackerrank />},
+    {name: "codeforces", icon: <SiCodeforces />}
   ];
 
   const sensors = useSensors(
@@ -177,9 +189,9 @@ const Preview = () => {
 
   useEffect(() => {
     if (isClient) {
-      const savedOrder = localStorage.getItem('sectionOrder');
-      const savedEnabled = localStorage.getItem('enabledSections');
-      
+      const savedOrder = localStorage.getItem("sectionOrder");
+      const savedEnabled = localStorage.getItem("enabledSections");
+
       if (savedOrder) {
         const parsedOrder = JSON.parse(savedOrder);
         // Add missing sections
@@ -197,23 +209,25 @@ const Preview = () => {
         }
         setSectionOrder(parsedOrder);
       } else {
-        localStorage.setItem('sectionOrder', JSON.stringify(defaultSections));
+        localStorage.setItem("sectionOrder", JSON.stringify(defaultSections));
       }
 
       if (savedEnabled) {
         const parsedEnabled = JSON.parse(savedEnabled);
         // Ensure all default sections are represented
         const updatedEnabled = {};
-        defaultSections.forEach(section => {
-          updatedEnabled[section] = parsedEnabled.hasOwnProperty(section) ? parsedEnabled[section] : true;
+        defaultSections.forEach((section) => {
+          updatedEnabled[section] = parsedEnabled.hasOwnProperty(section)
+            ? parsedEnabled[section]
+            : true;
         });
         setEnabledSections(updatedEnabled);
       } else {
         const initial = {};
-        defaultSections.forEach(section => {
+        defaultSections.forEach((section) => {
           initial[section] = true;
         });
-        localStorage.setItem('enabledSections', JSON.stringify(initial));
+        localStorage.setItem("enabledSections", JSON.stringify(initial));
       }
     }
   }, [isClient]);
@@ -227,11 +241,11 @@ const Preview = () => {
         const oldIndex = items.indexOf(active.id);
         const newIndex = items.indexOf(over.id);
         const newOrder = arrayMove(items, oldIndex, newIndex);
-        
+
         if (isClient) {
-          localStorage.setItem('sectionOrder', JSON.stringify(newOrder));
+          localStorage.setItem("sectionOrder", JSON.stringify(newOrder));
         }
-        
+
         return newOrder;
       });
     }
@@ -249,57 +263,70 @@ const Preview = () => {
       newOrder.splice(destination.index, 0, reorderedItem);
 
       setSectionOrder(newOrder);
-      localStorage.setItem('sectionOrder', JSON.stringify(newOrder));
+      localStorage.setItem("sectionOrder", JSON.stringify(newOrder));
     }
   };
 
   return (
-    <div className="w-full h-screen sticky top-0 preview rm-padding-print overflow-y-auto bg-gray-50">
+    <div className='w-full h-screen sticky top-0 preview rm-padding-print overflow-y-auto bg-gray-50'>
       {/* Template Dropdown */}
-      <div className="absolute top-4 sm:top-6 right-4 sm:right-6 z-50 exclude-print">
-        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+      <div className="absolute top-2   right-4 sm:right-6 z-50 exclude-print">
+        <div className="flex flex-row  gap-2 sm:gap-3">
           {/* Section Toggle Button */}
-          <div className="relative" ref={toggleRef}>
+          <div className='relative' ref={toggleRef}>
             <button
               onClick={() => setShowSectionToggle(!showSectionToggle)}
-              className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-3 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors shadow-lg text-xs sm:text-sm"
-              title="Toggle Sections"
+              className='flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-3 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors shadow-lg text-xs sm:text-sm'
+              title='Toggle Sections'
             >
-              <FaTh className="w-3 h-3 sm:w-4 sm:h-4" />
-              <span className="font-medium hidden sm:inline">Sections</span>
-              <span className="font-medium sm:hidden">Sec</span>
-              <FaChevronDown className={`w-2 h-2 sm:w-3 sm:h-3 transition-transform ${showSectionToggle ? 'rotate-180' : ''}`} />
+              <FaTh className='w-3 h-3 sm:w-4 sm:h-4' />
+              <span className='font-medium hidden sm:inline'>Sections</span>
+              <span className='font-medium sm:hidden'>Sec</span>
+              <FaChevronDown
+                className={`w-2 h-2 sm:w-3 sm:h-3 transition-transform ${showSectionToggle ? "rotate-180" : ""}`}
+              />
             </button>
-            
+
             {/* Section Toggle Dropdown */}
             {showSectionToggle && (
-              <div className="absolute right-0 mt-2 w-64 sm:w-72 bg-white rounded-lg shadow-lg border border-gray-200 py-3">
-                <div className="px-3 sm:px-4 pb-2 border-b border-gray-200">
-                  <h3 className="text-xs sm:text-sm font-semibold text-gray-900">Toggle Resume Sections</h3>
-                  <p className="text-xs text-gray-600 mt-1">Hide sections you don&apos;t need (e.g., freshers can hide experience)</p>
+              <div className='absolute right-0 mt-2 w-64 sm:w-72 bg-white rounded-lg shadow-lg border border-gray-200 py-3'>
+                <div className='px-3 sm:px-4 pb-2 border-b border-gray-200'>
+                  <h3 className='text-xs sm:text-sm font-semibold text-gray-900'>
+                    Toggle Resume Sections
+                  </h3>
+                  <p className='text-xs text-gray-600 mt-1'>
+                    Hide sections you don&apos;t need (e.g., freshers can hide
+                    experience)
+                  </p>
                 </div>
-                <div className="py-2 max-h-60 overflow-y-auto">
+                <div className='py-2 max-h-60 overflow-y-auto'>
                   {defaultSections.map((sectionId) => (
                     <label
                       key={sectionId}
-                      className="flex items-center gap-3 px-4 py-2 hover:bg-pink-50 cursor-pointer"
+                      className='flex items-center gap-3 px-4 py-2 hover:bg-pink-50 cursor-pointer'
                     >
                       <input
-                        type="checkbox"
+                        type='checkbox'
                         checked={enabledSections[sectionId]}
                         onChange={() => toggleSection(sectionId)}
-                        className="w-4 h-4 text-pink-600 bg-white border-2 border-gray-300 rounded focus:ring-pink-500 focus:ring-2 checked:bg-pink-600 checked:border-pink-600"
+                        className='w-4 h-4 text-pink-600 bg-white border-2 border-gray-300 rounded focus:ring-pink-500 focus:ring-2 checked:bg-pink-600 checked:border-pink-600'
                       />
-                      <span className="text-sm text-gray-900 flex-1">{sectionLabels[sectionId]}</span>
+                      <span className='text-sm text-gray-900 flex-1'>
+                        {sectionLabels[sectionId]}
+                      </span>
                       {!enabledSections[sectionId] && (
-                        <FaEyeSlash className="w-4 h-4 text-gray-400" title="Hidden" />
+                        <FaEyeSlash
+                          className='w-4 h-4 text-gray-400'
+                          title='Hidden'
+                        />
                       )}
                     </label>
                   ))}
                 </div>
-                <div className="px-4 pt-2 border-t border-gray-200">
-                  <div className="text-xs text-gray-500">
-                    {Object.values(enabledSections).filter(Boolean).length} of {defaultSections.length} sections visible
+                <div className='px-4 pt-2 border-t border-gray-200'>
+                  <div className='text-xs text-gray-500'>
+                    {Object.values(enabledSections).filter(Boolean).length} of{" "}
+                    {defaultSections.length} sections visible
                   </div>
                 </div>
               </div>
@@ -307,24 +334,30 @@ const Preview = () => {
           </div>
 
           {/* Template Selector */}
-          <div className="relative" ref={dropdownRef}>
+          <div className='relative' ref={dropdownRef}>
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-3 bg-zinc-800 text-white rounded-lg hover:bg-zinc-700 transition-colors shadow-lg text-xs sm:text-sm"
+              className='flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-3 bg-zinc-800 text-white rounded-lg hover:bg-zinc-700 transition-colors shadow-lg text-xs sm:text-sm'
             >
-              <FaFileAlt className="w-3 h-3 sm:w-4 sm:h-4" />
-              <span className="font-medium hidden sm:inline">
-                {templates.find(t => t.id === currentTemplate)?.name}
+              <FaFileAlt className='w-3 h-3 sm:w-4 sm:h-4' />
+              <span className='font-medium hidden sm:inline'>
+                {templates.find((t) => t.id === currentTemplate)?.name}
               </span>
-              <span className="font-medium sm:hidden">
-                {templates.find(t => t.id === currentTemplate)?.name.split(' ')[0]}
+              <span className='font-medium sm:hidden'>
+                {
+                  templates
+                    .find((t) => t.id === currentTemplate)
+                    ?.name.split(" ")[0]
+                }
               </span>
-              <FaChevronDown className={`w-2 h-2 sm:w-3 sm:h-3 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
+              <FaChevronDown
+                className={`w-2 h-2 sm:w-3 sm:h-3 transition-transform ${isDropdownOpen ? "rotate-180" : ""}`}
+              />
             </button>
-            
+
             {/* Dropdown Menu */}
             {isDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-56 sm:w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2">
+              <div className='absolute right-0 mt-2 w-56 sm:w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2'>
                 {templates.map((template) => {
                   const IconComponent = template.icon;
                   return (
@@ -335,20 +368,26 @@ const Preview = () => {
                         setIsDropdownOpen(false);
                       }}
                       className={`w-full px-4 py-3 flex items-center gap-3 hover:bg-pink-50 transition-colors ${
-                        currentTemplate === template.id ? 'bg-pink-50 border-r-2 border-pink-500' : ''
+                        currentTemplate === template.id
+                          ? "bg-pink-50 border-r-2 border-pink-500"
+                          : ""
                       }`}
                     >
-                      <IconComponent className={`w-4 h-4 ${currentTemplate === template.id ? 'text-pink-600' : 'text-gray-600'}`} />
-                      <div className="text-left">
-                        <div className={`font-medium text-sm ${currentTemplate === template.id ? 'text-pink-900' : 'text-gray-900'}`}>
+                      <IconComponent
+                        className={`w-4 h-4 ${currentTemplate === template.id ? "text-pink-600" : "text-gray-600"}`}
+                      />
+                      <div className='text-left'>
+                        <div
+                          className={`font-medium text-sm ${currentTemplate === template.id ? "text-pink-900" : "text-gray-900"}`}
+                        >
                           {template.name}
                         </div>
-                        <div className="text-xs text-gray-500">
+                        <div className='text-xs text-gray-500'>
                           {template.description}
                         </div>
                       </div>
                       {currentTemplate === template.id && (
-                        <div className="ml-auto w-2 h-2 bg-blue-500 rounded-full"></div>
+                        <div className='ml-auto w-2 h-2 bg-blue-500 rounded-full'></div>
                       )}
                     </button>
                   );
@@ -360,8 +399,8 @@ const Preview = () => {
       </div>
       <A4PageWrapper>
         {currentTemplate === "template1" ? (
-          <ClassicTemplate 
-            resumeData={resumeData} 
+          <ClassicTemplate
+            resumeData={resumeData}
             sectionOrder={sectionOrder}
             enabledSections={enabledSections}
             handleDragEnd={handleDragEnd}
@@ -369,7 +408,7 @@ const Preview = () => {
             icons={icons}
             setResumeData={setResumeData}
           />
-        ) : (
+        ) : currentTemplate === "template2" ? (
           <TemplateTwo
             namedata={resumeData.name}
             positionData={resumeData.position}
@@ -392,6 +431,16 @@ const Preview = () => {
             resumeData={resumeData}
             setResumeData={setResumeData}
           />
+        ) : (
+          <TemplateFour
+            resumeData={resumeData}
+            sectionOrder={sectionOrder}
+            enabledSections={enabledSections}
+            handleDragEnd={handleDragEnd}
+            sensors={sensors}
+            icons={icons}
+            setResumeData={setResumeData}
+          />
         )}
       </A4PageWrapper>
     </div>
@@ -399,7 +448,7 @@ const Preview = () => {
 };
 
 // Sortable Section Component for Classic Template - Professional Style
-const SortableSection = ({ id, children }) => {
+export const SortableSection = ({ id, children }) => {
   const {
     attributes,
     listeners,
@@ -429,7 +478,7 @@ const SortableSection = ({ id, children }) => {
 };
 
 // Sortable Item Component for individual items within sections (like Modern Template)
-const SortableItem = ({ id, children }) => {
+export const SortableItem = ({ id, children }) => {
   const {
     attributes,
     listeners,
@@ -451,7 +500,8 @@ const SortableItem = ({ id, children }) => {
       style={style}
       {...attributes}
       {...listeners}
-      className={`mb-3 cursor-move ${isDragging ? "bg-gray-50 shadow-lg rounded p-2" : ""}`}
+      className={`mb-1
+         cursor-move ${isDragging ? "bg-gray-50 shadow-lg rounded p-2" : ""}`}
     >
       {children}
     </div>
@@ -459,14 +509,14 @@ const SortableItem = ({ id, children }) => {
 };
 
 // Classic Template Component - Professional and Clean
-const ClassicTemplate = ({ 
-  resumeData, 
-  sectionOrder, 
-  enabledSections, 
-  handleDragEnd, 
-  sensors, 
-  icons, 
-  setResumeData 
+const ClassicTemplate = ({
+  resumeData,
+  sectionOrder,
+  enabledSections,
+  handleDragEnd,
+  sensors,
+  icons,
+  setResumeData,
 }) => {
   const { customSectionTitles } = useSectionTitles();
   const [isClient, setIsClient] = useState(false);
@@ -481,21 +531,29 @@ const ClassicTemplate = ({
 
     if (active.id !== over?.id) {
       // Handle reordering within the same section
-      if (sectionType === 'projects' && setResumeData) {
-        const oldIndex = parseInt(active.id.replace('project-', ''));
-        const newIndex = parseInt(over.id.replace('project-', ''));
-        
+      if (sectionType === "projects" && setResumeData) {
+        const oldIndex = parseInt(active.id.replace("project-", ""));
+        const newIndex = parseInt(over.id.replace("project-", ""));
+
         if (oldIndex !== -1 && newIndex !== -1) {
-          const newProjects = arrayMove(resumeData.projects, oldIndex, newIndex);
-          setResumeData(prev => ({ ...prev, projects: newProjects }));
+          const newProjects = arrayMove(
+            resumeData.projects,
+            oldIndex,
+            newIndex
+          );
+          setResumeData((prev) => ({ ...prev, projects: newProjects }));
         }
-      } else if (sectionType === 'experience' && setResumeData) {
-        const oldIndex = parseInt(active.id.replace('work-', ''));
-        const newIndex = parseInt(over.id.replace('work-', ''));
-        
+      } else if (sectionType === "experience" && setResumeData) {
+        const oldIndex = parseInt(active.id.replace("work-", ""));
+        const newIndex = parseInt(over.id.replace("work-", ""));
+
         if (oldIndex !== -1 && newIndex !== -1) {
-          const newExperience = arrayMove(resumeData.workExperience, oldIndex, newIndex);
-          setResumeData(prev => ({ ...prev, workExperience: newExperience }));
+          const newExperience = arrayMove(
+            resumeData.workExperience,
+            oldIndex,
+            newIndex
+          );
+          setResumeData((prev) => ({ ...prev, workExperience: newExperience }));
         }
       }
     }
@@ -503,45 +561,63 @@ const ClassicTemplate = ({
 
   // Define sections like Modern Template
   const sections = [
-    { id: "summary", title: "Professional Summary", content: resumeData.summary },
+    {
+      id: "summary",
+      title: "Professional Summary",
+      content: resumeData.summary,
+    },
     { id: "education", title: "Education", content: resumeData.education },
-    { id: "experience", title: "Experience", content: resumeData.workExperience },
+    {
+      id: "experience",
+      title: "Experience",
+      content: resumeData.workExperience,
+    },
     { id: "projects", title: "Projects", content: resumeData.projects },
     { id: "skills", title: "Skills", content: resumeData.skills },
-    { id: "softSkills", title: "Soft Skills", content: resumeData.skills.find(skill => skill.title === "Soft Skills")?.skills || [] },
+    {
+      id: "softSkills",
+      title: "Soft Skills",
+      content:
+        resumeData.skills.find((skill) => skill.title === "Soft Skills")
+          ?.skills || [],
+    },
     { id: "languages", title: "Languages", content: resumeData.languages },
-    { id: "certifications", title: "Certifications", content: resumeData.certifications }
+    {
+      id: "certifications",
+      title: "Certifications",
+      content: resumeData.certifications,
+    },
   ];
 
   const orderedSections = sectionOrder
-    .map(id => sections.find(section => section.id === id))
-    .filter(section => section !== undefined && enabledSections[section.id]);
+    .map((id) => sections.find((section) => section.id === id))
+    .filter((section) => section !== undefined && enabledSections[section.id]);
 
   const renderSection = (section) => {
-    switch(section.id) {
+    switch (section.id) {
       case "summary":
         return (
           <div>
-            <h2 className="section-title border-b-2 border-gray-300 mb-1 text-gray-900">
+            <h2 className='section-title border-b-2 border-gray-300 mb-1 text-gray-900'>
               {customSectionTitles.summary || "Professional Summary"}
             </h2>
-            <p className="content text-gray-700 text-justify">{resumeData.summary}</p>
+            <p className="content font-sans  text-black text-justify">{resumeData.summary}</p>
           </div>
         );
 
       case "education":
         return resumeData.education.length > 0 ? (
           <div>
-            <h2 className="section-title border-b-2 border-gray-300 mb-1 text-gray-900">
+            <h2 className='section-title border-b-2 border-gray-300 mb-1 text-gray-900'>
               {customSectionTitles.education || "Education"}
             </h2>
             {resumeData.education.map((item, index) => (
               <div key={index} className="mb-1 flex justify-between items-start">
                 <div className="flex-1">
                   <h3 className="content font-semibold text-gray-900">{item.school}</h3>
-                  <p className="content text-gray-700">{item.degree}</p>
+                  <p className="content font-sans  text-black">{item.degree}</p>
                 </div>
-                <div className="ml-4 text-right">
+                <div className='ml-4 text-right'>
                   <DateRange
                     startYear={item.startYear}
                     endYear={item.endYear}
@@ -556,13 +632,13 @@ const ClassicTemplate = ({
       case "experience":
         return resumeData.workExperience.length > 0 ? (
           <div>
-            <h2 className="section-title border-b-2 border-gray-300 mb-1 text-gray-900">
+            <h2 className='section-title border-b-2 border-gray-300 mb-1 text-gray-900'>
               {customSectionTitles.experience || "Professional Experience"}
             </h2>
             <DndContext
               sensors={sensors}
               collisionDetection={closestCenter}
-              onDragEnd={(event) => handleItemDragEnd(event, 'experience')}
+              onDragEnd={(event) => handleItemDragEnd(event, "experience")}
             >
               <SortableContext
                 items={resumeData.workExperience.map((_, idx) => `work-${idx}`)}
@@ -570,12 +646,11 @@ const ClassicTemplate = ({
               >
                 {resumeData.workExperience.map((item, index) => (
                   <SortableItem key={`work-${index}`} id={`work-${index}`}>
-                    <div className="flex justify-between items-start mb-1">
+                    <div className="flex justify-between items-start mb-[0.5]">
                       <div className="flex-1">
-                        <h3 className="content i-bold text-gray-900">{item.position}</h3>
-                        <p className="content text-gray-700">{item.company}</p>
+                        <h3 className="content i-bold text-gray-900">{item.position} - {item.company}</h3>
                       </div>
-                      <div className="text-right">
+                      <div className='text-right'>
                         <DateRange
                           startYear={item.startYear}
                           endYear={item.endYear}
@@ -583,9 +658,9 @@ const ClassicTemplate = ({
                         />
                       </div>
                     </div>
-                    <p className="content text-gray-700 mb-2">{item.description}</p>
+                    <p className="content font-sans  text-black mb-1">{item.description}</p>
                     {typeof item.keyAchievements === "string" && item.keyAchievements.trim() && (
-                      <ul className="list-disc list-inside content text-gray-700 ml-4">
+                      <ul className="list-disc list-inside content font-sans  text-black ml-4">
                         {item.keyAchievements
                           .split("\n")
                           .filter(achievement => achievement.trim())
@@ -606,37 +681,42 @@ const ClassicTemplate = ({
       case "projects":
         return resumeData.projects.length > 0 ? (
           <div>
-            <h2 className="section-title border-b-2 border-gray-300 mb-1 text-gray-900">
+            <h2 className='section-title border-b-2 border-gray-300 mb-1 text-gray-900'>
               {customSectionTitles.projects || "Projects"}
             </h2>
             <DndContext
               sensors={sensors}
               collisionDetection={closestCenter}
-              onDragEnd={(event) => handleItemDragEnd(event, 'projects')}
+              onDragEnd={(event) => handleItemDragEnd(event, "projects")}
             >
               <SortableContext
                 items={resumeData.projects.map((_, idx) => `project-${idx}`)}
                 strategy={verticalListSortingStrategy}
               >
                 {resumeData.projects.map((item, index) => (
-                  <SortableItem key={`project-${index}`} id={`project-${index}`}>
-                    <div className="flex justify-between items-start mb-1">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2">
-                          <h3 className="content i-bold text-gray-900">{item.name}</h3>
+                  <SortableItem
+                    key={`project-${index}`}
+                    id={`project-${index}`}
+                  >
+                    <div className='flex justify-between items-start mb-1'>
+                      <div className='flex-1'>
+                        <div className='flex items-center gap-2'>
+                          <h3 className='content i-bold text-gray-900'>
+                            {item.name}
+                          </h3>
                           {item.link && (
                             <Link
                               href={item.link}
-                              className="text-blue-600 hover:text-blue-800 transition-colors"
-                              target="_blank"
-                              rel="noopener noreferrer"
+                              className='text-blue-600 hover:text-blue-800 transition-colors'
+                              target='_blank'
+                              rel='noopener noreferrer'
                             >
-                              <FaExternalLinkAlt className="w-3 h-3" />
+                              <FaExternalLinkAlt className='w-3 h-3' />
                             </Link>
                           )}
                         </div>
                       </div>
-                      <div className="text-right">
+                      <div className='text-right'>
                         <DateRange
                           startYear={item.startYear}
                           endYear={item.endYear}
@@ -644,9 +724,9 @@ const ClassicTemplate = ({
                         />
                       </div>
                     </div>
-                    <p className="content text-gray-700 mb-2">{item.description}</p>
+                    <p className="content font-sans  text-black mb-1">{item.description}</p>
                     {typeof item.keyAchievements === "string" && item.keyAchievements.trim() && (
-                      <ul className="list-disc list-inside content text-gray-700 ml-4">
+                      <ul className="list-disc list-inside content font-sans  text-black ml-4">
                         {item.keyAchievements
                           .split("\n")
                           .filter(achievement => achievement.trim())
@@ -667,15 +747,15 @@ const ClassicTemplate = ({
       case "skills":
         return (
           <div>
-            <h2 className="section-title border-b-2 border-gray-300 mb-1 text-gray-900">
+            <h2 className='section-title border-b-2 border-gray-300 mb-1 text-gray-900'>
               {customSectionTitles.skills || "Technical Skills"}
             </h2>
             {resumeData.skills
-              .filter(skill => skill.title !== "Soft Skills")
+              .filter((skill) => skill.title !== "Soft Skills")
               .map((skill, index) => (
-                <div key={`SKILLS-${index}`} className="mb-3">
+                <div key={`SKILLS-${index}`} className="mb-1">
                   <h3 className="content i-bold text-gray-900 mb-1">{skill.title}</h3>
-                  <p className="content text-gray-700">{skill.skills.join(", ")}</p>
+                  <p className="content font-sans  text-black">{skill.skills.join(", ")}</p>
                 </div>
               ))}
           </div>
@@ -684,10 +764,10 @@ const ClassicTemplate = ({
       case "softSkills":
         return (
           <div>
-            <h2 className="section-title border-b-2 border-gray-300 mb-1 text-gray-900">
+            <h2 className='section-title border-b-2 border-gray-300 mb-1 text-gray-900'>
               {customSectionTitles.softSkills || "Soft Skills"}
             </h2>
-            <p className="content text-gray-700">
+            <p className="content font-sans  text-black">
               {resumeData.skills.find(skill => skill.title === "Soft Skills")?.skills?.join(", ")}
             </p>
           </div>
@@ -696,39 +776,41 @@ const ClassicTemplate = ({
       case "languages":
         return resumeData.languages.length > 0 ? (
           <div>
-            <h2 className="section-title border-b-2 border-gray-300 mb-1 text-gray-900">
+            <h2 className='section-title border-b-2 border-gray-300 mb-1 text-gray-900'>
               {customSectionTitles.languages || "Languages"}
             </h2>
-            <p className="content text-gray-700">{resumeData.languages.join(", ")}</p>
+            <p className="content font-sans  text-black">{resumeData.languages.join(", ")}</p>
           </div>
         ) : null;
 
       case "certifications":
         return resumeData.certifications.length > 0 ? (
           <div>
-            <h2 className="section-title border-b-2 border-gray-300 mb-1 text-gray-900">
+            <h2 className='section-title border-b-2 border-gray-300 mb-1 text-gray-900'>
               {customSectionTitles.certifications || "Certifications"}
             </h2>
-            <ul className="list-disc list-inside content text-gray-700">
+            <ul className="list-disc list-inside content font-sans  text-black">
               {resumeData.certifications.map((cert, index) => (
-                <li key={index} className="mb-1">
-                  <div className="flex items-center gap-2">
+                <li key={index} className='mb-1'>
+                  <div className='flex items-center gap-2'>
                     <span>
                       {typeof cert === 'string' ? cert : cert.name}
                       {typeof cert === 'object' && cert.issuer && (
-                        <span className="text-gray-600"> - {cert.issuer}</span>
+                        <span className="font-sans  text-black"> - {cert.issuer}</span>
                       )}
                     </span>
-                    {typeof cert === 'object' && cert.link && cert.link.trim() !== '' && (
-                      <Link
-                        href={cert.link}
-                        className="text-blue-600 hover:text-blue-800 transition-colors"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <FaExternalLinkAlt className="w-3 h-3" />
-                      </Link>
-                    )}
+                    {typeof cert === "object" &&
+                      cert.link &&
+                      cert.link.trim() !== "" && (
+                        <Link
+                          href={cert.link}
+                          className='text-blue-600 hover:text-blue-800 transition-colors'
+                          target='_blank'
+                          rel='noopener noreferrer'
+                        >
+                          <FaExternalLinkAlt className='w-3 h-3' />
+                        </Link>
+                      )}
                   </div>
                 </li>
               ))}
@@ -745,14 +827,18 @@ const ClassicTemplate = ({
   if (!isClient) {
     return (
       <div className="w-full h-full bg-white p-4">
-        <div className="text-center mb-4">
+        <div className="text-center mb-1
+        
+        
+        
+        ">
           <h1 className="text-2xl font-bold text-gray-900">{resumeData.name}</h1>
           <p className="text-lg text-gray-700">{resumeData.position}</p>
         </div>
-        <div className="animate-pulse">
-          <div className="space-y-4">
+        <div className='animate-pulse'>
+          <div className='space-y-4'>
             {orderedSections.map((section) => (
-              <div key={section.id} className="h-16 bg-gray-200 rounded"></div>
+              <div key={section.id} className='h-16 bg-gray-200 rounded'></div>
             ))}
           </div>
         </div>
@@ -761,45 +847,48 @@ const ClassicTemplate = ({
   }
 
   return (
-    <div className="w-full h-full bg-white p-4">
+    <div className="w-full h-full bg-white p-0">
       {/* Professional Header */}
-      <div className="text-center mb-2 no-break">
+      <div className="text-center mb-0 no-break">
         <h1 className="name">{resumeData.name}</h1>
         <h2 className="profession">{resumeData.position}</h2>
         
         {/* Contact Information */}
-        <div className="flex justify-center items-center gap-4 contact mb-2">
+        <div className="flex justify-center items-center gap-2 contact mb-0">
           <div className="flex items-center gap-1">
             <MdPhone className="text-gray-500" />
             <span>{resumeData.contactInformation}</span>
           </div>
-          <div className="flex items-center gap-1">
-            <MdEmail className="text-gray-500" />
+          <div className='flex items-center gap-1'>
+            <MdEmail className='text-gray-500' />
             <span>{resumeData.email}</span>
           </div>
-          <div className="flex items-center gap-1">
-            <MdLocationOn className="text-gray-500" />
+          <div className='flex items-center gap-1'>
+            <MdLocationOn className='text-gray-500' />
             <span>{resumeData.address}</span>
           </div>
         </div>
-        
+
         {/* Social Media */}
         {resumeData.socialMedia.length > 0 && (
-          <div className="flex justify-center items-center gap-3 text-sm">
+          <div className='flex justify-center items-center gap-3 text-sm'>
             {resumeData.socialMedia.map((socialMedia, index) => {
-              const icon = icons.find(icon => icon.name === socialMedia.socialMedia.toLowerCase());
+              const icon = icons.find(
+                (icon) => icon.name === socialMedia.socialMedia.toLowerCase()
+              );
               return (
                 <Link
-                  href={`${socialMedia.socialMedia.toLowerCase() === "website" 
-                    ? "https://" 
-                    : socialMedia.socialMedia.toLowerCase() === "linkedin" 
-                    ? "https://www." 
-                    : "https://www."
+                  href={`${
+                    socialMedia.socialMedia.toLowerCase() === "website"
+                      ? "https://"
+                      : socialMedia.socialMedia.toLowerCase() === "linkedin"
+                        ? "https://www."
+                        : "https://www."
                   }${socialMedia.link}`}
                   key={index}
-                  className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 transition-colors"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  className='inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 transition-colors'
+                  target='_blank'
+                  rel='noopener noreferrer'
                 >
                   {icon && icon.icon}
                   <span>{socialMedia.link}</span>
@@ -817,7 +906,7 @@ const ClassicTemplate = ({
         onDragEnd={handleDragEnd}
       >
         <SortableContext
-          items={orderedSections.map(section => section.id)}
+          items={orderedSections.map((section) => section.id)}
           strategy={verticalListSortingStrategy}
         >
           {orderedSections.map((section) => (
@@ -843,63 +932,63 @@ const A4PageWrapper = ({ children }) => {
         const a4HeightPx = 1122.5;
         const marginsPx = (10 + 10) * 3.7795; // 10mm top + 10mm bottom converted to px
         const availableHeight = a4HeightPx - marginsPx;
-        
+
         // Get the actual content height
         const contentHeight = contentRef.current.scrollHeight;
-        
+
         // Check if content exceeds available space
         const overflow = contentHeight > availableHeight;
-        
+
         // A4 Height Check (console log removed)
-        
+
         setIsOverflowing(overflow);
       }
     };
 
     // Initial check with longer delay to ensure content is rendered
     const timeoutId = setTimeout(checkOverflow, 200);
-    
+
     // More frequent checks to catch content changes
     const intervalId = setInterval(checkOverflow, 500);
-    
+
     // Check on resize
-    window.addEventListener('resize', checkOverflow);
-    
+    window.addEventListener("resize", checkOverflow);
+
     // Enhanced mutation observer
     const observer = new MutationObserver(() => {
       setTimeout(checkOverflow, 100);
     });
-    
+
     if (contentRef.current) {
-      observer.observe(contentRef.current, { 
-        childList: true, 
-        subtree: true, 
+      observer.observe(contentRef.current, {
+        childList: true,
+        subtree: true,
         characterData: true,
         attributes: true,
         attributeOldValue: true,
-        characterDataOldValue: true
+        characterDataOldValue: true,
       });
     }
 
     return () => {
       clearTimeout(timeoutId);
       clearInterval(intervalId);
-      window.removeEventListener('resize', checkOverflow);
+      window.removeEventListener("resize", checkOverflow);
       observer.disconnect();
     };
   }, []);
 
   return (
-    <div className="w-full flex justify-center p-2 md:p-4 lg:p-6 print:p-0">
-      <div className={`a4-preview print:shadow-none print:rounded-none print:border-none print:p-0 ${isOverflowing ? 'overflow-content' : ''}`}>
+    <div className="w-full  flex justify-center p-2 md:p-4 lg:p-6 print:p-0">
+      <div className={`a4-preview lg:top-10 sm:top-14 top-10 print:shadow-none print:rounded-none print:border-none print:p-0 ${isOverflowing ? 'overflow-content' : ''}`}>
         <div 
           ref={contentRef}
-          className="preview-content w-full h-full bg-white text-black relative"
+          className='preview-content w-full h-full bg-white text-black relative'
         >
           {children}
           {isOverflowing && (
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-red-100 to-transparent h-8 pointer-events-none print:hidden">
-              <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 text-red-600 text-xs font-medium bg-red-100 px-2 py-1 rounded">
+            <div className='absolute bottom-0 left-0 right-0 bg-gradient-to-t from-red-100 to-transparent h-8 pointer-events-none print:hidden'>
+              <div className='absolute bottom-1 left-1/2 transform -translate-x-1/2 text-red-600 text-xs font-medium bg-red-100 px-2 py-1 rounded'>
                 Content will continue on next page
               </div>
             </div>

@@ -133,6 +133,7 @@ const WorkExperience = () => {
         size={resumeData.workExperience.length}
         add={addWorkExperience}
         remove={removeWorkExperience}
+        sectionName="work experience"
       />
     </div>
   );

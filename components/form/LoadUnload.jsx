@@ -33,8 +33,9 @@ const LoadUnload = () => {
     <div className="flex flex-wrap gap-4 mb-2 justify-center">
       <div className="inline-flex flex-row items-center gap-2">
         <h2 className="text-[1.2rem] text-white">Load Data</h2>
-        <label className="p-2 text-white bg-zinc-800 rounded cursor-pointer hover:bg-zinc-700 transition-colors">
+        <label className="tooltip p-2 text-white bg-zinc-800 rounded cursor-pointer hover:bg-zinc-700 transition-colors">
           <FaCloudUploadAlt className="text-[1.2rem] text-white" />
+          <span className="tooltiptext">Upload JSON file</span>
           <input
             aria-label="Load Data"
             type="file"
@@ -46,19 +47,22 @@ const LoadUnload = () => {
       </div>
       <div className="inline-flex flex-row items-center gap-2">
         <h2 className="text-[1.2rem] text-white">Save Data</h2>
-        <button
-          aria-label="Save Data"
-          className="p-2 text-white bg-zinc-800 rounded hover:bg-zinc-700 transition-colors"
-          onClick={(event) =>
-            handleDownload(
-              resumeData,
-              resumeData.name + " - Profocto.json",
-              event
-            )
-          }
-        >
-          <FaCloudDownloadAlt className="text-[1.2rem] text-white" />
-        </button>
+        <div className="tooltip">
+          <button
+            aria-label="Save Data"
+            className="p-2 text-white bg-zinc-800 rounded hover:bg-zinc-700 transition-colors"
+            onClick={(event) =>
+              handleDownload(
+                resumeData,
+                resumeData.name + " - Profocto.json",
+                event
+              )
+            }
+          >
+            <FaCloudDownloadAlt className="text-[1.2rem] text-white" />
+          </button>
+          <span className="tooltiptext">Download JSON file</span>
+        </div>
       </div>
     </div>
   );

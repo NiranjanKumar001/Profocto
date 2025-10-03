@@ -50,3 +50,6 @@ next-env.d.ts
 *OAUTH*.md
 *_SETUP.md
 SETUP.md
+
+# VS Code
+.vscode/

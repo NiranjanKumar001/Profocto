@@ -4,11 +4,17 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { v4 as uuidv4 } from "uuid";
 export default function BuilderRedirect() {
   const router = useRouter();
 
   useEffect(() => {
     const uniqueId = Math.random().toString(36).substring(2, 15);
+    // Generate a unique ID for the resume
+    const uniqueId = uuidv4();
     router.push(`/builder/${uniqueId}`);
   }, [router]);
 

@@ -1,0 +1,32 @@
+name: Auto Label Issues
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  label-issue:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      contents: read
+    
+    steps:
+      - name: Add hacktoberfest label to new issues
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            try {
+              await github.rest.issues.addLabels({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                labels: ['hacktoberfest']
+              });
+              
+              console.log(`✅ Added 'hacktoberfest' label to issue #${context.issue.number}`);
+            } catch (error) {
+              console.error(`❌ Error adding label: ${error.message}`);
+              core.setFailed(`Failed to add label: ${error.message}`);
+            }
