@@ -1,0 +1,10 @@
+{
+  "build": {
+    "env": {
+      "NEXT_PUBLIC_CONVEX_URL": "@next_public_convex_url"
+    }
+  },
+  "installCommand": "npm ci --legacy-peer-deps",
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next"
+}

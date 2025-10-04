@@ -256,6 +256,14 @@ This project is optimized for deployment on **Vercel**:
 4. Add your environment variables
 5. Deploy!
 
+### Vercel notes
+
+- If your repository contains multiple package-lock.json files or a nested app folder, set the **Root Directory** in Vercel to the inner `Profocto` folder (where `package.json` and `next.config.mjs` live).
+- Add the environment variables listed in `.env.example` to the Vercel Project → Settings → Environment Variables (do not commit secrets).
+- If Vercel fails due to peer dependency resolution, set the Install Command in Vercel to `npm ci --legacy-peer-deps` (this project used that locally during prototyping).
+
+After making these changes, trigger a redeploy from the Vercel dashboard.
+
 ## 🤝 Contributing
 
 We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
