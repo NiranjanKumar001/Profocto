@@ -44,9 +44,353 @@ import { CSS } from "@dnd-kit/utilities";
 import { ImGithub } from "react-icons/im";
 import { SiCodeforces, SiLeetcode } from "react-icons/si";
 
+// ----------------------------------------------------------------
+// NEW ModernSidebarTemplate COMPONENT (simulated import)
+// ----------------------------------------------------------------
+
+// Define the ModernSidebarTemplate component structure inline (as requested)
+const ModernSidebarTemplate = ({ data }) => {
+  const accentColor = '#2563eb'; // Blue accent color
+  
+  // Helper to safely get education data and format duration
+  const getEducation = () => {
+    return (data.education || []).map(edu => ({
+      ...edu,
+      duration: `${edu.startYear || ''} - ${edu.endYear || ''}`.trim().replace(" - ", " - ").replace(" -  - ", " - "),
+    }))
+  };
+
+  // Helper to safely get experience data and format duration
+  const getExperience = () => {
+    return (data.professionalExperience || []).map(exp => ({
+      ...exp,
+      duration: `${exp.startYear || ''} - ${exp.endYear || ''}`.trim().replace(" - ", " - ").replace(" -  - ", " - "),
+    }))
+  };
+
+  // Helper to safely get project data and format duration
+  const getProjects = () => {
+    return (data.projects || []).map(proj => ({
+      ...proj,
+      duration: `${proj.startYear || ''} - ${proj.endYear || ''}`.trim().replace(" - ", " - ").replace(" -  - ", " - "),
+    }))
+  };
+
+  // Helper to filter for technical skills (excluding Soft Skills)
+  const getTechnicalSkills = () => {
+    return (data.technicalSkills || []).filter(
+      (skill) => skill.title !== "Soft Skills" && skill.skills.length > 0
+    ).map(skill => ({
+      category: skill.title,
+      skills: skill.skills,
+    }));
+  };
+  
+  const getSoftSkills = () => {
+    return data.technicalSkills?.find(s => s.title === "Soft Skills")?.skills || [];
+  };
+
+
+  return (
+    <div className="w-full h-full bg-white flex" style={{ fontFamily: 'Inter, sans-serif' }}>
+      {/* Left Sidebar - 35% width */}
+      <div 
+        className="w-[35%] p-8 text-white flex flex-col no-break"
+        style={{ backgroundColor: accentColor, minHeight: '100%' }}
+      >
+        {/* Contact Information */}
+        <div className="mb-8">
+          <h2 className="text-sm font-semibold uppercase tracking-wider mb-4 border-b border-white/30 pb-2">
+            Contact
+          </h2>
+          <div className="space-y-3 text-sm">
+            {data.contactInformation && (
+              <div className="flex items-start gap-2">
+                <span className="mt-1">📞</span>
+                <span className="break-words">{data.contactInformation}</span>
+              </div>
+            )}
+            {data.email && (
+              <div className="flex items-start gap-2">
+                <span className="mt-1">✉️</span>
+                <span className="break-words">{data.email}</span>
+              </div>
+            )}
+            {data.address && (
+              <div className="flex items-start gap-2">
+                <span className="mt-1">📍</span>
+                <span className="break-words">{data.address}</span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Social Media */}
+        {data.socialMedia && data.socialMedia.length > 0 && (
+          <div className="mb-8">
+            <h2 className="text-sm font-semibold uppercase tracking-wider mb-4 border-b border-white/30 pb-2">
+              Links
+            </h2>
+            <div className="space-y-2 text-sm">
+              {data.socialMedia.map((social, index) => (
+                <div key={index} className="flex items-center gap-2">
+                  <span>🔗</span>
+                  <span className="break-all">{social.link}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Technical Skills */}
+        {getTechnicalSkills().length > 0 && data.enabledSections?.skills && (
+          <div className="mb-8">
+            <h2 className="text-sm font-semibold uppercase tracking-wider mb-4 border-b border-white/30 pb-2">
+              Technical Skills
+            </h2>
+            <div className="space-y-3">
+              {getTechnicalSkills().map((skillCategory, index) => (
+                <div key={index} className="text-sm">
+                  <div className="font-semibold mb-1">{skillCategory.category}</div>
+                  <div className="text-white/90 text-xs leading-relaxed">
+                    {skillCategory.skills.join(', ')}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+        
+        {/* Soft Skills */}
+        {getSoftSkills().length > 0 && data.enabledSections?.softSkills && (
+          <div className="mb-8">
+            <h2 className="text-sm font-semibold uppercase tracking-wider mb-4 border-b border-white/30 pb-2">
+              Soft Skills
+            </h2>
+            <div className="text-white/90 text-xs leading-relaxed">
+              {getSoftSkills().join(', ')}
+            </div>
+          </div>
+        )}
+
+        {/* Education */}
+        {data.education && data.education.length > 0 && data.enabledSections?.education && (
+          <div className="mb-8">
+            <h2 className="text-sm font-semibold uppercase tracking-wider mb-4 border-b border-white/30 pb-2">
+              Education
+            </h2>
+            <div className="space-y-4">
+              {getEducation().map((edu, index) => (
+                <div key={index} className="text-sm">
+                  <div className="font-semibold">{edu.school}</div>
+                  <div className="text-white/90 text-xs mt-1">{edu.degree}</div>
+                  <div className="text-white/80 text-xs mt-1">{edu.duration}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+        
+        {/* Languages */}
+        {data.languages && data.languages.length > 0 && data.enabledSections?.languages && (
+          <div className="mb-8">
+            <h2 className="text-sm font-semibold uppercase tracking-wider mb-4 border-b border-white/30 pb-2">
+              Languages
+            </h2>
+            <div className="text-white/90 text-xs leading-relaxed">
+              {data.languages.join(', ')}
+            </div>
+          </div>
+        )}
+
+      </div>
+
+      {/* Main Content Area - 65% width */}
+      <div className="w-[65%] p-8 bg-white text-gray-800">
+        {/* Header */}
+        <div className="mb-8 pb-6 border-b-2 no-break" style={{ borderColor: accentColor }}>
+          <h1 
+            className="text-4xl font-bold mb-2"
+            style={{ color: accentColor }}
+          >
+            {data.name || 'YOUR NAME'}
+          </h1>
+          <div className="text-xl text-gray-600 font-medium">
+            {data.position || 'Your Job Title'}
+          </div>
+        </div>
+
+        {/* Dynamic Content (respecting section order) */}
+        {data.sectionOrder.map((sectionId) => {
+          if (!data.enabledSections[sectionId]) return null;
+          
+          switch (sectionId) {
+            case 'summary':
+              return data.summary ? (
+                <div className="mb-8" key="summary">
+                  <h2 
+                    className="text-lg font-bold uppercase tracking-wide mb-3 flex items-center gap-2"
+                    style={{ color: accentColor }}
+                  >
+                    <div className="w-1 h-5 rounded" style={{ backgroundColor: accentColor }}></div>
+                    Professional Summary
+                  </h2>
+                  <p className="text-gray-700 text-sm leading-relaxed">
+                    {data.summary}
+                  </p>
+                </div>
+              ) : null;
+
+            case 'experience':
+              const experienceData = getExperience();
+              return experienceData.length > 0 ? (
+                <div className="mb-8" key="experience">
+                  <h2 
+                    className="text-lg font-bold uppercase tracking-wide mb-4 flex items-center gap-2"
+                    style={{ color: accentColor }}
+                  >
+                    <div className="w-1 h-5 rounded" style={{ backgroundColor: accentColor }}></div>
+                    Professional Experience
+                  </h2>
+                  <div className="space-y-5">
+                    {experienceData.map((exp, index) => (
+                      <div key={index} className="relative pl-4 border-l-2 border-gray-300">
+                        <div className="flex justify-between items-start mb-2">
+                          <div>
+                            <h3 className="font-bold text-gray-800">{exp.position}</h3>
+                            <div className="text-gray-600 text-sm font-medium">{exp.company}</div>
+                          </div>
+                          <div className="text-xs text-gray-500 whitespace-nowrap ml-4">
+                            {exp.duration}
+                          </div>
+                        </div>
+                        <p className="text-sm text-gray-700 leading-relaxed">
+                          {exp.description}
+                        </p>
+                        {typeof exp.keyAchievements === "string" && exp.keyAchievements.trim() && (
+                          <ul className="list-disc list-inside text-sm text-gray-700 leading-relaxed ml-4 mt-1">
+                            {exp.keyAchievements
+                              .split("\n")
+                              .filter(a => a.trim())
+                              .map((achievement, subIndex) => (
+                                <li key={subIndex}>{achievement}</li>
+                              ))}
+                          </ul>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : null;
+
+            case 'projects':
+              const projectData = getProjects();
+              return projectData.length > 0 ? (
+                <div className="mb-8" key="projects">
+                  <h2 
+                    className="text-lg font-bold uppercase tracking-wide mb-4 flex items-center gap-2"
+                    style={{ color: accentColor }}
+                  >
+                    <div className="w-1 h-5 rounded" style={{ backgroundColor: accentColor }}></div>
+                    Projects
+                  </h2>
+                  <div className="space-y-4">
+                    {projectData.map((project, index) => (
+                      <div key={index} className="relative pl-4 border-l-2 border-gray-300">
+                        <div className="flex justify-between items-start mb-2">
+                          <h3 className="font-bold text-gray-800">{project.name}</h3>
+                          <div className="text-xs text-gray-500 whitespace-nowrap ml-4">
+                            {project.duration}
+                          </div>
+                        </div>
+                        <p className="text-sm text-gray-700 leading-relaxed">
+                          {project.description}
+                        </p>
+                        {/* Assuming keyAchievements holds a comma-separated list of technologies for the badges, as inferred from the original template logic */}
+                        {typeof project.keyAchievements === "string" && project.keyAchievements.trim() && (
+                          <div className="mt-2 flex flex-wrap gap-2">
+                            {project.keyAchievements
+                              .split(',')
+                              .filter(tech => tech.trim())
+                              .map((tech, techIndex) => (
+                                <span
+                                  key={techIndex}
+                                  className="text-xs px-2 py-1 rounded text-white"
+                                  style={{ backgroundColor: accentColor }}
+                                >
+                                  {tech.trim()}
+                                </span>
+                              ))}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : null;
+              
+            case 'certifications':
+              return data.certifications.length > 0 ? (
+                <div className="mb-8" key="certifications">
+                  <h2 
+                    className="text-lg font-bold uppercase tracking-wide mb-4 flex items-center gap-2"
+                    style={{ color: accentColor }}
+                  >
+                    <div className="w-1 h-5 rounded" style={{ backgroundColor: accentColor }}></div>
+                    Certifications
+                  </h2>
+                  <ul className="list-disc list-inside text-sm text-gray-700 leading-relaxed ml-4">
+                    {data.certifications.map((cert, index) => (
+                      <li key={index} className='mb-1'>
+                        {cert.name || cert}
+                        {cert.issuer && <span className="text-gray-500"> - {cert.issuer}</span>}
+                        {cert.link && (
+                          <Link href={cert.link} target='_blank' rel='noopener noreferrer' className='text-xs text-blue-500 ml-2'>
+                            (Link)
+                          </Link>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null;
+
+            default:
+              // Sections like education, skills, softSkills, languages are handled in the sidebar
+              return null;
+          }
+        })}
+      </div>
+    </div>
+  );
+};
+
+// Wrapper to map ResumeContext data to ModernSidebarTemplate's expected props
+const ModernSidebarTemplateWrapper = ({ 
+  resumeData, 
+  sectionOrder, 
+  enabledSections 
+}) => {
+  // Pass all raw data and control state to the template
+  const dataForTemplate = {
+    ...resumeData,
+    sectionOrder: sectionOrder,
+    enabledSections: enabledSections,
+    // Note: We rename `skills` to `technicalSkills` in the internal template logic for clarity
+    technicalSkills: resumeData.skills,
+  };
+
+  return <ModernSidebarTemplate data={dataForTemplate} />;
+};
+// ----------------------------------------------------------------
+// END ModernSidebarTemplate COMPONENT
+// ----------------------------------------------------------------
+
+
 const Preview = () => {
   const { resumeData, setResumeData } = useContext(ResumeContext);
-  const [currentTemplate, setCurrentTemplate] = useState("template1");
+  // Setting default template to 'template1' as before
+  const [currentTemplate, setCurrentTemplate] = useState("template1"); 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isClient, setIsClient] = useState(false);
 
@@ -93,13 +437,20 @@ const Preview = () => {
     name: "Fancy Template",
     description: "New modern layout",
     icon: FaFileAlt,
-  },
-  {
+    },
+    {
     id: "template6",
     name: "Smart Template",
     description: "clean layout with divisions",
     icon: FaFileAlt,
-  },
+    },
+    // ADDED NEW TEMPLATE HERE
+    {
+      id: "template7", 
+      name: "Modern Sidebar", 
+      description: "Modern layout with left sidebar",
+      icon: FaTh, // Using a suitable icon
+    },
   ];
 
   const defaultSections = [
@@ -285,8 +636,8 @@ const Preview = () => {
   return (
     <div className='w-full h-screen sticky top-0 preview rm-padding-print overflow-y-auto bg-gray-50'>
       {/* Template Dropdown */}
-      <div className="absolute top-2   right-4 sm:right-6 z-50 exclude-print">
-        <div className="flex flex-row  gap-2 sm:gap-3">
+      <div className="absolute top-2   right-4 sm:right-6 z-50 exclude-print">
+        <div className="flex flex-row  gap-2 sm:gap-3">
           {/* Section Toggle Button */}
           <div className='relative' ref={toggleRef}>
             <button
@@ -476,7 +827,17 @@ const Preview = () => {
             setResumeData={setResumeData}
           />
         );
+      // ADDED NEW TEMPLATE CASE
+      case "template7":
+        return (
+          <ModernSidebarTemplateWrapper
+            resumeData={resumeData}
+            sectionOrder={sectionOrder}
+            enabledSections={enabledSections}
+          />
+        );
       default:
+        // Assuming TemplateFour is the default/fallback for unknown templates
         return (
           <TemplateFour
             resumeData={resumeData}
@@ -551,7 +912,7 @@ export const SortableItem = ({ id, children }) => {
       {...attributes}
       {...listeners}
       className={`mb-1
-         cursor-move ${isDragging ? "bg-gray-50 shadow-lg rounded p-2" : ""}`}
+          cursor-move ${isDragging ? "bg-gray-50 shadow-lg rounded p-2" : ""}`}
     >
       {children}
     </div>
@@ -651,7 +1012,7 @@ const ClassicTemplate = ({
             <h2 className='section-title border-b-2 border-gray-300 mb-1 text-gray-900'>
               {customSectionTitles.summary || "Professional Summary"}
             </h2>
-            <p className="content font-sans  text-black text-justify">{resumeData.summary}</p>
+            <p className="content font-sans  text-black text-justify">{resumeData.summary}</p>
           </div>
         );
 
@@ -665,7 +1026,7 @@ const ClassicTemplate = ({
               <div key={index} className="mb-1 flex justify-between items-start">
                 <div className="flex-1">
                   <h3 className="content font-semibold text-gray-900">{item.school}</h3>
-                  <p className="content font-sans  text-black">{item.degree}</p>
+                  <p className="content font-sans  text-black">{item.degree}</p>
                 </div>
                 <div className='ml-4 text-right'>
                   <DateRange
@@ -708,9 +1069,9 @@ const ClassicTemplate = ({
                         />
                       </div>
                     </div>
-                    <p className="content font-sans  text-black mb-1">{item.description}</p>
+                    <p className="content font-sans  text-black mb-1">{item.description}</p>
                     {typeof item.keyAchievements === "string" && item.keyAchievements.trim() && (
-                      <ul className="list-disc list-inside content font-sans  text-black ml-4">
+                      <ul className="list-disc list-inside content font-sans  text-black ml-4">
                         {item.keyAchievements
                           .split("\n")
                           .filter(achievement => achievement.trim())
@@ -774,9 +1135,9 @@ const ClassicTemplate = ({
                         />
                       </div>
                     </div>
-                    <p className="content font-sans  text-black mb-1">{item.description}</p>
+                    <p className="content font-sans  text-black mb-1">{item.description}</p>
                     {typeof item.keyAchievements === "string" && item.keyAchievements.trim() && (
-                      <ul className="list-disc list-inside content font-sans  text-black ml-4">
+                      <ul className="list-disc list-inside content font-sans  text-black ml-4">
                         {item.keyAchievements
                           .split("\n")
                           .filter(achievement => achievement.trim())
@@ -805,7 +1166,7 @@ const ClassicTemplate = ({
               .map((skill, index) => (
                 <div key={`SKILLS-${index}`} className="mb-1">
                   <h3 className="content i-bold text-gray-900 mb-1">{skill.title}</h3>
-                  <p className="content font-sans  text-black">{skill.skills.join(", ")}</p>
+                  <p className="content font-sans  text-black">{skill.skills.join(", ")}</p>
                 </div>
               ))}
           </div>
@@ -817,7 +1178,7 @@ const ClassicTemplate = ({
             <h2 className='section-title border-b-2 border-gray-300 mb-1 text-gray-900'>
               {customSectionTitles.softSkills || "Soft Skills"}
             </h2>
-            <p className="content font-sans  text-black">
+            <p className="content font-sans  text-black">
               {resumeData.skills.find(skill => skill.title === "Soft Skills")?.skills?.join(", ")}
             </p>
           </div>
@@ -829,7 +1190,7 @@ const ClassicTemplate = ({
             <h2 className='section-title border-b-2 border-gray-300 mb-1 text-gray-900'>
               {customSectionTitles.languages || "Languages"}
             </h2>
-            <p className="content font-sans  text-black">{resumeData.languages.join(", ")}</p>
+            <p className="content font-sans  text-black">{resumeData.languages.join(", ")}</p>
           </div>
         ) : null;
 
@@ -839,14 +1200,14 @@ const ClassicTemplate = ({
             <h2 className='section-title border-b-2 border-gray-300 mb-1 text-gray-900'>
               {customSectionTitles.certifications || "Certifications"}
             </h2>
-            <ul className="list-disc list-inside content font-sans  text-black">
+            <ul className="list-disc list-inside content font-sans  text-black">
               {resumeData.certifications.map((cert, index) => (
                 <li key={index} className='mb-1'>
                   <div className='flex items-center gap-2'>
                     <span>
                       {typeof cert === 'string' ? cert : cert.name}
                       {typeof cert === 'object' && cert.issuer && (
-                        <span className="font-sans  text-black"> - {cert.issuer}</span>
+                        <span className="font-sans  text-black"> - {cert.issuer}</span>
                       )}
                     </span>
                     {typeof cert === "object" &&
@@ -1025,7 +1386,7 @@ const A4PageWrapper = ({ children }) => {
   }, []);
 
   return (
-    <div className="w-full  flex justify-center p-2 md:p-4 lg:p-6 print:p-0">
+    <div className="w-full  flex justify-center p-2 md:p-4 lg:p-6 print:p-0">
       <div className={`a4-preview lg:top-10 sm:top-14 top-10 print:shadow-none print:rounded-none print:border-none print:p-0 ${isOverflowing ? 'overflow-content' : ''}`}>
         <div 
           ref={contentRef}
