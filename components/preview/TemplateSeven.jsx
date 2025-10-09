@@ -158,13 +158,14 @@ const TemplateSeven = ({
                   <p className={`${contentClass} ${sidebarClass} opacity-90 mt-1`}>
                     {item.degree}
                   </p>
-                  <p className={`text-xs ${sidebarClass} opacity-80 mt-1`}>
+                  {/* FIX for nested <p> error from line 161 (previous error) */}
+                  <span className={`text-xs ${sidebarClass} opacity-80 mt-1 block`}>
                     <DateRange
                       startYear={item.startYear}
                       endYear={item.endYear}
                       id={`education-${index}`}
                     />
-                  </p>
+                  </span>
                 </div>
               ))}
             </div>
@@ -196,13 +197,15 @@ const TemplateSeven = ({
                           </h3>
                         </div>
                         <div className="text-right ml-4">
-                          <p className="text-xs font-semibold text-gray-700">
+                          {/* FIX: Changed <p> to <span> to resolve the nested <p> error from line 201 */}
+                          <span className="text-xs font-semibold text-gray-700 block">
                             <DateRange
                               startYear={item.startYear}
                               endYear={item.endYear}
                               id={`work-experience-${index}`}
                             />
-                          </p>
+                          </span>
+                          {/* END FIX */}
                         </div>
                       </div>
                       <p className={`${contentClass} text-gray-700 leading-relaxed mb-2`}>
@@ -333,7 +336,7 @@ const TemplateSeven = ({
             <h2 className={titleClass}>
               {customSectionTitles.softSkills || "SOFT SKILLS"}
             </h2> 
-            {/* The error was here: changed </H2> to </h2> */}
+            {/* The error was here: changed </H2> to </h2> in the previous fix block, it's correct here */}
             <ul className={`list-disc list-inside ${contentClass} ${sidebarClass} opacity-90 space-y-1`}>
               {softSkillsData.map((skill, idx) => (
                 <li key={idx}>{skill}</li>
