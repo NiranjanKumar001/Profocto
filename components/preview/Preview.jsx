@@ -22,8 +22,11 @@ import { ResumeContext } from "../../contexts/ResumeContext";
 import TemplateTwo from "./TemplateTwo";
 import TemplateFour from "./TemplateFour"
 import TemplateFive from "./TemplateFive"
-
 import TemplateSix from "./TemplateSix"
+
+// Import the new TemplateSeven component
+import TemplateSeven from "./TemplateSeven"
+
 import { useSectionTitles } from "../../contexts/SectionTitleContext";
 import {
   DndContext,
@@ -44,353 +47,9 @@ import { CSS } from "@dnd-kit/utilities";
 import { ImGithub } from "react-icons/im";
 import { SiCodeforces, SiLeetcode } from "react-icons/si";
 
-// ----------------------------------------------------------------
-// NEW ModernSidebarTemplate COMPONENT (simulated import)
-// ----------------------------------------------------------------
-
-// Define the ModernSidebarTemplate component structure inline (as requested)
-const ModernSidebarTemplate = ({ data }) => {
-  const accentColor = '#2563eb'; // Blue accent color
-  
-  // Helper to safely get education data and format duration
-  const getEducation = () => {
-    return (data.education || []).map(edu => ({
-      ...edu,
-      duration: `${edu.startYear || ''} - ${edu.endYear || ''}`.trim().replace(" - ", " - ").replace(" -  - ", " - "),
-    }))
-  };
-
-  // Helper to safely get experience data and format duration
-  const getExperience = () => {
-    return (data.professionalExperience || []).map(exp => ({
-      ...exp,
-      duration: `${exp.startYear || ''} - ${exp.endYear || ''}`.trim().replace(" - ", " - ").replace(" -  - ", " - "),
-    }))
-  };
-
-  // Helper to safely get project data and format duration
-  const getProjects = () => {
-    return (data.projects || []).map(proj => ({
-      ...proj,
-      duration: `${proj.startYear || ''} - ${proj.endYear || ''}`.trim().replace(" - ", " - ").replace(" -  - ", " - "),
-    }))
-  };
-
-  // Helper to filter for technical skills (excluding Soft Skills)
-  const getTechnicalSkills = () => {
-    return (data.technicalSkills || []).filter(
-      (skill) => skill.title !== "Soft Skills" && skill.skills.length > 0
-    ).map(skill => ({
-      category: skill.title,
-      skills: skill.skills,
-    }));
-  };
-  
-  const getSoftSkills = () => {
-    return data.technicalSkills?.find(s => s.title === "Soft Skills")?.skills || [];
-  };
-
-
-  return (
-    <div className="w-full h-full bg-white flex" style={{ fontFamily: 'Inter, sans-serif' }}>
-      {/* Left Sidebar - 35% width */}
-      <div 
-        className="w-[35%] p-8 text-white flex flex-col no-break"
-        style={{ backgroundColor: accentColor, minHeight: '100%' }}
-      >
-        {/* Contact Information */}
-        <div className="mb-8">
-          <h2 className="text-sm font-semibold uppercase tracking-wider mb-4 border-b border-white/30 pb-2">
-            Contact
-          </h2>
-          <div className="space-y-3 text-sm">
-            {data.contactInformation && (
-              <div className="flex items-start gap-2">
-                <span className="mt-1">📞</span>
-                <span className="break-words">{data.contactInformation}</span>
-              </div>
-            )}
-            {data.email && (
-              <div className="flex items-start gap-2">
-                <span className="mt-1">✉️</span>
-                <span className="break-words">{data.email}</span>
-              </div>
-            )}
-            {data.address && (
-              <div className="flex items-start gap-2">
-                <span className="mt-1">📍</span>
-                <span className="break-words">{data.address}</span>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Social Media */}
-        {data.socialMedia && data.socialMedia.length > 0 && (
-          <div className="mb-8">
-            <h2 className="text-sm font-semibold uppercase tracking-wider mb-4 border-b border-white/30 pb-2">
-              Links
-            </h2>
-            <div className="space-y-2 text-sm">
-              {data.socialMedia.map((social, index) => (
-                <div key={index} className="flex items-center gap-2">
-                  <span>🔗</span>
-                  <span className="break-all">{social.link}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Technical Skills */}
-        {getTechnicalSkills().length > 0 && data.enabledSections?.skills && (
-          <div className="mb-8">
-            <h2 className="text-sm font-semibold uppercase tracking-wider mb-4 border-b border-white/30 pb-2">
-              Technical Skills
-            </h2>
-            <div className="space-y-3">
-              {getTechnicalSkills().map((skillCategory, index) => (
-                <div key={index} className="text-sm">
-                  <div className="font-semibold mb-1">{skillCategory.category}</div>
-                  <div className="text-white/90 text-xs leading-relaxed">
-                    {skillCategory.skills.join(', ')}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-        
-        {/* Soft Skills */}
-        {getSoftSkills().length > 0 && data.enabledSections?.softSkills && (
-          <div className="mb-8">
-            <h2 className="text-sm font-semibold uppercase tracking-wider mb-4 border-b border-white/30 pb-2">
-              Soft Skills
-            </h2>
-            <div className="text-white/90 text-xs leading-relaxed">
-              {getSoftSkills().join(', ')}
-            </div>
-          </div>
-        )}
-
-        {/* Education */}
-        {data.education && data.education.length > 0 && data.enabledSections?.education && (
-          <div className="mb-8">
-            <h2 className="text-sm font-semibold uppercase tracking-wider mb-4 border-b border-white/30 pb-2">
-              Education
-            </h2>
-            <div className="space-y-4">
-              {getEducation().map((edu, index) => (
-                <div key={index} className="text-sm">
-                  <div className="font-semibold">{edu.school}</div>
-                  <div className="text-white/90 text-xs mt-1">{edu.degree}</div>
-                  <div className="text-white/80 text-xs mt-1">{edu.duration}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-        
-        {/* Languages */}
-        {data.languages && data.languages.length > 0 && data.enabledSections?.languages && (
-          <div className="mb-8">
-            <h2 className="text-sm font-semibold uppercase tracking-wider mb-4 border-b border-white/30 pb-2">
-              Languages
-            </h2>
-            <div className="text-white/90 text-xs leading-relaxed">
-              {data.languages.join(', ')}
-            </div>
-          </div>
-        )}
-
-      </div>
-
-      {/* Main Content Area - 65% width */}
-      <div className="w-[65%] p-8 bg-white text-gray-800">
-        {/* Header */}
-        <div className="mb-8 pb-6 border-b-2 no-break" style={{ borderColor: accentColor }}>
-          <h1 
-            className="text-4xl font-bold mb-2"
-            style={{ color: accentColor }}
-          >
-            {data.name || 'YOUR NAME'}
-          </h1>
-          <div className="text-xl text-gray-600 font-medium">
-            {data.position || 'Your Job Title'}
-          </div>
-        </div>
-
-        {/* Dynamic Content (respecting section order) */}
-        {data.sectionOrder.map((sectionId) => {
-          if (!data.enabledSections[sectionId]) return null;
-          
-          switch (sectionId) {
-            case 'summary':
-              return data.summary ? (
-                <div className="mb-8" key="summary">
-                  <h2 
-                    className="text-lg font-bold uppercase tracking-wide mb-3 flex items-center gap-2"
-                    style={{ color: accentColor }}
-                  >
-                    <div className="w-1 h-5 rounded" style={{ backgroundColor: accentColor }}></div>
-                    Professional Summary
-                  </h2>
-                  <p className="text-gray-700 text-sm leading-relaxed">
-                    {data.summary}
-                  </p>
-                </div>
-              ) : null;
-
-            case 'experience':
-              const experienceData = getExperience();
-              return experienceData.length > 0 ? (
-                <div className="mb-8" key="experience">
-                  <h2 
-                    className="text-lg font-bold uppercase tracking-wide mb-4 flex items-center gap-2"
-                    style={{ color: accentColor }}
-                  >
-                    <div className="w-1 h-5 rounded" style={{ backgroundColor: accentColor }}></div>
-                    Professional Experience
-                  </h2>
-                  <div className="space-y-5">
-                    {experienceData.map((exp, index) => (
-                      <div key={index} className="relative pl-4 border-l-2 border-gray-300">
-                        <div className="flex justify-between items-start mb-2">
-                          <div>
-                            <h3 className="font-bold text-gray-800">{exp.position}</h3>
-                            <div className="text-gray-600 text-sm font-medium">{exp.company}</div>
-                          </div>
-                          <div className="text-xs text-gray-500 whitespace-nowrap ml-4">
-                            {exp.duration}
-                          </div>
-                        </div>
-                        <p className="text-sm text-gray-700 leading-relaxed">
-                          {exp.description}
-                        </p>
-                        {typeof exp.keyAchievements === "string" && exp.keyAchievements.trim() && (
-                          <ul className="list-disc list-inside text-sm text-gray-700 leading-relaxed ml-4 mt-1">
-                            {exp.keyAchievements
-                              .split("\n")
-                              .filter(a => a.trim())
-                              .map((achievement, subIndex) => (
-                                <li key={subIndex}>{achievement}</li>
-                              ))}
-                          </ul>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ) : null;
-
-            case 'projects':
-              const projectData = getProjects();
-              return projectData.length > 0 ? (
-                <div className="mb-8" key="projects">
-                  <h2 
-                    className="text-lg font-bold uppercase tracking-wide mb-4 flex items-center gap-2"
-                    style={{ color: accentColor }}
-                  >
-                    <div className="w-1 h-5 rounded" style={{ backgroundColor: accentColor }}></div>
-                    Projects
-                  </h2>
-                  <div className="space-y-4">
-                    {projectData.map((project, index) => (
-                      <div key={index} className="relative pl-4 border-l-2 border-gray-300">
-                        <div className="flex justify-between items-start mb-2">
-                          <h3 className="font-bold text-gray-800">{project.name}</h3>
-                          <div className="text-xs text-gray-500 whitespace-nowrap ml-4">
-                            {project.duration}
-                          </div>
-                        </div>
-                        <p className="text-sm text-gray-700 leading-relaxed">
-                          {project.description}
-                        </p>
-                        {/* Assuming keyAchievements holds a comma-separated list of technologies for the badges, as inferred from the original template logic */}
-                        {typeof project.keyAchievements === "string" && project.keyAchievements.trim() && (
-                          <div className="mt-2 flex flex-wrap gap-2">
-                            {project.keyAchievements
-                              .split(',')
-                              .filter(tech => tech.trim())
-                              .map((tech, techIndex) => (
-                                <span
-                                  key={techIndex}
-                                  className="text-xs px-2 py-1 rounded text-white"
-                                  style={{ backgroundColor: accentColor }}
-                                >
-                                  {tech.trim()}
-                                </span>
-                              ))}
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ) : null;
-              
-            case 'certifications':
-              return data.certifications.length > 0 ? (
-                <div className="mb-8" key="certifications">
-                  <h2 
-                    className="text-lg font-bold uppercase tracking-wide mb-4 flex items-center gap-2"
-                    style={{ color: accentColor }}
-                  >
-                    <div className="w-1 h-5 rounded" style={{ backgroundColor: accentColor }}></div>
-                    Certifications
-                  </h2>
-                  <ul className="list-disc list-inside text-sm text-gray-700 leading-relaxed ml-4">
-                    {data.certifications.map((cert, index) => (
-                      <li key={index} className='mb-1'>
-                        {cert.name || cert}
-                        {cert.issuer && <span className="text-gray-500"> - {cert.issuer}</span>}
-                        {cert.link && (
-                          <Link href={cert.link} target='_blank' rel='noopener noreferrer' className='text-xs text-blue-500 ml-2'>
-                            (Link)
-                          </Link>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ) : null;
-
-            default:
-              // Sections like education, skills, softSkills, languages are handled in the sidebar
-              return null;
-          }
-        })}
-      </div>
-    </div>
-  );
-};
-
-// Wrapper to map ResumeContext data to ModernSidebarTemplate's expected props
-const ModernSidebarTemplateWrapper = ({ 
-  resumeData, 
-  sectionOrder, 
-  enabledSections 
-}) => {
-  // Pass all raw data and control state to the template
-  const dataForTemplate = {
-    ...resumeData,
-    sectionOrder: sectionOrder,
-    enabledSections: enabledSections,
-    // Note: We rename `skills` to `technicalSkills` in the internal template logic for clarity
-    technicalSkills: resumeData.skills,
-  };
-
-  return <ModernSidebarTemplate data={dataForTemplate} />;
-};
-// ----------------------------------------------------------------
-// END ModernSidebarTemplate COMPONENT
-// ----------------------------------------------------------------
-
-
 const Preview = () => {
   const { resumeData, setResumeData } = useContext(ResumeContext);
-  // Setting default template to 'template1' as before
-  const [currentTemplate, setCurrentTemplate] = useState("template1"); 
+  const [currentTemplate, setCurrentTemplate] = useState("template1");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isClient, setIsClient] = useState(false);
 
@@ -412,7 +71,7 @@ const Preview = () => {
     }
   }, [currentTemplate, isClient]);
 
-  // Available templates
+  // Available templates (TemplateSeven added here)
   const templates = [
     {
       id: "template1",
@@ -433,23 +92,23 @@ const Preview = () => {
       icon: FaTh,
     },
     {
-    id: "template5",
-    name: "Fancy Template",
-    description: "New modern layout",
-    icon: FaFileAlt,
+      id: "template5",
+      name: "Fancy Template",
+      description: "New modern layout",
+      icon: FaFileAlt,
     },
     {
-    id: "template6",
-    name: "Smart Template",
-    description: "clean layout with divisions",
-    icon: FaFileAlt,
+      id: "template6",
+      name: "Smart Template",
+      description: "clean layout with divisions",
+      icon: FaFileAlt,
     },
-    // ADDED NEW TEMPLATE HERE
+    // ADDED TEMPLATESEVEN
     {
-      id: "template7", 
-      name: "Modern Sidebar", 
-      description: "Modern layout with left sidebar",
-      icon: FaTh, // Using a suitable icon
+      id: "template7",
+      name: "Sidebar Template",
+      description: "Two-column professional layout",
+      icon: FaTh,
     },
   ];
 
@@ -764,94 +423,97 @@ const Preview = () => {
         </div>
       </div>
       <A4PageWrapper>
-  {(() => {
-    switch (currentTemplate) {
-      case "template1":
-        return (
-          <ClassicTemplate
-            resumeData={resumeData}
-            sectionOrder={sectionOrder}
-            enabledSections={enabledSections}
-            handleDragEnd={handleDragEnd}
-            sensors={sensors}
-            icons={icons}
-            setResumeData={setResumeData}
-          />
-        );
-      case "template2":
-        return (
-          <TemplateTwo
-            namedata={resumeData.name}
-            positionData={resumeData.position}
-            contactData={resumeData.contactInformation}
-            emailData={resumeData.email}
-            addressData={resumeData.address}
-            telIcon={<MdPhone />}
-            emailIcon={<MdEmail />}
-            addressIcon={<MdLocationOn />}
-            summaryData={resumeData.summary}
-            educationData={resumeData.education}
-            projectsData={resumeData.projects}
-            workExperienceData={resumeData.workExperience}
-            skillsData={resumeData.skills}
-            languagesData={resumeData.languages}
-            certificationsData={resumeData.certifications}
-            sectionOrder={sectionOrder}
-            enabledSections={enabledSections}
-            onDragEnd={onDragEnd}
-            resumeData={resumeData}
-            setResumeData={setResumeData}
-          />
-        );
-      case "template5":
-        return (
-          <TemplateFive
-            resumeData={resumeData}
-            sectionOrder={sectionOrder}
-            enabledSections={enabledSections}
-            handleDragEnd={handleDragEnd}
-            sensors={sensors}
-            icons={icons}
-            setResumeData={setResumeData}
-          />
-        );
-      case "template6":
-        return (
-          <TemplateSix
-            resumeData={resumeData}
-            sectionOrder={sectionOrder}
-            enabledSections={enabledSections}
-            handleDragEnd={handleDragEnd}
-            sensors={sensors}
-            icons={icons}
-            setResumeData={setResumeData}
-          />
-        );
-      // ADDED NEW TEMPLATE CASE
-      case "template7":
-        return (
-          <ModernSidebarTemplateWrapper
-            resumeData={resumeData}
-            sectionOrder={sectionOrder}
-            enabledSections={enabledSections}
-          />
-        );
-      default:
-        // Assuming TemplateFour is the default/fallback for unknown templates
-        return (
-          <TemplateFour
-            resumeData={resumeData}
-            sectionOrder={sectionOrder}
-            enabledSections={enabledSections}
-            handleDragEnd={handleDragEnd}
-            sensors={sensors}
-            icons={icons}
-            setResumeData={setResumeData}
-          />
-        );
-    }
-  })()}
-</A4PageWrapper>
+        {(() => {
+          switch (currentTemplate) {
+            case "template1":
+              return (
+                <ClassicTemplate
+                  resumeData={resumeData}
+                  sectionOrder={sectionOrder}
+                  enabledSections={enabledSections}
+                  handleDragEnd={handleDragEnd}
+                  sensors={sensors}
+                  icons={icons}
+                  setResumeData={setResumeData}
+                />
+              );
+            case "template2":
+              return (
+                <TemplateTwo
+                  namedata={resumeData.name}
+                  positionData={resumeData.position}
+                  contactData={resumeData.contactInformation}
+                  emailData={resumeData.email}
+                  addressData={resumeData.address}
+                  telIcon={<MdPhone />}
+                  emailIcon={<MdEmail />}
+                  addressIcon={<MdLocationOn />}
+                  summaryData={resumeData.summary}
+                  educationData={resumeData.education}
+                  projectsData={resumeData.projects}
+                  workExperienceData={resumeData.workExperience}
+                  skillsData={resumeData.skills}
+                  languagesData={resumeData.languages}
+                  certificationsData={resumeData.certifications}
+                  sectionOrder={sectionOrder}
+                  enabledSections={enabledSections}
+                  onDragEnd={onDragEnd}
+                  resumeData={resumeData}
+                  setResumeData={setResumeData}
+                />
+              );
+            case "template5":
+              return (
+                <TemplateFive
+                  resumeData={resumeData}
+                  sectionOrder={sectionOrder}
+                  enabledSections={enabledSections}
+                  handleDragEnd={handleDragEnd}
+                  sensors={sensors}
+                  icons={icons}
+                  setResumeData={setResumeData}
+                />
+              );
+            case "template6":
+              return (
+                <TemplateSix
+                  resumeData={resumeData}
+                  sectionOrder={sectionOrder}
+                  enabledSections={enabledSections}
+                  handleDragEnd={handleDragEnd}
+                  sensors={sensors}
+                  icons={icons}
+                  setResumeData={setResumeData}
+                />
+              );
+            // ADDED TEMPLATESEVEN CASE BLOCK
+            case "template7":
+              return (
+                <TemplateSeven
+                  resumeData={resumeData}
+                  sectionOrder={sectionOrder}
+                  enabledSections={enabledSections}
+                  handleDragEnd={handleDragEnd}
+                  sensors={sensors}
+                  icons={icons}
+                  setResumeData={setResumeData}
+                />
+              );
+            default:
+              return (
+                <TemplateFour
+                  resumeData={resumeData}
+                  sectionOrder={sectionOrder}
+                  enabledSections={enabledSections}
+                  handleDragEnd={handleDragEnd}
+                  sensors={sensors}
+                  icons={icons}
+                  setResumeData={setResumeData}
+                />
+              );
+          }
+        })()}
+      </A4PageWrapper>
 
 
     </div>
@@ -1293,8 +955,8 @@ const ClassicTemplate = ({
                     socialMedia.socialMedia.toLowerCase() === "website"
                       ? "https://"
                       : socialMedia.socialMedia.toLowerCase() === "linkedin"
-                        ? "https://www."
-                        : "https://www."
+                      ? "https://www."
+                      : "https://www."
                   }${socialMedia.link}`}
                   key={index}
                   className='inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 transition-colors'
