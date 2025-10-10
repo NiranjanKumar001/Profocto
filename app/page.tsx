@@ -6,7 +6,15 @@ import SEOContent from '@/components/seo/SEOContent';
 export default function Home() {
   return (
     <>
-      <Suspense fallback={<div className="w-full h-screen bg-black" />}>
+      <Suspense fallback={
+        <div 
+          role="status" 
+          aria-live="polite" 
+          className="w-full h-screen bg-black flex items-center justify-center"
+        >
+          <span className="sr-only">Loading...</span>
+        </div>
+      }>
         <Hero />
       </Suspense>
       
