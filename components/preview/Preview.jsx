@@ -13,17 +13,25 @@ import {
   FaEyeSlash,
   FaHackerrank,
 } from "react-icons/fa";
-import { MdEmail, MdLocationOn, MdPhone } from "react-icons/md";
 import { CgWebsite } from "react-icons/cg";
 import DateRange from "../utility/DateRange";
 import Link from "next/link";
 import React, { useContext, useState, useEffect, useRef } from "react";
 import { ResumeContext } from "../../contexts/ResumeContext";
 import TemplateTwo from "./TemplateTwo";
+import TemplateThree from "./TemplateThree";
 import TemplateFour from "./TemplateFour"
 import TemplateFive from "./TemplateFive"
-
 import TemplateSix from "./TemplateSix"
+import TemplateSeven from "./TemplateSeven"
+import TemplateEight from "./TemplateEight"
+import TemplateNine from "./TemplateNine"
+import TemplateTen from "./TemplateTen"
+import TemplateEleven from "./TemplateEleven"
+import TemplateTwelve from "./TemplateTwelve"
+import TemplateThirteen from "./TemplateThirteen"
+import TemplateFourteen from "./TemplateFourteen"
+import TemplateFifteen from "./TemplateFifteen"
 import { useSectionTitles } from "../../contexts/SectionTitleContext";
 import {
   DndContext,
@@ -43,6 +51,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { ImGithub } from "react-icons/im";
 import { SiCodeforces, SiLeetcode } from "react-icons/si";
+import { MdEmail, MdLocationOn, MdPhone } from "react-icons/md";
 
 const Preview = () => {
   const { resumeData, setResumeData } = useContext(ResumeContext);
@@ -84,9 +93,15 @@ const Preview = () => {
     },
     {
       id: "template3",
-      name: "Classic Template II",
-      description: "Clean and ATS friendly",
+      name: "Blue Sidebar Template",
+      description: "Modern with colored sidebar",
       icon: FaTh,
+    },
+    {
+      id: "template4",
+      name: "Professional Template",
+      description: "Classic professional layout",
+      icon: FaFileAlt,
     },
     {
     id: "template5",
@@ -99,6 +114,60 @@ const Preview = () => {
     name: "Smart Template",
     description: "clean layout with divisions",
     icon: FaFileAlt,
+  },
+  {
+    id: "template7",
+    name: "Minimalist Professional",
+    description: "Clean, ATS-friendly design",
+    icon: FaFileAlt,
+  },
+  {
+    id: "template8",
+    name: "Creative Modern",
+    description: "Colorful, eye-catching layout",
+    icon: FaTh,
+  },
+  {
+    id: "template9",
+    name: "Executive Professional",
+    description: "Sophisticated senior-level design",
+    icon: FaFileAlt,
+  },
+  {
+    id: "template10",
+    name: "Tech Developer",
+    description: "Code-inspired terminal style",
+    icon: FaTh,
+  },
+  {
+    id: "template11",
+    name: "Academic CV",
+    description: "Traditional academic format",
+    icon: FaFileAlt,
+  },
+  {
+    id: "template12",
+    name: "Creative Portfolio",
+    description: "Bold artistic design",
+    icon: FaTh,
+  },
+  {
+    id: "template13",
+    name: "Startup Founder",
+    description: "Dynamic entrepreneurial style",
+    icon: FaTh,
+  },
+  {
+    id: "template14",
+    name: "Compact One-Page",
+    description: "Space efficient layout",
+    icon: FaFileAlt,
+  },
+  {
+    id: "template15",
+    name: "Modern Gradient",
+    description: "Sleek contemporary design",
+    icon: FaTh,
   },
   ];
 
@@ -452,6 +521,35 @@ const Preview = () => {
             setResumeData={setResumeData}
           />
         );
+      case "template2":
+        return (
+          <TemplateTwo
+            namedata={resumeData.name}
+            resumeData={resumeData}
+            sectionOrder={sectionOrder}
+            enabledSections={enabledSections}
+            handleDragEnd={handleDragEnd}
+            sensors={sensors}
+            icons={icons}
+            setResumeData={setResumeData}
+          />
+        );
+      case "template3":
+        return (
+          <TemplateThree />
+        );
+      case "template4":
+        return (
+          <TemplateFour
+            resumeData={resumeData}
+            sectionOrder={sectionOrder}
+            enabledSections={enabledSections}
+            handleDragEnd={handleDragEnd}
+            sensors={sensors}
+            icons={icons}
+            setResumeData={setResumeData}
+          />
+        );
       case "template5":
         return (
           <TemplateFive
@@ -474,6 +572,87 @@ const Preview = () => {
             sensors={sensors}
             icons={icons}
             setResumeData={setResumeData}
+          />
+        );
+      case "template7":
+        return (
+          <TemplateSeven
+            resumeData={resumeData}
+            sectionOrder={sectionOrder}
+            enabledSections={enabledSections}
+            icons={icons}
+          />
+        );
+      case "template8":
+        return (
+          <TemplateEight
+            resumeData={resumeData}
+            sectionOrder={sectionOrder}
+            enabledSections={enabledSections}
+            icons={icons}
+          />
+        );
+      case "template9":
+        return (
+          <TemplateNine
+            resumeData={resumeData}
+            sectionOrder={sectionOrder}
+            enabledSections={enabledSections}
+            icons={icons}
+          />
+        );
+      case "template10":
+        return (
+          <TemplateTen
+            resumeData={resumeData}
+            sectionOrder={sectionOrder}
+            enabledSections={enabledSections}
+            icons={icons}
+          />
+        );
+      case "template11":
+        return (
+          <TemplateEleven
+            resumeData={resumeData}
+            sectionOrder={sectionOrder}
+            enabledSections={enabledSections}
+            icons={icons}
+          />
+        );
+      case "template12":
+        return (
+          <TemplateTwelve
+            resumeData={resumeData}
+            sectionOrder={sectionOrder}
+            enabledSections={enabledSections}
+            icons={icons}
+          />
+        );
+      case "template13":
+        return (
+          <TemplateThirteen
+            resumeData={resumeData}
+            sectionOrder={sectionOrder}
+            enabledSections={enabledSections}
+            icons={icons}
+          />
+        );
+      case "template14":
+        return (
+          <TemplateFourteen
+            resumeData={resumeData}
+            sectionOrder={sectionOrder}
+            enabledSections={enabledSections}
+            icons={icons}
+          />
+        );
+      case "template15":
+        return (
+          <TemplateFifteen
+            resumeData={resumeData}
+            sectionOrder={sectionOrder}
+            enabledSections={enabledSections}
+            icons={icons}
           />
         );
       default:

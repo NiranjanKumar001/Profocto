@@ -56,14 +56,134 @@ const templates = [
   },
   {
     id: 5,
-    name: "Minimal Classic",
+    name: "Fancy Template",
     image: "/assets/resume.jpg",
-    description: "Simple, elegant, and professional layout",
+    description: "New modern layout with elegant design",
+    style: "modern",
+    features: [
+      "Modern aesthetics",
+      "Clean sections",
+      "Professional look"
+    ]
+  },
+  {
+    id: 6,
+    name: "Smart Template",
+    image: "/assets/resume.jpg",
+    description: "Clean layout with clear divisions",
     style: "minimal",
     features: [
-      "Clean typography",
-      "Perfect spacing",
-      "Traditional structure"
+      "Organized sections",
+      "Easy to read",
+      "Professional format"
+    ]
+  },
+  {
+    id: 7,
+    name: "Minimalist Professional",
+    image: "/assets/resume.jpg",
+    description: "Clean, ATS-friendly design perfect for corporate roles",
+    style: "minimal",
+    features: [
+      "ATS-optimized format",
+      "Black and white design",
+      "Excellent readability"
+    ]
+  },
+  {
+    id: 8,
+    name: "Creative Modern",
+    image: "/assets/resume.jpg",
+    description: "Colorful, eye-catching layout for creative industries",
+    style: "modern",
+    features: [
+      "Gradient header design",
+      "Card-based sections",
+      "Modern UI elements"
+    ]
+  },
+  {
+    id: 9,
+    name: "Executive Professional",
+    image: "/assets/resume.jpg",
+    description: "Sophisticated design for senior-level positions",
+    style: "professional",
+    features: [
+      "Bold headers",
+      "Leadership focused",
+      "Executive presence"
+    ]
+  },
+  {
+    id: 10,
+    name: "Tech Developer",
+    image: "/assets/resume.jpg",
+    description: "Code-inspired terminal style for developers",
+    style: "technical",
+    features: [
+      "Terminal aesthetics",
+      "Monospace fonts",
+      "Developer friendly"
+    ]
+  },
+  {
+    id: 11,
+    name: "Academic CV",
+    image: "/assets/resume.jpg",
+    description: "Traditional academic format for researchers",
+    style: "academic",
+    features: [
+      "Serif typography",
+      "Formal structure",
+      "Research focused"
+    ]
+  },
+  {
+    id: 12,
+    name: "Creative Portfolio",
+    image: "/assets/resume.jpg",
+    description: "Bold artistic design for creative professionals",
+    style: "creative",
+    features: [
+      "Vibrant gradients",
+      "Artistic flair",
+      "Portfolio showcase"
+    ]
+  },
+  {
+    id: 13,
+    name: "Startup Founder",
+    image: "/assets/resume.jpg",
+    description: "Dynamic entrepreneurial style for innovators",
+    style: "modern",
+    features: [
+      "Energetic design",
+      "Innovation focused",
+      "Startup culture"
+    ]
+  },
+  {
+    id: 14,
+    name: "Compact One-Page",
+    image: "/assets/resume.jpg",
+    description: "Space-efficient layout for concise resumes",
+    style: "minimal",
+    features: [
+      "Two-column layout",
+      "Space optimized",
+      "One-page format"
+    ]
+  },
+  {
+    id: 15,
+    name: "Modern Gradient",
+    image: "/assets/resume.jpg",
+    description: "Sleek contemporary design with smooth gradients",
+    style: "modern",
+    features: [
+      "Gradient accents",
+      "Contemporary style",
+      "Professional polish"
     ]
   }
 ];
