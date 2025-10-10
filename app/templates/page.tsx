@@ -101,6 +101,90 @@ const templates = [
       "Card-based sections",
       "Modern UI elements"
     ]
+  },
+  {
+    id: 9,
+    name: "Executive Professional",
+    image: "/assets/resume.jpg",
+    description: "Sophisticated design for senior-level positions",
+    style: "professional",
+    features: [
+      "Bold headers",
+      "Leadership focused",
+      "Executive presence"
+    ]
+  },
+  {
+    id: 10,
+    name: "Tech Developer",
+    image: "/assets/resume.jpg",
+    description: "Code-inspired terminal style for developers",
+    style: "technical",
+    features: [
+      "Terminal aesthetics",
+      "Monospace fonts",
+      "Developer friendly"
+    ]
+  },
+  {
+    id: 11,
+    name: "Academic CV",
+    image: "/assets/resume.jpg",
+    description: "Traditional academic format for researchers",
+    style: "academic",
+    features: [
+      "Serif typography",
+      "Formal structure",
+      "Research focused"
+    ]
+  },
+  {
+    id: 12,
+    name: "Creative Portfolio",
+    image: "/assets/resume.jpg",
+    description: "Bold artistic design for creative professionals",
+    style: "creative",
+    features: [
+      "Vibrant gradients",
+      "Artistic flair",
+      "Portfolio showcase"
+    ]
+  },
+  {
+    id: 13,
+    name: "Startup Founder",
+    image: "/assets/resume.jpg",
+    description: "Dynamic entrepreneurial style for innovators",
+    style: "modern",
+    features: [
+      "Energetic design",
+      "Innovation focused",
+      "Startup culture"
+    ]
+  },
+  {
+    id: 14,
+    name: "Compact One-Page",
+    image: "/assets/resume.jpg",
+    description: "Space-efficient layout for concise resumes",
+    style: "minimal",
+    features: [
+      "Two-column layout",
+      "Space optimized",
+      "One-page format"
+    ]
+  },
+  {
+    id: 15,
+    name: "Modern Gradient",
+    image: "/assets/resume.jpg",
+    description: "Sleek contemporary design with smooth gradients",
+    style: "modern",
+    features: [
+      "Gradient accents",
+      "Contemporary style",
+      "Professional polish"
+    ]
   }
 ];
 
