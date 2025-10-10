@@ -93,8 +93,17 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <StructuredData />
       </head>
       <body suppressHydrationWarning={true}>
+        {/* Skip to content link for keyboard navigation */}
+        <a 
+          href="#main-content" 
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-pink-500 focus:text-white focus:rounded"
+        >
+          Skip to content
+        </a>
         <AuthProvider>
-          {children}
+          <main id="main-content">
+            {children}
+          </main>
         </AuthProvider>
         <Toaster position="bottom-center" /> 
       </body>
