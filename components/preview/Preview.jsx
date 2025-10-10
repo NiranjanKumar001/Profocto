@@ -111,6 +111,7 @@ const Preview = () => {
     "softSkills",
     "languages",
     "certifications",
+    "awards",
   ];
 
   const sectionLabels = {
@@ -122,6 +123,7 @@ const Preview = () => {
     softSkills: "Soft Skills",
     languages: "Languages",
     certifications: "Certifications",
+    awards: "Awards and Recognition",
   };
 
   const [sectionOrder, setSectionOrder] = useState(defaultSections);
@@ -637,6 +639,11 @@ const ClassicTemplate = ({
       title: "Certifications",
       content: resumeData.certifications,
     },
+    {
+      id: "awards",
+      title: "Awards and Recognition",
+      content: resumeData.awards, // Assumes awards data is in resumeData.awards
+    },
   ];
 
   const orderedSections = sectionOrder
@@ -861,6 +868,41 @@ const ClassicTemplate = ({
                           <FaExternalLinkAlt className='w-3 h-3' />
                         </Link>
                       )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null;
+        case "awards":
+        return resumeData.awards && resumeData.awards.length > 0 ? (
+          <div>
+            <h2 className='section-title border-b-2 border-gray-300 mb-1 text-gray-900'>
+              {customSectionTitles.awards || "Awards and Recognition"}
+            </h2>
+            <ul className="list-disc list-inside content font-sans  text-black">
+              {resumeData.awards.map((award, index) => (
+                <li key={index} className='mb-1'>
+                  <div className='flex items-center gap-2'>
+                    <span>
+                      <span className='font-semibold'>{award.name}</span>
+                      {award.issuer && (
+                        <span className="font-sans text-black"> - {award.issuer}</span>
+                      )}
+                      {award.year && (
+                        <span className="font-sans text-gray-600"> ({award.year})</span>
+                      )}
+                    </span>
+                    {award.link && award.link.trim() !== "" && (
+                      <Link
+                        href={award.link}
+                        className='text-blue-600 hover:text-blue-800 transition-colors'
+                        target='_blank'
+                        rel='noopener noreferrer'
+                      >
+                        <FaExternalLinkAlt className='w-3 h-3' />
+                      </Link>
+                    )}
                   </div>
                 </li>
               ))}
