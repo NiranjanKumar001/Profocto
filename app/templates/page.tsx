@@ -56,14 +56,50 @@ const templates = [
   },
   {
     id: 5,
-    name: "Minimal Classic",
+    name: "Fancy Template",
     image: "/assets/resume.jpg",
-    description: "Simple, elegant, and professional layout",
+    description: "New modern layout with elegant design",
+    style: "modern",
+    features: [
+      "Modern aesthetics",
+      "Clean sections",
+      "Professional look"
+    ]
+  },
+  {
+    id: 6,
+    name: "Smart Template",
+    image: "/assets/resume.jpg",
+    description: "Clean layout with clear divisions",
     style: "minimal",
     features: [
-      "Clean typography",
-      "Perfect spacing",
-      "Traditional structure"
+      "Organized sections",
+      "Easy to read",
+      "Professional format"
+    ]
+  },
+  {
+    id: 7,
+    name: "Minimalist Professional",
+    image: "/assets/resume.jpg",
+    description: "Clean, ATS-friendly design perfect for corporate roles",
+    style: "minimal",
+    features: [
+      "ATS-optimized format",
+      "Black and white design",
+      "Excellent readability"
+    ]
+  },
+  {
+    id: 8,
+    name: "Creative Modern",
+    image: "/assets/resume.jpg",
+    description: "Colorful, eye-catching layout for creative industries",
+    style: "modern",
+    features: [
+      "Gradient header design",
+      "Card-based sections",
+      "Modern UI elements"
     ]
   }
 ];

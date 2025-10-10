@@ -20,10 +20,12 @@ import Link from "next/link";
 import React, { useContext, useState, useEffect, useRef } from "react";
 import { ResumeContext } from "../../contexts/ResumeContext";
 import TemplateTwo from "./TemplateTwo";
+import TemplateThree from "./TemplateThree";
 import TemplateFour from "./TemplateFour"
 import TemplateFive from "./TemplateFive"
-
 import TemplateSix from "./TemplateSix"
+import TemplateSeven from "./TemplateSeven"
+import TemplateEight from "./TemplateEight"
 import { useSectionTitles } from "../../contexts/SectionTitleContext";
 import {
   DndContext,
@@ -84,9 +86,15 @@ const Preview = () => {
     },
     {
       id: "template3",
-      name: "Classic Template II",
-      description: "Clean and ATS friendly",
+      name: "Blue Sidebar Template",
+      description: "Modern with colored sidebar",
       icon: FaTh,
+    },
+    {
+      id: "template4",
+      name: "Professional Template",
+      description: "Classic professional layout",
+      icon: FaFileAlt,
     },
     {
     id: "template5",
@@ -99,6 +107,18 @@ const Preview = () => {
     name: "Smart Template",
     description: "clean layout with divisions",
     icon: FaFileAlt,
+  },
+  {
+    id: "template7",
+    name: "Minimalist Professional",
+    description: "Clean, ATS-friendly design",
+    icon: FaFileAlt,
+  },
+  {
+    id: "template8",
+    name: "Creative Modern",
+    description: "Colorful, eye-catching layout",
+    icon: FaTh,
   },
   ];
 
@@ -452,6 +472,35 @@ const Preview = () => {
             setResumeData={setResumeData}
           />
         );
+      case "template2":
+        return (
+          <TemplateTwo
+            namedata={resumeData.name}
+            resumeData={resumeData}
+            sectionOrder={sectionOrder}
+            enabledSections={enabledSections}
+            handleDragEnd={handleDragEnd}
+            sensors={sensors}
+            icons={icons}
+            setResumeData={setResumeData}
+          />
+        );
+      case "template3":
+        return (
+          <TemplateThree />
+        );
+      case "template4":
+        return (
+          <TemplateFour
+            resumeData={resumeData}
+            sectionOrder={sectionOrder}
+            enabledSections={enabledSections}
+            handleDragEnd={handleDragEnd}
+            sensors={sensors}
+            icons={icons}
+            setResumeData={setResumeData}
+          />
+        );
       case "template5":
         return (
           <TemplateFive
@@ -474,6 +523,24 @@ const Preview = () => {
             sensors={sensors}
             icons={icons}
             setResumeData={setResumeData}
+          />
+        );
+      case "template7":
+        return (
+          <TemplateSeven
+            resumeData={resumeData}
+            sectionOrder={sectionOrder}
+            enabledSections={enabledSections}
+            icons={icons}
+          />
+        );
+      case "template8":
+        return (
+          <TemplateEight
+            resumeData={resumeData}
+            sectionOrder={sectionOrder}
+            enabledSections={enabledSections}
+            icons={icons}
           />
         );
       default:
