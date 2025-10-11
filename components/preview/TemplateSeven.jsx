@@ -529,5 +529,6 @@ const TemplateSeven = ({
     </div>
   );
 };
+//sidebar template
 
 export default TemplateSeven;
