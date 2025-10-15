@@ -7,19 +7,18 @@ import EditableFormTitle from "./EditableFormTitle"; // Adjust path as needed
 
 // A component to display and edit a single Award object
 const AwardItem = ({ award, index, handleAwardChange, handleRemoveAward }) => (
-  <div className="section-card border p-4 mb-4 rounded-md shadow-sm">
+  <div className="section-card border p-4 mb-4 rounded-md shadow-sm text-white">
     <div className="flex justify-between items-start mb-3">
-      <h4 className="font-semibold text-lg text-gray-700">Award #{index + 1}</h4>
-      {/* Remove button appears only after the first item, or is controlled by FormButton logic */}
+      <h4 className="font-semibold text-lg">Award #{index + 1}</h4>
     </div>
     
     {/* Award Name Input */}
     <div className="mb-3">
-      <label className="input-label">Name of Award/Achievement</label>
+      <label className="input-label text-white">Name of Award/Achievement</label>
       <input
         type="text"
         placeholder="e.g., Dean's List, Top Contributor Award"
-        className="w-full other-input"
+        className="w-full other-input bg-[#1f1f1f] text-white border border-[#444] rounded-md px-2 py-1"
         value={award.name || ""}
         onChange={(e) => handleAwardChange(e, index, "name")}
       />
@@ -28,20 +27,20 @@ const AwardItem = ({ award, index, handleAwardChange, handleRemoveAward }) => (
     {/* Issuer/Institution and Date Inputs (Side-by-Side) */}
     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
       <div>
-        <label className="input-label">Issuer/Institution</label>
+        <label className="input-label text-white">Issuer/Institution</label>
         <input
           type="text"
           placeholder="e.g., University Name, Company, Foundation"
-          className="w-full other-input"
+          className="w-full other-input bg-[#1f1f1f] text-white border border-[#444] rounded-md px-2 py-1"
           value={award.issuer || ""}
           onChange={(e) => handleAwardChange(e, index, "issuer")}
         />
       </div>
       <div>
-        <label className="input-label">Date (YYYY-MM-DD)</label>
+        <label className="input-label text-white">Date (YYYY-MM-DD)</label>
         <input
           type="date"
-          className="w-full other-input"
+          className="w-full other-input bg-[#1f1f1f] text-white border border-[#444] rounded-md px-2 py-1"
           value={award.date || ""}
           onChange={(e) => handleAwardChange(e, index, "date")}
         />
@@ -50,10 +49,10 @@ const AwardItem = ({ award, index, handleAwardChange, handleRemoveAward }) => (
     
     {/* Description Textarea */}
     <div className="mb-3">
-      <label className="input-label">Description / Key Achievement</label>
+      <label className="input-label text-white">Description / Key Achievement</label>
       <textarea
         placeholder="Describe the significance of the award in a few lines. Use Shift+Enter for new lines."
-        className="w-full other-input h-20 resize-none"
+        className="w-full other-input h-20 resize-none bg-[#1f1f1f] text-white border border-[#444] rounded-md px-2 py-1"
         value={award.description || ""}
         onChange={(e) => handleAwardChange(e, index, "description")}
       />
@@ -61,20 +60,18 @@ const AwardItem = ({ award, index, handleAwardChange, handleRemoveAward }) => (
 
     {/* Photo/Link Input (for image URL or certificate link) */}
     <div className="mb-0">
-      <label className="input-label">Photo Link / Certificate URL</label>
+      <label className="input-label text-white">Photo Link / Certificate URL</label>
       <input
         type="url"
         placeholder="Link to photo or external certificate (e.g., Google Drive link)"
-        className="w-full other-input"
+        className="w-full other-input bg-[#1f1f1f] text-white border border-[#444] rounded-md px-2 py-1"
         value={award.link || ""}
         onChange={(e) => handleAwardChange(e, index, "link")}
       />
-      <p className="text-xs text-gray-500 mt-1">
+      <p className="text-xs text-gray-400 mt-1">
         *For direct image upload, you'd need a separate backend service. This field accepts a URL to your photo.
       </p>
     </div>
-
-    {/* The FormButton component handles the actual remove logic */}
   </div>
 );
 
@@ -84,7 +81,7 @@ const Award = () => {
   // Safely get the awards array, defaulting to an empty array
   const awards = resumeData.awards || [];
 
-  // 1. Handle Changes to an Existing Award Entry
+  // Handle changes
   const handleAwardChange = (e, index, field) => {
     const newAwards = [...awards];
     newAwards[index] = {
@@ -93,11 +90,11 @@ const Award = () => {
     };
     setResumeData((prevData) => ({
       ...prevData,
-      awards: newAwards, // Update the top-level awards array
+      awards: newAwards,
     }));
   };
 
-  // 2. Add a New Award Entry
+  // Add new award
   const addAward = () => {
     const newAward = {
       name: "",
@@ -108,30 +105,29 @@ const Award = () => {
     };
     setResumeData((prevData) => ({
       ...prevData,
-      awards: [...awards, newAward], // Append the new object
+      awards: [...awards, newAward],
     }));
   };
 
-  // 3. Remove the Last Award Entry
+  // Remove last award
   const removeAward = () => {
-    // Note: Assuming FormButton uses this to remove the LAST entry added
     setResumeData((prevData) => {
       const newAwards = [...awards];
-      newAwards.pop(); // Removes the last element
+      newAwards.pop();
       return {
         ...prevData,
-        awards: newAwards, // Update the array
+        awards: newAwards,
       };
     });
   };
 
   return (
     <div className="form-section">
-      <div className="form-section-title">
+      <div className="form-section-title text-white">
         <EditableFormTitle 
-          sectionKey="awards" // Matches the key added in SectionTitleProvider.jsx
-          defaultTitle="Awards & Achievements" 
-          className="input-title"
+          sectionKey="awards"
+          defaultTitle="Awards & Achievements"
+          className="input-title text-white"
         />
       </div>
 
@@ -141,7 +137,7 @@ const Award = () => {
           award={award}
           index={index}
           handleAwardChange={handleAwardChange}
-          handleRemoveAward={removeAward} // Passing the remove function
+          handleRemoveAward={removeAward}
         />
       ))}
 
