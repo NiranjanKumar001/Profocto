@@ -100,7 +100,9 @@ export default function Hero() {
     const handleSignOut = async () => {
         setIsLoggingOut(true);
         try {
-            await signOut({ callbackUrl: '/' });
+            // Use dynamic origin so the callback works correctly in local and deployed environments
+            const origin = typeof window !== 'undefined' ? window.location.origin : '';
+            await signOut({ callbackUrl: `${origin}/` });
         } catch (error) {
             // Handle any errors
         } finally {

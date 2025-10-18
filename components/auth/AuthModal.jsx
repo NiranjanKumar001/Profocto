@@ -10,8 +10,10 @@ const AuthModal = ({ isOpen, onClose }) => {
 
   const handleMethodSelect = async (provider) => {
     setLoading(true);
+    // Use window.location.origin to construct a full callback URL so redirects work across environments
+    const origin = typeof window !== 'undefined' ? window.location.origin : '';
     await signIn(provider, {
-      callbackUrl: '/builder',
+      callbackUrl: `${origin}/builder`,
       redirect: true
     });
     setLoading(false);
