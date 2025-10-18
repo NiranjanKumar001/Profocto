@@ -1,11 +1,10 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import ContactInfo from "./ContactInfo";
-import Link from "next/link";
-import { FaExternalLinkAlt, FaLinkedin, FaTwitter, FaFacebook, FaInstagram, FaYoutube } from "react-icons/fa";
+import { FaExternalLinkAlt, FaLinkedin, FaEnvelope, FaPhone, FaMapMarkerAlt } from "react-icons/fa";
+import { ImGithub } from "react-icons/im";
 import { CgWebsite } from "react-icons/cg";
-import Certification from "./Certification";
+import DateRange from "../utility/DateRange";
 import { useSectionTitles } from "../../contexts/SectionTitleContext";
 import {
   DndContext,
@@ -180,7 +179,18 @@ const TemplateTwo = ({
 
   const orderedSections = sectionOrder
     .map(id => sections.find(section => section.id === id))
-    .filter(section => section !== undefined && (!enabledSections || enabledSections[section.id]));
+    .filter(section => {
+      if (!section || (enabledSections && !enabledSections[section.id])) return false;
+      // Filter out sections with empty content
+      if (Array.isArray(section.content)) {
+        return section.content.length > 0;
+      }
+      if (typeof section.content === 'string') {
+        return section.content && section.content.trim().length > 0;
+      }
+      // If content is not array or string, assume it exists
+      return section.content != null;
+    });
 
   // Prevent hydration issues by only rendering on client
   if (!isClient) {
@@ -189,72 +199,95 @@ const TemplateTwo = ({
 
   const renderSection = (section) => {
     switch(section.id) {
-      case "certifications":
-        return (
-          <div>
-            <h2 className="section-title border-b-2 border-gray-300 mb-1">
-              {customSectionTitles.certifications || "Certifications"}
-            </h2>
-            <ul className="list-disc pl-4 content">
-              {certificationsdata && certificationsdata.map((cert, i) => (
-                <li key={i} className="content">
-                  <div className="flex items-center gap-2">
-                    <span>
-                      {cert.name}
-                      {cert.issuer && (
-                        <span className="text-gray-600"> - {cert.issuer}</span>
-                      )}
-                    </span>
-                    {cert.link && cert.link.trim() !== '' && (
-                      <a
-                        href={cert.link}
-                        className="text-blue-600 hover:text-blue-800 transition-colors"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <FaExternalLinkAlt className="w-3 h-3" />
-                      </a>
-                    )}
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-        );
       case "summary":
         return (
-          <div>
-            <h2 className="section-title border-b-2 border-gray-300 mb-1">
-              {customSectionTitles.summary || "Summary"}
+          <div className="mb-5">
+            <h2 className="text-lg font-bold border-b-2 border-black pb-1 mb-3">
+              {customSectionTitles.summary || "Profile"}
             </h2>
-            <p className="content">{summarydata}</p>
+            <p className="text-sm text-justify leading-relaxed text-gray-800">
+              {summarydata}
+            </p>
           </div>
         );
+      
+      case "experience":
+        return workExperiencedata && workExperiencedata.length > 0 ? (
+          <div className="mb-5">
+            <h2 className="text-lg font-bold border-b-2 border-black pb-1 mb-3">
+              {customSectionTitles.experience || "Professional Experience"}
+            </h2>
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={(event) => handleItemDragEnd(event, 'experience')}
+            >
+              <SortableContext
+                items={workExperiencedata.map((_, idx) => `work-${idx}`)}
+                strategy={verticalListSortingStrategy}
+              >
+                {workExperiencedata.map((work, idx) => (
+                  <SortableItem key={`work-${idx}`} id={`work-${idx}`}>
+                    <div className="mb-4">
+                      <div className="flex justify-between items-start mb-1">
+                        <div className="flex-1">
+                          <div className="text-sm">
+                            <DateRange
+                              startYear={work.startYear}
+                              endYear={work.endYear}
+                              id={`work-range-${idx}`}
+                              className="font-normal text-gray-700"
+                            />
+                          </div>
+                          <h3 className="text-base font-bold mt-1">{work.position}</h3>
+                          <p className="text-sm italic text-gray-700">{work.company}</p>
+                        </div>
+                      </div>
+                      {work.description && (
+                        <p className="text-sm text-gray-800 mb-2">{work.description}</p>
+                      )}
+                      {work.keyAchievements && (
+                        <ul className="list-disc ml-5 text-sm text-gray-800 space-y-1">
+                          {work.keyAchievements.split('\n').filter(item => item.trim()).map((achievement, i) => (
+                            <li key={i}>{achievement.trim()}</li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  </SortableItem>
+                ))}
+              </SortableContext>
+            </DndContext>
+          </div>
+        ) : null;
+
       case "education":
-        return (
-          <div>
-            <h2 className="section-title border-b-2 border-gray-300 mb-1">
+        return educationdata && educationdata.length > 0 ? (
+          <div className="mb-5">
+            <h2 className="text-lg font-bold border-b-2 border-black pb-1 mb-3">
               {customSectionTitles.education || "Education"}
             </h2>
             {educationdata && educationdata.map((edu, idx) => (
-              <div key={idx} className="mb-1 flex justify-between items-start">
-                <div className="flex-1">
-                  <p className="content font-semibold">{edu.school}</p>
-                  <p className="content">{edu.degree}</p>
+              <div key={idx} className="mb-3">
+                <div className="text-sm text-gray-700">
+                  <DateRange
+                    startYear={edu.startYear}
+                    endYear={edu.endYear}
+                    id={`edu-range-${idx}`}
+                    className="font-normal"
+                  />
                 </div>
-                <div className="ml-4 text-right">
-                  <p className="sub-content font-medium text-gray-600">
-                    {new Date(edu.startYear).getFullYear()} - {new Date(edu.endYear).getFullYear()}
-                  </p>
-                </div>
+                <h3 className="text-base font-bold mt-1">{edu.degree}</h3>
+                <p className="text-sm italic text-gray-700">{edu.school}</p>
               </div>
             ))}
           </div>
-        );
+        ) : null;
+
       case "projects":
-        return (
-          <div>
-            <h2 className="section-title border-b-2 border-gray-300 mb-1">
+        return projectsdata && projectsdata.length > 0 ? (
+          <div className="mb-5">
+            <h2 className="text-lg font-bold border-b-2 border-black pb-1 mb-3">
               {customSectionTitles.projects || "Projects"}
             </h2>
             <DndContext
@@ -268,149 +301,141 @@ const TemplateTwo = ({
               >
                 {projectsdata && projectsdata.map((project, idx) => (
                   <SortableItem key={`project-${idx}`} id={`project-${idx}`}>
-                    <div className="flex justify-between items-center">
-                      <div className="flex items-center gap-2">
-                        <p className="content i-bold">{project.name}</p>
-                        {project.link && (
-                          <a
-                            href={project.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-600 hover:text-blue-800"
-                            title={project.link}
-                          >
-                            <FaExternalLinkAlt size={12} />
-                          </a>
-                        )}
+                    <div className="mb-4">
+                      <div className="flex justify-between items-start mb-1">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <h3 className="text-base font-bold">{project.name}</h3>
+                            {project.link && (
+                              <a
+                                href={project.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-600 hover:text-blue-800"
+                              >
+                                <FaExternalLinkAlt className="w-3 h-3" />
+                              </a>
+                            )}
+                          </div>
+                          <div className="text-sm text-gray-700">
+                            <DateRange
+                              startYear={project.startYear}
+                              endYear={project.endYear}
+                              id={`project-range-${idx}`}
+                              className="font-normal"
+                            />
+                          </div>
+                        </div>
                       </div>
-                      <p className="sub-content font-medium text-gray-600">
-                        {new Date(project.startYear).getFullYear()} - {new Date(project.endYear).getFullYear()}
-                      </p>
+                      {project.description && (
+                        <p className="text-sm text-gray-800 mb-2">{project.description}</p>
+                      )}
+                      {project.keyAchievements && (
+                        <ul className="list-disc ml-5 text-sm text-gray-800 space-y-1">
+                          {project.keyAchievements.split('\n').filter(item => item.trim()).map((achievement, i) => (
+                            <li key={i}>{achievement.trim()}</li>
+                          ))}
+                        </ul>
+                      )}
                     </div>
-                    <p className="content">{project.description}</p>
-                    {project.keyAchievements && (
-                      <ul className="list-disc pl-4 content">
-                        {project.keyAchievements.split('\n').map((achievement, i) => (
-                          <li key={i} className="content">{achievement}</li>
-                        ))}
-                      </ul>
-                    )}
                   </SortableItem>
                 ))}
               </SortableContext>
             </DndContext>
           </div>
-        );
-      case "experience":
-        return (
-          <div>
-            <h2 className="section-title border-b-2 border-gray-300 mb-1">
-              {customSectionTitles.experience || "Work Experience"}
-            </h2>
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragEnd={(event) => handleItemDragEnd(event, 'experience')}
-            >
-              <SortableContext
-                items={workExperiencedata && workExperiencedata.length > 0 ? workExperiencedata.map((_, idx) => `work-${idx}`) : []}
-                strategy={verticalListSortingStrategy}
-              >
-                {workExperiencedata && workExperiencedata.map((work, idx) => (
-                  <SortableItem key={`work-${idx}`} id={`work-${idx}`}>
-                    <div className="flex justify-between items-center">
-                      <p className="content">
-                        <span className="font-bold">{work.company}</span>
-                        <span className="mx-1">-</span>
-                        <span>{work.position}</span>
-                      </p>
-                      <p className="sub-content font-medium text-gray-600">
-                        {new Date(work.startYear).getFullYear()} - {new Date(work.endYear).getFullYear()}
-                      </p>
-                    </div>
-                    <p className="content">{work.description}</p>
-                    <p className="content">{work.keyAchievements}</p>
-                  </SortableItem>
-                ))}
-              </SortableContext>
-            </DndContext>
-          </div>
-        );
+        ) : null;
+
       case "skills":
-        return (
-          <div>
-            <h2 className="section-title border-b-2 border-gray-300 mb-1">
-              {customSectionTitles.skills || "Technical Skills"}
+        return skillsdata && skillsdata.length > 0 ? (
+          <div className="mb-5">
+            <h2 className="text-lg font-bold border-b-2 border-black pb-1 mb-3">
+              {customSectionTitles.skills || "Skills"}
             </h2>
-            <div className="content">
-              {skillsdata && skillsdata
-                .filter(skill => skill.title !== "Soft Skills")
-                .map((skillCategory, index) => (
-                  <div key={index} className="mb-3">
-                    <h3 className="font-semibold text-sm text-gray-700 mb-1">
-                      {skillCategory.title}
-                    </h3>
-                    <p className="text-gray-600">
-                      {skillCategory.skills && skillCategory.skills.join(", ")}
-                    </p>
-                  </div>
-                ))}
+            <div className="grid grid-cols-2 gap-x-8 gap-y-2">
+              {skillsdata && skillsdata.filter(skill => skill.title !== "Soft Skills").map((skill, idx) => (
+                <div key={idx} className="flex items-start gap-2">
+                  <span className="text-sm font-semibold min-w-fit">{skill.title}</span>
+                  <span className="flex-1">
+                    {Array(5).fill(0).map((_, i) => (
+                      <span key={i} className="text-xs">●</span>
+                    ))}
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
-        );
+        ) : null;
+
       case "softskills":
-        return (
-          <div>
-            <h2 className="section-title border-b-2 border-gray-300 mb-1">
+        return section.content && section.content.length > 0 ? (
+          <div className="mb-5">
+            <h2 className="text-lg font-bold border-b-2 border-black pb-1 mb-3">
               {customSectionTitles.softskills || "Soft Skills"}
             </h2>
-            <p className="content">
-              {skillsdata && skillsdata.find(skill => skill.title === "Soft Skills")?.skills?.join(", ")}
+            <p className="text-sm text-gray-800">
+              {section.content.join(", ")}
             </p>
           </div>
-        );
+        ) : null;
+
       case "languages":
-        return (
-          <div>
-            <h2 className="section-title border-b-2 border-gray-300 mb-1">
+        return section.content && Array.isArray(section.content) && section.content.length > 0 ? (
+          <div className="mb-5">
+            <h2 className="text-lg font-bold border-b-2 border-black pb-1 mb-3">
               {customSectionTitles.languages || "Languages"}
             </h2>
-            <p className="content">
-              {section.content && Array.isArray(section.content) ? section.content.join(", ") : ""}
-            </p>
+            <div className="flex flex-wrap gap-x-6 text-sm text-gray-800">
+              {section.content.map((lang, idx) => (
+                <span key={idx}>• {lang}</span>
+              ))}
+            </div>
           </div>
-        );
+        ) : null;
+
+      case "certifications":
+        return certificationsdata && certificationsdata.length > 0 ? (
+          <div className="mb-5">
+            <h2 className="text-lg font-bold border-b-2 border-black pb-1 mb-3">
+              {customSectionTitles.certifications || "Awards"}
+            </h2>
+            {certificationsdata.map((cert, i) => (
+              <div key={i} className="mb-2">
+                <div className="flex items-center gap-2">
+                  <h3 className="text-sm font-bold">{cert.name}</h3>
+                  {cert.link && cert.link.trim() !== '' && (
+                    <a
+                      href={cert.link}
+                      className="text-blue-600 hover:text-blue-800 transition-colors"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <FaExternalLinkAlt className="w-3 h-3" />
+                    </a>
+                  )}
+                </div>
+                {cert.issuer && (
+                  <p className="text-sm italic text-gray-700">{cert.issuer}</p>
+                )}
+              </div>
+            ))}
+          </div>
+        ) : null;
+
       default:
         return null;
     }
   };
 
-  const icons = [
-    { name: "linkedin", icon: <FaLinkedin /> },
-    { name: "twitter", icon: <FaTwitter /> },
-    { name: "facebook", icon: <FaFacebook /> },
-    { name: "instagram", icon: <FaInstagram /> },
-    { name: "youtube", icon: <FaYoutube /> },
-    { name: "website", icon: <CgWebsite /> },
-  ];
-
-  // Function to extract username from URL
-  const getUsername = (url) => {
-    return url.split('/').pop();
-  };
-
   // Prevent hydration mismatch by showing a simple loading state on server
   if (!isClient) {
     return (
-      <div className="w-full h-full bg-white p-4">
-        <div className="text-center mb-2">
-          <h1 className="name">{namedata}</h1>
-          <p className="profession">{positiondata}</p>
-        </div>
+      <div className="w-full h-full bg-white p-8">
         <div className="animate-pulse">
+          <div className="h-8 bg-gray-200 rounded w-1/3 mb-2"></div>
+          <div className="h-4 bg-gray-200 rounded w-1/4 mb-4"></div>
           <div className="space-y-4">
-            {orderedSections.map((section) => (
-              <div key={section.id} className="h-16 bg-gray-200 rounded"></div>
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="h-16 bg-gray-200 rounded"></div>
             ))}
           </div>
         </div>
@@ -419,62 +444,79 @@ const TemplateTwo = ({
   }
 
   return (
-    <div className="w-full h-full bg-white p-4">
-      {/* Header Section */}
-      <div className="text-center mb-2">
-        <h1 className="name">{namedata}</h1>
-        <p className="profession">{positiondata}</p>
-        <ContactInfo
-          mainclass="flex flex-row gap-1 contact justify-center"
-          linkclass="inline-flex items-center gap-1"
-          teldata={contactdata}
-          emaildata={emaildata}
-          addressdata={addressdata}
-          telicon={telicon}
-          emailicon={emailicon}
-          addressicon={addressicon}
-        />
-        <div className="flex justify-center items-center gap-2 mt-1 text-sm">
-          {resumeData && resumeData.socialMedia && resumeData.socialMedia.map((socialMedia, index) => {
-            return (
-              <a
-                href={`http://${socialMedia.link}`}
-                aria-label={socialMedia.socialMedia}
-                key={index}
-                title={socialMedia.socialMedia}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-[2px] text-blue-600 hover:text-blue-800 transition-colors"
-              >
-                {icons.map((icon, index) => {
-                  if (icon.name === socialMedia.socialMedia.toLowerCase()) {
-                    return <span key={index} className="text-sm">{icon.icon}</span>;
-                  }
-                })}
-                <span className="capitalize">{socialMedia.socialMedia}</span>
-              </a>
-            );
-          })}
+    <div className="w-full h-full bg-white exclude-print" style={{ fontFamily: 'Georgia, serif' }}>
+      <div className="max-w-[800px] mx-auto p-8 print:p-6">
+        {/* Header Section */}
+        <div className="mb-6">
+          {/* Name and Title */}
+          <h1 className="text-4xl font-bold mb-1" style={{ letterSpacing: '0.02em' }}>
+            {namedata}
+          </h1>
+          <p className="text-lg italic text-gray-700 mb-3">
+            {positiondata}
+          </p>
+          
+          {/* Contact Information */}
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-700">
+            {addressdata && (
+              <div className="flex items-center gap-1">
+                <FaMapMarkerAlt className="text-gray-600" />
+                <span>{addressdata}</span>
+              </div>
+            )}
+            {emaildata && (
+              <div className="flex items-center gap-1">
+                <FaEnvelope className="text-gray-600" />
+                <span>{emaildata}</span>
+              </div>
+            )}
+            {contactdata && (
+              <div className="flex items-center gap-1">
+                <FaPhone className="text-gray-600" />
+                <span>{contactdata}</span>
+              </div>
+            )}
+            {resumeData && resumeData.socialMedia && resumeData.socialMedia.map((social, index) => {
+              const socialName = social.socialMedia.toLowerCase();
+              return (
+                <div key={index} className="flex items-center gap-1">
+                  {socialName === 'linkedin' && <FaLinkedin className="text-gray-600" />}
+                  {socialName === 'github' && <ImGithub className="text-gray-600" />}
+                  {socialName === 'website' && <CgWebsite className="text-gray-600" />}
+                  <a 
+                    href={`http://${social.link}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-700 hover:text-gray-900"
+                  >
+                    {social.socialMedia.toLowerCase() === 'linkedin' || social.socialMedia.toLowerCase() === 'github' 
+                      ? social.socialMedia.toLowerCase() 
+                      : social.link}
+                  </a>
+                </div>
+              );
+            })}
+          </div>
         </div>
-      </div>
 
-      {/* Draggable Sections with Modern @dnd-kit */}
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={handleSectionDragEnd}
-      >
-        <SortableContext
-          items={orderedSections.map(section => section.id)}
-          strategy={verticalListSortingStrategy}
+        {/* Draggable Sections */}
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleSectionDragEnd}
         >
-          {orderedSections.map((section, index) => (
-            <SortableSection key={section.id} id={section.id}>
-              {renderSection(section)}
-            </SortableSection>
-          ))}
-        </SortableContext>
-      </DndContext>
+          <SortableContext
+            items={orderedSections.map(section => section.id)}
+            strategy={verticalListSortingStrategy}
+          >
+            {orderedSections.map((section) => (
+              <SortableSection key={section.id} id={section.id}>
+                {renderSection(section)}
+              </SortableSection>
+            ))}
+          </SortableContext>
+        </DndContext>
+      </div>
     </div>
   );
 };

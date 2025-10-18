@@ -1,9 +1,9 @@
 "use client";
 
 import { FaExternalLinkAlt } from "react-icons/fa";
-import { MdEmail, MdLocationOn, MdPhone } from "react-icons/md";
+import { MdEmail, MdLocationOn, MdPhone, MdLink } from "react-icons/md";
 import { GiGraduateCap } from "react-icons/gi";
-import { BiBriefcase, BiBookAlt, BiCodeAlt } from "react-icons/bi";
+import { BiBriefcase, BiBookAlt, BiCodeAlt, BiStar } from "react-icons/bi";
 import DateRange from "../utility/DateRange";
 import { DndContext, closestCenter } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
@@ -14,13 +14,12 @@ import { useEffect, useState } from "react";
 import { arrayMove } from "@dnd-kit/sortable";
 
 
-const TemplateFive = ({
+const TemplateSix = ({
   resumeData,
   sectionOrder,
   enabledSections,
   handleDragEnd,
   sensors,
-  icons,
   setResumeData,
 }) => {
   const { customSectionTitles } = useSectionTitles();
@@ -41,302 +40,204 @@ const TemplateFive = ({
           parseInt(over.id.split("-")[1])
         );
       if (sectionType === "projects")
-        setResumeData((prev) => ({
-          ...prev,
-          projects: updateArray(resumeData.projects),
-        }));
+        setResumeData((prev) => ({ ...prev, projects: updateArray(resumeData.projects) }));
       if (sectionType === "experience")
-        setResumeData((prev) => ({
-          ...prev,
-          workExperience: updateArray(resumeData.workExperience),
-        }));
+        setResumeData((prev) => ({ ...prev, workExperience: updateArray(resumeData.workExperience) }));
+      if (sectionType === "education")
+        setResumeData((prev) => ({ ...prev, education: updateArray(resumeData.education) }));
     }
   };
 
-  const sections = [
-    { id: "summary", title: "Professional Summary", content: resumeData.summary },
-    { id: "experience", title: "Experience", content: resumeData.workExperience },
-    { id: "projects", title: "Projects", content: resumeData.projects },
-  ];
-
-  const sidebarSections = [
-    {
-      id: "education",
-      title: "Education",
-      content: resumeData.education,
-      icon: <GiGraduateCap />,
-    },
-    {
-      id: "skills",
-      title: "Technical Skills",
-      content: resumeData.skills.filter((s) => s.title !== "Soft Skills"),
-      icon: <BiCodeAlt />,
-    },
-    {
-      id: "softSkills",
-      title: "Soft Skills",
-      content: resumeData.skills.find((s) => s.title === "Soft Skills")?.skills || [],
-      icon: <BiBookAlt />,
-    },
-    { id: "languages", title: "Languages", content: resumeData.languages, icon: <BiBookAlt /> },
-    {
-      id: "certifications",
-      title: "Certifications",
-      content: resumeData.certifications,
-      icon: <BiBookAlt />,
-    },
-  ];
+  const sectionsMap = {
+    summary: { id: "summary", title: "Professional Summary", content: resumeData.summary, icon: <BiBookAlt /> },
+    experience: { id: "experience", title: "Experience", content: resumeData.workExperience, icon: <BiBriefcase /> },
+    projects: { id: "projects", title: "Projects", content: resumeData.projects, icon: <BiCodeAlt /> },
+    education: { id: "education", title: "Education", content: resumeData.education, icon: <GiGraduateCap /> },
+    skills: { id: "skills", title: "Technical Skills", content: resumeData.skills.filter(s => s.title !== "Soft Skills"), icon: <BiCodeAlt /> },
+    softSkills: { id: "softSkills", title: "Soft Skills", content: resumeData.skills.find(s => s.title === "Soft Skills")?.skills || [], icon: <BiStar /> },
+    languages: { id: "languages", title: "Languages", content: resumeData.languages, icon: <BiBookAlt /> },
+    certifications: { id: "certifications", title: "Certifications", content: resumeData.certifications, icon: <BiStar /> },
+  };
 
   const orderedSections = sectionOrder
-    .map((id) => sections.find((s) => s.id === id))
-    .filter((s) => s && enabledSections[s.id]);
+    .map(id => sectionsMap[id])
+    .filter(s => s && enabledSections[s.id] && s.content && (Array.isArray(s.content) ? s.content.length > 0 : s.content.length > 0));
 
-  const renderMainSection = (section) => {
+  // Component to render the section header (Title + Line)
+  const SectionHeader = ({ id, icon, defaultTitle }) => (
+    <div className="mb-2 print:mb-1">
+      <h2 className="text-lg font-bold uppercase tracking-wider text-gray-900 mb-1">
+        {customSectionTitles[id] || defaultTitle}
+      </h2>
+      <div className="w-full h-0.5 bg-gray-500 mb-3 print:mb-2"></div>
+    </div>
+  );
+
+  const renderSectionContent = (section) => {
     switch (section.id) {
       case "summary":
         return (
-          <div className="mb-3 print:mb-2">
-            <h2 className="section-title-main flex items-center gap-1 text-black font-bold pb-0.5 mb-1 border-b border-gray-900">
-              <BiBookAlt className="w-4 h-4" />{" "}
-              {customSectionTitles.summary || "Professional Summary"}
-            </h2>
-            <p className="text-gray-800 text-justify text-sm leading-snug">
-              {section.content}
-            </p>
+          <div className="text-gray-700 text-sm leading-snug">
+            {section.content}
           </div>
         );
       case "experience":
         return (
-          <div className="mb-3 print:mb-2">
-            <h2 className="section-title-main flex items-center gap-1 text-black font-bold pb-0.5 mb-2 border-b border-gray-900">
-              <BiBriefcase className="w-4 h-4" />{" "}
-              {customSectionTitles.experience || "Professional Experience"}
-            </h2>
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragEnd={(e) => handleItemDragEnd(e, "experience")}
-            >
-              <SortableContext
-                items={resumeData.workExperience.map((_, i) => `work-${i}`)}
-                strategy={verticalListSortingStrategy}
-              >
-                {resumeData.workExperience.map((item, index) => (
-                  <SortableItem key={`work-${index}`} id={`work-${index}`}>
-                    <div className="relative pl-4 mb-2">
-                      <div className="absolute left-0 top-1 w-2 h-2 bg-black rounded-full"></div>
-                      <div className="p-0 bg-white border-l border-gray-300 ml-1">
-                        <h3 className="font-bold text-gray-900 text-sm leading-snug">
-                          {item.position} | {item.company}
-                        </h3>
-                        <DateRange
-                          startYear={item.startYear}
-                          endYear={item.endYear}
-                          id={`exp-${index}`}
-                          className="text-xs text-gray-700 block"
-                        />
-                        <p className="text-gray-800 mt-1 text-sm leading-snug">
-                          {item.description}
-                        </p>
-                        {item.keyAchievements && (
-                          <ul className="list-disc list-inside text-gray-800 mt-1 ml-3 text-sm leading-snug">
-                            {item.keyAchievements
-                              .split("\n")
-                              .filter((a) => a.trim())
-                              .map((a, idx) => <li key={idx}>{a}</li>)}
-                          </ul>
-                        )}
-                      </div>
+          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={(e) => handleItemDragEnd(e, "experience")}>
+            <SortableContext items={resumeData.workExperience.map((_, i) => `work-${i}`)} strategy={verticalListSortingStrategy}>
+              {resumeData.workExperience.map((item, index) => (
+                <SortableItem key={`work-${index}`} id={`work-${index}`}>
+                  <div className="mb-3 print:mb-2">
+                    <div className="flex justify-between items-start text-sm">
+                      <h3 className="font-bold text-gray-900 leading-tight">
+                        {item.position}
+                        <span className="font-normal text-gray-700 block italic">{item.company} | {item.location}</span>
+                      </h3>
+                      <DateRange
+                        startYear={item.startYear}
+                        endYear={item.endYear}
+                        id={`exp-range-${index}`}
+                        className="text-xs font-semibold text-gray-600 flex-shrink-0 ml-2 pt-1"
+                      />
                     </div>
-                  </SortableItem>
-                ))}
-              </SortableContext>
-            </DndContext>
-          </div>
+                    {item.description && <p className="text-gray-700 text-sm mt-1 leading-snug">{item.description}</p>}
+                    {item.keyAchievements && (
+                      <ul className="list-disc list-outside text-gray-700 mt-0.5 ml-5 text-sm leading-snug">
+                        {item.keyAchievements.split("\n").filter(a => a.trim()).map((a, idx) => <li key={idx}>{a}</li>)}
+                      </ul>
+                    )}
+                  </div>
+                </SortableItem>
+              ))}
+            </SortableContext>
+          </DndContext>
         );
       case "projects":
         return (
-          <div className="mb-3 print:mb-2">
-            <h2 className="section-title-main flex items-center gap-1 text-black font-bold pb-0.5 mb-2 border-b border-gray-900">
-              <BiCodeAlt className="w-4 h-4" />{" "}
-              {customSectionTitles.projects || "Projects"}
-            </h2>
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragEnd={(e) => handleItemDragEnd(e, "projects")}
-            >
-              <SortableContext
-                items={resumeData.projects.map((_, i) => `project-${i}`)}
-                strategy={verticalListSortingStrategy}
-              >
-                {resumeData.projects.map((item, index) => (
-                  <SortableItem key={`project-${index}`} id={`project-${index}`}>
-                    <div className="relative pl-4 mb-2">
-                      <div className="absolute left-0 top-1 w-2 h-2 bg-black rounded-full"></div>
-                      <div className="p-0 bg-white border-l border-gray-300 ml-1">
-                        <h3 className="font-bold text-gray-900 text-sm leading-snug flex items-center gap-1">
-                          {item.name}
-                          {item.link && (
-                            <Link
-                              href={item.link}
-                              target="_blank"
-                              className="text-gray-600 hover:text-black"
-                            >
-                              <FaExternalLinkAlt className="w-3 h-3" />
-                            </Link>
-                          )}
-                        </h3>
-                        <DateRange
-                          startYear={item.startYear}
-                          endYear={item.endYear}
-                          id={`proj-${index}`}
-                          className="text-xs text-gray-700 block"
-                        />
-                        <p className="text-gray-800 mt-1 text-sm leading-snug">
-                          {item.description}
-                        </p>
-                      </div>
+          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={(e) => handleItemDragEnd(e, "projects")}>
+            <SortableContext items={resumeData.projects.map((_, i) => `project-${i}`)} strategy={verticalListSortingStrategy}>
+              {resumeData.projects.map((item, index) => (
+                <SortableItem key={`project-${index}`} id={`project-${index}`}>
+                  <div className="mb-3 print:mb-2">
+                    <div className="flex justify-between items-start text-sm">
+                      <h3 className="font-bold text-gray-900 leading-tight flex items-center gap-2">
+                        {item.name}
+                        {item.link && <a href={item.link} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-black"><FaExternalLinkAlt className="w-3 h-3" /></a>}
+                      </h3>
+                      <DateRange
+                        startYear={item.startYear}
+                        endYear={item.endYear}
+                        id={`proj-range-${index}`}
+                        className="text-xs font-semibold text-gray-600 flex-shrink-0 ml-2 pt-1"
+                      />
                     </div>
-                  </SortableItem>
-                ))}
-              </SortableContext>
-            </DndContext>
-          </div>
+                    <p className="text-gray-700 text-sm mt-0.5 leading-snug">{item.description}</p>
+                    {item.technologies && <p className="text-xs text-gray-600 mt-0.5">**Tech Stack:** {item.technologies}</p>}
+                  </div>
+                </SortableItem>
+              ))}
+            </SortableContext>
+          </DndContext>
         );
+      case "education":
+        return (
+          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={(e) => handleItemDragEnd(e, "education")}>
+            <SortableContext items={resumeData.education.map((_, i) => `education-${i}`)} strategy={verticalListSortingStrategy}>
+              {resumeData.education.map((item, index) => (
+                <SortableItem key={`education-${index}`} id={`education-${index}`}>
+                  <div className="mb-3 print:mb-2">
+                    <div className="flex justify-between items-start text-sm">
+                      <h3 className="font-bold text-gray-900 leading-tight">
+                        {item.degree}
+                        <span className="font-normal text-gray-700 block italic">{item.school} | {item.location}</span>
+                      </h3>
+                      <DateRange
+                        startYear={item.startYear}
+                        endYear={item.endYear}
+                        id={`edu-range-${index}`}
+                        className="text-xs font-semibold text-gray-600 flex-shrink-0 ml-2 pt-1"
+                      />
+                    </div>
+                  </div>
+                </SortableItem>
+              ))}
+            </SortableContext>
+          </DndContext>
+        );
+      case "skills":
+      case "softSkills":
+      case "languages":
+      case "certifications":
+        const listContent = Array.isArray(section.content)
+          ? section.content.map(s => typeof s === "string" ? s : s.skills?.join(", ") || s.name).join(" | ")
+          : section.content;
+        return <p className="text-gray-700 text-sm leading-snug font-semibold">{listContent}</p>;
+
       default:
         return null;
     }
   };
 
-  const renderSidebarSection = (section) => {
-    if (!section.content || (Array.isArray(section.content) && section.content.length === 0))
-      return null;
-
-    return (
-      <div className="mb-3 print:mb-2">
-        <h2 className="flex items-center gap-1 text-black font-bold pb-0.5 mb-1 border-b border-gray-900">
-          <span className="text-black">{section.icon}</span>{" "}
-          <span className="text-sm uppercase">
-            {customSectionTitles[section.id] || section.title}
-          </span>
-        </h2>
-
-        {section.id === "education" ? (
-          <ul className="text-gray-800 text-sm space-y-1">
-            {resumeData.education.map((item, idx) => (
-              <li key={idx}>
-                <p className="font-semibold">{item.school}</p>
-                <div className="text-xs text-gray-700">
-                  {item.degree} -{" "}
-                  <DateRange
-                    startYear={item.startYear}
-                    endYear={item.endYear}
-                    id={`edu-range-${idx}`}
-                  />
-                </div>
-              </li>
-            ))}
-          </ul>
-        ) : Array.isArray(section.content) ? (
-          section.id === "skills" || section.id === "softSkills" || section.id === "languages" ? (
-            <div className="text-gray-800 text-sm leading-snug">
-              {section.id === "skills" ? (
-                section.content.map((group, idx) => (
-                  <div key={idx} className="mb-1">
-                    <p className="font-semibold text-xs">{group.title}:</p>
-                    <p className="text-sm">{group.skills?.join(", ")}</p>
-                  </div>
-                ))
-              ) : (
-                <p>
-                  {section.content
-                    .map((s) => (typeof s === "string" ? s : s.skills?.join(", ")))
-                    .join(", ")}
-                </p>
-              )}
-            </div>
-          ) : (
-            <ul className="list-disc list-inside text-gray-800 text-sm ml-2 space-y-1">
-              {section.content.map((item, idx) => (
-                <li key={idx}>
-                  {typeof item === "string" ? item : item.school || item.name}
-                </li>
-              ))}
-            </ul>
-          )
-        ) : (
-          <p className="text-gray-800 text-sm">{section.content}</p>
-        )}
-      </div>
-    );
-  };
-
-  if (!isClient)
-    return <div className="animate-pulse p-4 bg-white h-full w-full"></div>;
+  if (!isClient) return <div className="animate-pulse p-4 bg-white h-full w-full"></div>;
 
   return (
-    <div className="w-full h-full bg-white p-6 print:p-0">
-      {/* Header */}
-      <div className="text-center mb-4 border-b border-gray-900 pb-1">
-        <h1 className="text-2xl font-bold text-gray-900 inline-block px-0 py-0">
+    <div className="w-full h-full bg-white p-6 print:p-0 font-serif">
+      {/* Header - Solid Black/Dark Gray Block */}
+      <div className="bg-gray-800 text-white p-4 mb-4 print:p-2 print:mb-2">
+        <h1 className="text-4xl font-extrabold tracking-tight mb-1">
           {resumeData.name}
         </h1>
-        <h2 className="text-base font-semibold text-gray-800 mt-0.5">
+        <h2 className="text-xl font-light mb-3 opacity-90">
           {resumeData.position}
         </h2>
-
-        <div className="flex justify-center flex-wrap gap-x-4 gap-y-0.5 mt-1 text-gray-700 text-sm">
+        
+        {/* Contact Info - Compact and White/Light Gray */}
+        <div className="flex flex-wrap gap-x-5 gap-y-1 text-sm opacity-80">
           {resumeData.contactInformation && (
             <div className="flex items-center gap-1">
-              <MdPhone className="w-3 h-3 text-gray-700" />
-              <span>{resumeData.contactInformation}</span>
+              <MdPhone className="w-4 h-4" /> <span>{resumeData.contactInformation}</span>
             </div>
           )}
           {resumeData.email && (
             <div className="flex items-center gap-1">
-              <MdEmail className="w-3 h-3 text-gray-700" />
-              <span>{resumeData.email}</span>
+              <MdEmail className="w-4 h-4" /> <span>{resumeData.email}</span>
             </div>
           )}
           {resumeData.address && (
             <div className="flex items-center gap-1">
-              <MdLocationOn className="w-3 h-3 text-gray-700" />
-              <span>{resumeData.address}</span>
+              <MdLocationOn className="w-4 h-4" /> <span>{resumeData.address}</span>
+            </div>
+          )}
+          {/* Example for a link (LinkedIn/Portfolio) */}
+          {resumeData.linkedin && (
+            <div className="flex items-center gap-1">
+              <MdLink className="w-4 h-4" /> <a href={resumeData.linkedin} target="_blank" rel="noopener noreferrer" className="underline">{resumeData.linkedin}</a>
             </div>
           )}
         </div>
       </div>
 
-      {/* Two-column layout */}
-      <div className="flex flex-col md:flex-row gap-4 print:gap-3">
-        <div className="w-full md:w-1/3 p-0 bg-white">
-          {sidebarSections.map((section) => (
-            <div key={section.id}>{renderSidebarSection(section)}</div>
-          ))}
-        </div>
-
-        <div className="w-full md:w-2/3 p-0 border-l border-gray-300 pl-4 print:pl-3">
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragEnd={handleDragEnd}
-          >
-            <SortableContext
-              items={orderedSections.map((s) => s.id)}
-              strategy={verticalListSortingStrategy}
-            >
-              {orderedSections.map((section) => (
-                <SortableSection key={section.id} id={section.id}>
-                  {renderMainSection(section)}
-                </SortableSection>
-              ))}
-            </SortableContext>
-          </DndContext>
-        </div>
+      {/* Main Content - Single Column */}
+      <div className="px-4 print:px-0">
+        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+          <SortableContext items={orderedSections.map(s => s.id)} strategy={verticalListSortingStrategy}>
+            {orderedSections.map(section => (
+              <SortableSection key={section.id} id={section.id}>
+                <div className="mb-4 print:mb-2">
+                  <SectionHeader
+                    id={section.id}
+                    icon={section.icon}
+                    defaultTitle={section.title}
+                  />
+                  {renderSectionContent(section)}
+                </div>
+              </SortableSection>
+            ))}
+          </SortableContext>
+        </DndContext>
       </div>
     </div>
   );
 };
 
-export default TemplateFive;
+export default TemplateSix;

@@ -20,10 +20,9 @@ import Link from "next/link";
 import React, { useContext, useState, useEffect, useRef } from "react";
 import { ResumeContext } from "../../contexts/ResumeContext";
 import TemplateTwo from "./TemplateTwo";
+import TemplateThree from "./TemplateThree"
 import TemplateFour from "./TemplateFour"
 import TemplateFive from "./TemplateFive"
-
-import TemplateSix from "./TemplateSix"
 import { useSectionTitles } from "../../contexts/SectionTitleContext";
 import {
   DndContext,
@@ -89,17 +88,17 @@ const Preview = () => {
       icon: FaTh,
     },
     {
-    id: "template5",
-    name: "Fancy Template",
-    description: "New modern layout",
-    icon: FaFileAlt,
-  },
-  {
-    id: "template6",
-    name: "Smart Template",
-    description: "clean layout with divisions",
-    icon: FaFileAlt,
-  },
+      id: "template4",
+      name: "Fancy Template",
+      description: "New modern layout",
+      icon: FaFileAlt,
+    },
+    {
+      id: "template5",
+      name: "Smart Template",
+      description: "clean layout with divisions",
+      icon: FaFileAlt,
+    },
   ];
 
   const defaultSections = [
@@ -452,6 +451,30 @@ const Preview = () => {
             setResumeData={setResumeData}
           />
         );
+      case "template3":
+        return (
+          <TemplateThree
+            resumeData={resumeData}
+            sectionOrder={sectionOrder}
+            enabledSections={enabledSections}
+            handleDragEnd={handleDragEnd}
+            sensors={sensors}
+            icons={icons}
+            setResumeData={setResumeData}
+          />
+        );
+      case "template4":
+        return (
+          <TemplateFour
+            resumeData={resumeData}
+            sectionOrder={sectionOrder}
+            enabledSections={enabledSections}
+            handleDragEnd={handleDragEnd}
+            sensors={sensors}
+            icons={icons}
+            setResumeData={setResumeData}
+          />
+        );
       case "template5":
         return (
           <TemplateFive
@@ -464,21 +487,9 @@ const Preview = () => {
             setResumeData={setResumeData}
           />
         );
-      case "template6":
-        return (
-          <TemplateSix
-            resumeData={resumeData}
-            sectionOrder={sectionOrder}
-            enabledSections={enabledSections}
-            handleDragEnd={handleDragEnd}
-            sensors={sensors}
-            icons={icons}
-            setResumeData={setResumeData}
-          />
-        );
       default:
         return (
-          <TemplateFour
+          <TemplateThree
             resumeData={resumeData}
             sectionOrder={sectionOrder}
             enabledSections={enabledSections}
@@ -641,7 +652,14 @@ const ClassicTemplate = ({
 
   const orderedSections = sectionOrder
     .map((id) => sections.find((section) => section.id === id))
-    .filter((section) => section !== undefined && enabledSections[section.id]);
+    .filter((section) => {
+      if (!section || !enabledSections[section.id]) return false;
+      // Filter out sections with empty content
+      if (Array.isArray(section.content)) {
+        return section.content.length > 0;
+      }
+      return section.content && section.content.trim().length > 0;
+    });
 
   const renderSection = (section) => {
     switch (section.id) {
@@ -818,7 +836,7 @@ const ClassicTemplate = ({
               {customSectionTitles.softSkills || "Soft Skills"}
             </h2>
             <p className="content font-sans  text-black">
-              {resumeData.skills.find(skill => skill.title === "Soft Skills")?.skills?.join(", ")}
+              {section.content.join(", ")}
             </p>
           </div>
         );
