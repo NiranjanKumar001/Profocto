@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FaGoogle, FaTimes } from 'react-icons/fa';
-import { signIn } from 'next-auth/react';
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { FaGoogle, FaTimes } from "react-icons/fa";
+import { signIn } from "next-auth/react";
 
 const AuthModal = ({ isOpen, onClose }) => {
   const [loading, setLoading] = useState(false);
@@ -11,10 +11,10 @@ const AuthModal = ({ isOpen, onClose }) => {
   const handleMethodSelect = async (provider) => {
     setLoading(true);
     // Use window.location.origin to construct a full callback URL so redirects work across environments
-    const origin = typeof window !== 'undefined' ? window.location.origin : '';
+    const origin = typeof window !== "undefined" ? window.location.origin : "";
     await signIn(provider, {
       callbackUrl: `${origin}/builder`,
-      redirect: true
+      redirect: true,
     });
     setLoading(false);
   };
@@ -65,14 +65,15 @@ const AuthModal = ({ isOpen, onClose }) => {
               {/* Welcome Text */}
               <div className="text-center mb-6">
                 <p className="text-gray-600 text-sm">
-                  Continue with Google to create and manage your professional resume.
+                  Continue with Google to create and manage your professional
+                  resume.
                 </p>
               </div>
 
               {/* Sign-in options */}
               <div className="space-y-4">
                 <button
-                  onClick={() => handleMethodSelect('google')}
+                  onClick={() => handleMethodSelect("google")}
                   disabled={loading}
                   className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   type="button"
@@ -84,14 +85,13 @@ const AuthModal = ({ isOpen, onClose }) => {
                   )}
                   <span className="text-gray-700">Continue with Google</span>
                 </button>
-
-
               </div>
 
               {/* Security Notice */}
               <div className="mt-6 text-center">
                 <p className="text-xs text-gray-500">
-                  By continuing, you agree to our Terms of Service and Privacy Policy
+                  By continuing, you agree to our Terms of Service and Privacy
+                  Policy
                 </p>
               </div>
             </div>
