@@ -796,3 +796,36 @@
   visibility: visible;
   opacity: 1;
 }
+
+/* Print Styles - Ensure exact preview-to-print matching */
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  .exclude-print {
+    display: none !important;
+  }
+
+  /* Ensure backgrounds and colors print */
+  .bg-pink-600,
+  .bg-pink-50,
+  .bg-gray-100,
+  .bg-gray-200,
+  .bg-white {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}

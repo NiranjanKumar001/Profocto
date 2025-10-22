@@ -37,7 +37,31 @@ export default function Hero() {
     useEffect(() => {
         const error = searchParams.get('error');
         if (error) {
-            toast.error('Sign-in was canceled. Please try again.');
+            // Show a friendly toast but include the raw error in console for debugging
+            console.debug('NextAuth error param:', error);
+            // Map some common NextAuth error keys to friendlier messages
+            const friendly = {
+                OAuthSignin: 'Error signing in with OAuth provider. Please try again.',
+                OAuthCallback: 'OAuth callback failed. Please try again.',
+                OAuthCreateAccount: 'Could not create account with provider. Please try another sign-in method.',
+                EmailCreateAccount: 'Could not create account. Please try again.',
+                Callback: 'Sign-in callback failed. Please try again.',
+                OAuthAccountNotLinked: 'An existing account is already linked with a different provider. Try signing in with that provider.',
+                Default: 'Sign-in was canceled. Please try again.'
+            };
+
+            const message = friendly[error] || friendly.Default;
+            toast.error(message);
+
+            // Remove the error param so the toast doesn't re-appear on page refresh or navigation
+            try {
+                const url = new URL(window.location.href);
+                url.searchParams.delete('error');
+                // Use replaceState so browser history isn't polluted
+                window.history.replaceState({}, '', url.toString());
+            } catch (e) {
+                // If URL API fails for any reason, silently ignore
+            }
         }
     }, [searchParams]);
 

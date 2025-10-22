@@ -2,19 +2,39 @@ import { NextAuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import { convexAdapter } from '@/lib/convex-client';
 
+// Determine whether Convex adapter should be enabled. For local development
+// the user may not have set a proper Convex deploy key. We treat values that
+// look like URLs as misconfigured (your `.env.local` currently has a URL there).
+const convexUrl = process.env.NEXT_PUBLIC_CONVEX_URL;
+const convexDeployKey = process.env.CONVEX_DEPLOY_KEY;
+const hasConvexAdapter = Boolean(
+  convexUrl && convexDeployKey && !/^https?:\/\//i.test(convexDeployKey)
+);
+
+if (!hasConvexAdapter) {
+  console.warn('[auth.config] Convex adapter disabled: missing or invalid CONVEX_DEPLOY_KEY. Falling back to JWT sessions for local dev.');
+}
+
 export const authOptions: NextAuthOptions = {
-  debug: false, // Disabled for clean console output
+  // Enable debug while troubleshooting sign-in callback failures (disable in production)
+  debug: true,
   secret: process.env.NEXTAUTH_SECRET,
-  
-  // Use Convex database adapter
-  adapter: convexAdapter,
-  
-  // Configure session handling with database
-  session: {
-    strategy: 'database',
-    maxAge: 30 * 24 * 60 * 60, // 30 days
-    updateAge: 24 * 60 * 60, // 24 hours
-  },
+
+  // Only attach the database adapter when Convex envs look valid. If not
+  // present, fall back to JWT sessions so sign-in callbacks do not fail.
+  ...(hasConvexAdapter ? { adapter: convexAdapter } : {}),
+
+  // Configure session handling: use 'database' when adapter available, else 'jwt'
+  session: hasConvexAdapter
+    ? {
+        strategy: 'database',
+        maxAge: 30 * 24 * 60 * 60, // 30 days
+        updateAge: 24 * 60 * 60, // 24 hours
+      }
+    : {
+        strategy: 'jwt',
+        maxAge: 30 * 24 * 60 * 60,
+      },
   
   // Configure Google authentication provider only
   providers: [

@@ -28,6 +28,8 @@ import TemplateTwo from "./TemplateTwo";
 import TemplateThree from "./TemplateThree"
 import TemplateFour from "./TemplateFour"
 import TemplateFive from "./TemplateFive"
+import TemplateSix from "./TemplateSix";
+import TemplateSeven from "./TemplateSeven";
 import { useSectionTitles } from "../../contexts/SectionTitleContext";
 import {
   DndContext,
@@ -102,6 +104,18 @@ const Preview = () => {
       id: "template5",
       name: "Smart Template",
       description: "clean layout with divisions",
+      icon: FaFileAlt,
+    },
+    {
+      id: "template6",
+      name: "Modern Two-Column",
+      description: "Bold sidebar with accent colors",
+      icon: FaTh,
+    },
+    {
+      id: "template7",
+      name: "Minimalist",
+      description: "Clean, single-column modern resume",
       icon: FaFileAlt,
     },
   ];
@@ -490,6 +504,30 @@ const Preview = () => {
       case "template5":
         return (
           <TemplateFive
+            resumeData={resumeData}
+            sectionOrder={sectionOrder}
+            enabledSections={enabledSections}
+            handleDragEnd={handleDragEnd}
+            sensors={sensors}
+            icons={icons}
+            setResumeData={setResumeData}
+          />
+        );
+      case "template6":
+        return (
+          <TemplateSix
+            resumeData={resumeData}
+            sectionOrder={sectionOrder}
+            enabledSections={enabledSections}
+            handleDragEnd={handleDragEnd}
+            sensors={sensors}
+            icons={icons}
+            setResumeData={setResumeData}
+          />
+        );
+      case "template7":
+        return (
+          <TemplateSeven
             resumeData={resumeData}
             sectionOrder={sectionOrder}
             enabledSections={enabledSections}

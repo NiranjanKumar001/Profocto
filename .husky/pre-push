@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Run lint and typecheck before pushing
+npm run lint
+npm run typecheck
+# Prevent push if build fails
+npm run build
