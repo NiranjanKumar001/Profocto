@@ -239,7 +239,7 @@ export default function BuilderPage() {
               <div
                 className={`w-full lg:w-[45%] xl:w-[40%] h-screen lg:h-screen md:h-auto exclude-print relative overflow-x-hidden ${
                   mobileView === 'preview' ? 'hidden lg:block' : 'block'
-                } pt-16 lg:pt-0 pb-16 lg:pb-0 print:pt-0 print:pb-0`}
+                } pt-16 lg:pt-0 pb-16 lg:pb-0`}
                 style={{ backgroundColor: "hsl(240 10% 3.9%)" }}
               >
                 {/* Fixed Animated Background Grid */}
@@ -254,7 +254,7 @@ export default function BuilderPage() {
                 </div>
                 <div
                   ref={divRef}
-                  className='h-full border-r relative z-10 overflow-y-auto overflow-x-hidden'
+                  className='h-full border-r print:border-r-0 relative z-10 overflow-y-auto overflow-x-hidden'
                   style={{ borderColor: "hsl(240 3.7% 15.9%)" }}
                 >
                   <div className='p-4 sm:p-6 lg:p-5 relative z-20 backdrop-blur-[1.5px]'>
@@ -516,7 +516,7 @@ export default function BuilderPage() {
                 formClose ? "w-full" : "w-full lg:w-[55%] xl:w-[60%]"
               } transition-all duration-300 min-h-screen lg:min-h-0 ${
                 mobileView === 'form' ? 'hidden lg:block' : 'block'
-              } pt-16 lg:pt-0 pb-16 lg:pb-0 print:pt-0 print:pb-0 print:w-full print:block`}
+              } pt-16 lg:pt-0 pb-16 lg:pb-0 print:!block print:!w-full print:pt-0 print:pb-0`}
             >
               <Preview />
             </div>

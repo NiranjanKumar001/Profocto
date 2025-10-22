@@ -682,29 +682,11 @@
         margin: -3mm 8mm;
     }
 
-    /* Show only the preview content in print */
-    body, html {
-        margin: 0 !important;
-        padding: 0 !important;
-        background: white !important;
-        overflow: visible !important;
-    }
-
-    /* Hide the form sidebar completely */
-    .exclude-print {
-        display: none !important;
-    }
-
-    /* Make the preview section full width */
     .preview {
         overflow-y: visible !important;
         height: auto !important;
         position: static !important;
         background: white !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        padding: 0 !important;
-        margin: 0 !important;
     }
 
     .a4-preview {
@@ -725,18 +707,22 @@
         margin: 0 !important;
     }
 
+    body, html {
+        margin: 0 !important;
+        padding: 0 !important;
+        background: white !important;
+    }
+
     .bg-gray-50 {
         background: white !important;
     }
 
-    /* Optimize text for print */
     * {
         -webkit-print-color-adjust: exact !important;
         color-adjust: exact !important;
         print-color-adjust: exact !important;
     }
 
-    /* Ensure exact font sizes match preview */
     .a4-preview * {
         font-size: inherit !important;
         line-height: inherit !important;
@@ -744,13 +730,11 @@
         padding: inherit !important;
     }
 
-    /* Ensure proper page breaks */
     .no-break {
         page-break-inside: avoid !important;
         break-inside: avoid !important;
     }
 
-    /* Remove any transforms that might cause issues */
     * {
         transform: none !important;
     }

@@ -321,7 +321,7 @@ const TemplateFive = ({
           ))}
         </div>
 
-        <div className="w-full md:w-2/3 p-0 border-l border-gray-300 pl-4 print:pl-3">
+        <div className="w-full md:w-2/3 p-0 border-l border-gray-300 pl-4 print:pl-3 print:border-l-0">
           <DndContext
             sensors={sensors}
             collisionDetection={closestCenter}
