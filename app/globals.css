@@ -15,8 +15,8 @@
         color: hsl(0 0% 98%);
     }
     
-    body {
-        @apply font-[sans-serif];
+    html, body {
+        @apply font-[sans-serif] overflow-x-hidden;
     }
 
     ::-webkit-scrollbar {

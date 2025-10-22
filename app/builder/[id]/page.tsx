@@ -234,10 +234,10 @@ export default function BuilderPage() {
             </div>
           </div>
 
-          <div className='flex flex-col lg:flex-row min-h-screen max-w-full overflow-hidden'>
+          <div className='flex flex-col lg:flex-row min-h-screen max-w-full overflow-x-hidden'>
             {!formClose && (
               <div
-                className={`w-full lg:w-[45%] xl:w-[40%] h-screen lg:h-screen md:h-auto exclude-print relative ${
+                className={`w-full lg:w-[45%] xl:w-[40%] h-screen lg:h-screen md:h-auto exclude-print relative overflow-x-hidden ${
                   mobileView === 'preview' ? 'hidden lg:block' : 'block'
                 } pt-16 lg:pt-0 pb-16 lg:pb-0`}
                 style={{ backgroundColor: "hsl(240 10% 3.9%)" }}
@@ -254,7 +254,7 @@ export default function BuilderPage() {
                 </div>
                 <div
                   ref={divRef}
-                  className='h-full border-r relative z-10 overflow-y-auto'
+                  className='h-full border-r relative z-10 overflow-y-auto overflow-x-hidden'
                   style={{ borderColor: "hsl(240 3.7% 15.9%)" }}
                 >
                   <div className='p-4 sm:p-6 lg:p-5 relative z-20 backdrop-blur-[1.5px]'>
