@@ -679,14 +679,32 @@
 
     @page {
         size: A4;
-        margin: -3mm 8mm; /* Reduced margins for more content space */
+        margin: -3mm 8mm;
     }
 
+    /* Show only the preview content in print */
+    body, html {
+        margin: 0 !important;
+        padding: 0 !important;
+        background: white !important;
+        overflow: visible !important;
+    }
+
+    /* Hide the form sidebar completely */
+    .exclude-print {
+        display: none !important;
+    }
+
+    /* Make the preview section full width */
     .preview {
         overflow-y: visible !important;
         height: auto !important;
         position: static !important;
         background: white !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
     }
 
     .a4-preview {
@@ -694,7 +712,7 @@
         max-width: none !important;
         height: auto !important;
         margin: 0 !important;
-        padding: 0 !important; /* Remove padding since @page has margins */
+        padding: 0 !important;
         box-shadow: none !important;
         border-radius: 0 !important;
         background: white !important;
@@ -702,22 +720,14 @@
         box-sizing: border-box !important;
     }
     
-    /* Ensure content has no padding in print */
     .preview-content {
         padding: 0 !important;
         margin: 0 !important;
     }
 
-    /* Ensure single page layout */
-    body, html {
-        margin: 0 !important;
-        padding: 0 !important;
-        background: white !important;
-    }
-
-    /* Hide any unnecessary elements during print */
     .bg-gray-50 {
         background: white !important;
+    }
     }
 
     /* Optimize text for print */

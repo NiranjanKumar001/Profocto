@@ -516,7 +516,7 @@ export default function BuilderPage() {
                 formClose ? "w-full" : "w-full lg:w-[55%] xl:w-[60%]"
               } transition-all duration-300 min-h-screen lg:min-h-0 ${
                 mobileView === 'form' ? 'hidden lg:block' : 'block'
-              } pt-16 lg:pt-0 pb-16 lg:pb-0 print:pt-0 print:pb-0`}
+              } pt-16 lg:pt-0 pb-16 lg:pb-0 print:pt-0 print:pb-0 print:w-full print:block`}
             >
               <Preview />
             </div>
