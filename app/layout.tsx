@@ -94,7 +94,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <head>
         <StructuredData />
       </head>
-      <body suppressHydrationWarning={true} className="overflow-x-hidden">
+      <body suppressHydrationWarning={true}>
         <ConvexClientProvider>
           <AuthProvider>{children}</AuthProvider>
         </ConvexClientProvider>

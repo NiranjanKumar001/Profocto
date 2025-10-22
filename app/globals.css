@@ -15,8 +15,8 @@
         color: hsl(0 0% 98%);
     }
     
-    html, body {
-        @apply font-[sans-serif] overflow-x-hidden;
+    body {
+        @apply font-[sans-serif];
     }
 
     ::-webkit-scrollbar {
@@ -679,7 +679,7 @@
 
     @page {
         size: A4;
-        margin: -3mm 8mm;
+        margin: -3mm 8mm; /* Reduced margins for more content space */
     }
 
     .preview {
@@ -694,7 +694,7 @@
         max-width: none !important;
         height: auto !important;
         margin: 0 !important;
-        padding: 0 !important;
+        padding: 0 !important; /* Remove padding since @page has margins */
         box-shadow: none !important;
         border-radius: 0 !important;
         background: white !important;
@@ -702,27 +702,32 @@
         box-sizing: border-box !important;
     }
     
+    /* Ensure content has no padding in print */
     .preview-content {
         padding: 0 !important;
         margin: 0 !important;
     }
 
+    /* Ensure single page layout */
     body, html {
         margin: 0 !important;
         padding: 0 !important;
         background: white !important;
     }
 
+    /* Hide any unnecessary elements during print */
     .bg-gray-50 {
         background: white !important;
     }
 
+    /* Optimize text for print */
     * {
         -webkit-print-color-adjust: exact !important;
         color-adjust: exact !important;
         print-color-adjust: exact !important;
     }
 
+    /* Ensure exact font sizes match preview */
     .a4-preview * {
         font-size: inherit !important;
         line-height: inherit !important;
@@ -730,11 +735,13 @@
         padding: inherit !important;
     }
 
+    /* Ensure proper page breaks */
     .no-break {
         page-break-inside: avoid !important;
         break-inside: avoid !important;
     }
 
+    /* Remove any transforms that might cause issues */
     * {
         transform: none !important;
     }
