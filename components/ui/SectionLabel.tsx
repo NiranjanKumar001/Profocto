@@ -3,7 +3,7 @@ import { AnimatedShinyText } from "@/components/magicui/animated-shiny-text";
 import { BorderBeam } from "@/components/magicui/border-beam";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 
 const SectionLabel = ({ title, badge }: { title: string; badge?: string }) => {
   return (
