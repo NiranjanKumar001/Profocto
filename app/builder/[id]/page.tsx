@@ -84,6 +84,9 @@ export default function BuilderPage() {
 
   // Form hide/show
   const [formClose, setFormClose] = useState(false);
+  
+  // Mobile view state: 'form' or 'preview'
+  const [mobileView, setMobileView] = useState<'form' | 'preview'>('form');
 
   // Profile picture handler
   const handleProfilePicture = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -152,10 +155,91 @@ export default function BuilderPage() {
             handleChange,
           }}
         >
+          {/* Mobile Navbar - Only visible on mobile/tablet */}
+          <div className='lg:hidden fixed top-0 left-0 right-0 z-50 bg-black border-b border-pink-500/20 h-16'>
+            <div className='flex items-center justify-between h-full px-4'>
+              {/* Logo */}
+              <div className='flex items-center gap-1'>
+                <h1 className='text-xl font-bold text-gray-200'>Profocto</h1>
+                <FaOctopusDeploy className='text-pink-500 size-5' />
+              </div>
+
+              {/* Profile Picture */}
+              <div className='relative'>
+                <div
+                  className='w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold text-sm shadow-lg ring-2 ring-pink-500/30 overflow-hidden'
+                  style={{
+                    background:
+                      "linear-gradient(135deg, hsl(322, 84%, 60%) 0%, hsl(270, 84%, 60%) 100%)",
+                  }}
+                >
+                  {session?.user?.image ? (
+                    <Image
+                      src={session.user.image}
+                      alt={session.user.name || "User"}
+                      width={40}
+                      height={40}
+                      className='w-full h-full rounded-full object-cover'
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = "none";
+                      }}
+                    />
+                  ) : (
+                    <div className='w-full h-full flex items-center justify-center text-white text-lg font-bold'>
+                      {session?.user?.name?.charAt(0).toUpperCase() || "U"}
+                    </div>
+                  )}
+                </div>
+                <div
+                  className='absolute -top-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-black'
+                ></div>
+              </div>
+            </div>
+          </div>
+
+          {/* Mobile Bottom Navigation - Only visible on mobile/tablet */}
+          <div className='lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-black border-t border-pink-500/20 h-16'>
+            <div className='flex items-center h-full'>
+              {/* Editor Tab */}
+              <button
+                onClick={() => setMobileView('form')}
+                className={`flex-1 h-full flex flex-col items-center justify-center gap-1 transition-all duration-200 ${
+                  mobileView === 'form'
+                    ? 'bg-pink-500/10 border-t-2 border-pink-500 text-pink-400'
+                    : 'text-gray-400 hover:text-gray-300'
+                }`}
+              >
+                <svg className='w-6 h-6' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z' />
+                </svg>
+                <span className='text-xs font-medium'>Editor</span>
+              </button>
+
+              {/* Preview Tab */}
+              <button
+                onClick={() => setMobileView('preview')}
+                className={`flex-1 h-full flex flex-col items-center justify-center gap-1 transition-all duration-200 ${
+                  mobileView === 'preview'
+                    ? 'bg-pink-500/10 border-t-2 border-pink-500 text-pink-400'
+                    : 'text-gray-400 hover:text-gray-300'
+                }`}
+              >
+                <svg className='w-6 h-6' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M15 12a3 3 0 11-6 0 3 3 0 016 0z' />
+                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z' />
+                </svg>
+                <span className='text-xs font-medium'>Preview</span>
+              </button>
+            </div>
+          </div>
+
           <div className='flex flex-col lg:flex-row min-h-screen max-w-full overflow-hidden'>
             {!formClose && (
               <div
-                className='w-full lg:w-[45%] xl:w-[40%] h-screen lg:h-screen md:h-auto exclude-print relative'
+                className={`w-full lg:w-[45%] xl:w-[40%] h-screen lg:h-screen md:h-auto exclude-print relative ${
+                  mobileView === 'preview' ? 'hidden lg:block' : 'block'
+                } pt-16 lg:pt-0 pb-16 lg:pb-0`}
                 style={{ backgroundColor: "hsl(240 10% 3.9%)" }}
               >
                 {/* Fixed Animated Background Grid */}
@@ -174,9 +258,8 @@ export default function BuilderPage() {
                   style={{ borderColor: "hsl(240 3.7% 15.9%)" }}
                 >
                   <div className='p-4 sm:p-6 lg:p-5 relative z-20 backdrop-blur-[1.5px]'>
-                    {/* Header */}
 
-                    <div className='bg-black/85 border border-pink-400/80 hover:border-pink-400  h-12 relative md:p-0 overflow-hidden flex flex-col gap-1 justify-center items-center mb-6 w-full rounded-full'>
+                    <div className='bg-black/85 border border-pink-400/80 hover:border-pink-400 h-12 relative md:p-0 overflow-hidden gap-1 justify-center items-center mb-6 w-full rounded-full hidden lg:flex flex-col'>
                       <div className=' flex gap-0.5 items-center'>
                         <h1 className='text-2xl md:text-3-xl text-gray-200 font-bold tracking-wide'>
                           Profocto
@@ -243,8 +326,8 @@ export default function BuilderPage() {
                       <Certification />
                     </div>
 
-                    {/* Floating Profile Pocket - stick only on large screens to avoid overlap */}
-                    <div className='relative lg:sticky bottom-0 left-0 right-0 p-4 z-10 mt-6'>
+                    {/* Floating Profile Pocket - Hidden on mobile */}
+                    <div className='relative lg:sticky bottom-0 left-0 right-0 p-4 z-10 mt-6 hidden lg:block'>
                       <div
                         className='relative p-4 rounded-xl border backdrop-blur-sm'
                         style={{
@@ -431,7 +514,9 @@ export default function BuilderPage() {
             <div
               className={`${
                 formClose ? "w-full" : "w-full lg:w-[55%] xl:w-[60%]"
-              } transition-all duration-300 min-h-screen lg:min-h-0`}
+              } transition-all duration-300 min-h-screen lg:min-h-0 ${
+                mobileView === 'form' ? 'hidden lg:block' : 'block'
+              } pt-16 lg:pt-0 pb-16 lg:pb-0`}
             >
               <Preview />
             </div>
