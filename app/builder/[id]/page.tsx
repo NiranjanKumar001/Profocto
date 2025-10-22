@@ -156,7 +156,7 @@ export default function BuilderPage() {
           }}
         >
           {/* Mobile Navbar - Only visible on mobile/tablet */}
-          <div className='lg:hidden fixed top-0 left-0 right-0 z-50 bg-black border-b border-pink-500/20 h-16'>
+          <div className='lg:hidden fixed top-0 left-0 right-0 z-50 bg-black border-b border-pink-500/20 h-16 exclude-print'>
             <div className='flex items-center justify-between h-full px-4'>
               {/* Logo */}
               <div className='flex items-center gap-1'>
@@ -199,7 +199,7 @@ export default function BuilderPage() {
           </div>
 
           {/* Mobile Bottom Navigation - Only visible on mobile/tablet */}
-          <div className='lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-black border-t border-pink-500/20 h-16'>
+          <div className='lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-black border-t border-pink-500/20 h-16 exclude-print'>
             <div className='flex items-center h-full'>
               {/* Editor Tab */}
               <button
@@ -239,7 +239,7 @@ export default function BuilderPage() {
               <div
                 className={`w-full lg:w-[45%] xl:w-[40%] h-screen lg:h-screen md:h-auto exclude-print relative overflow-x-hidden ${
                   mobileView === 'preview' ? 'hidden lg:block' : 'block'
-                } pt-16 lg:pt-0 pb-16 lg:pb-0`}
+                } pt-16 lg:pt-0 pb-16 lg:pb-0 print:pt-0 print:pb-0`}
                 style={{ backgroundColor: "hsl(240 10% 3.9%)" }}
               >
                 {/* Fixed Animated Background Grid */}
@@ -516,7 +516,7 @@ export default function BuilderPage() {
                 formClose ? "w-full" : "w-full lg:w-[55%] xl:w-[60%]"
               } transition-all duration-300 min-h-screen lg:min-h-0 ${
                 mobileView === 'form' ? 'hidden lg:block' : 'block'
-              } pt-16 lg:pt-0 pb-16 lg:pb-0`}
+              } pt-16 lg:pt-0 pb-16 lg:pb-0 print:pt-0 print:pb-0`}
             >
               <Preview />
             </div>
