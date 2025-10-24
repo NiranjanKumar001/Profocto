@@ -289,7 +289,7 @@ export default function BuilderPage() {
                       <Certification />
                     </div>
 
-                    <div className='relative lg:sticky bottom-0 left-0 right-0 p-4 z-10 mt-6'>
+                    <div className='hidden lg:block relative lg:sticky bottom-0 left-0 right-0 p-4 z-10 mt-6'>
                       <div
                         className='relative p-4 rounded-xl border backdrop-blur-sm'
                         style={{
