@@ -394,8 +394,8 @@ const Preview = () => {
                         setIsDropdownOpen(false);
                       }}
                       className={`w-full px-4 py-3 flex items-center gap-3 hover:bg-pink-50 transition-colors ${currentTemplate === template.id
-                          ? "bg-pink-50 border-r-2 border-pink-500"
-                          : ""
+                        ? "bg-pink-50 border-r-2 border-pink-500"
+                        : ""
                         }`}
                     >
                       <IconComponent
@@ -632,7 +632,6 @@ const ClassicTemplate = ({
     }
   };
 
-  // Define sections like Modern Template
   const sections = [
     {
       id: "summary",
@@ -907,11 +906,7 @@ const ClassicTemplate = ({
   if (!isClient) {
     return (
       <div className="w-full h-full bg-white p-4">
-        <div className="text-center mb-1
-        
-        
-        
-        ">
+        <div className="text-center mb-1">
           <h1 className="text-4xl font-bold text-gray-900">{resumeData.name}</h1>
           <p className="text-lg text-gray-700">{resumeData.position}</p>
         </div>
@@ -960,10 +955,10 @@ const ClassicTemplate = ({
             return (
               <a
                 href={`${socialMedia.socialMedia.toLowerCase() === "website"
-                    ? "https://"
-                    : socialMedia.socialMedia.toLowerCase() === "linkedin"
-                      ? "https://www."
-                      : "https://www."
+                  ? "https://"
+                  : socialMedia.socialMedia.toLowerCase() === "linkedin"
+                    ? "https://www."
+                    : "https://www."
                   }${socialMedia.link}`}
                 key={index}
                 className='inline-flex items-center gap-1 text-black'

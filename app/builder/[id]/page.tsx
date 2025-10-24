@@ -193,15 +193,14 @@ export default function BuilderPage() {
             onViewChange={handleMobileViewChange}
           />
 
-          <div className='flex flex-col lg:flex-row min-h-screen max-w-full overflow-hidden pt-[60px] lg:pt-0 pb-[73px] lg:pb-0 relative'>
+          <div className='flex flex-col lg:flex-row h-screen max-w-full overflow-hidden pt-[60px] lg:pt-0 pb-[73px] lg:pb-0 relative'>
             {!formClose && (
               <div
                 className={`w-full lg:w-[45%] xl:w-[40%] exclude-print transition-opacity duration-200 lg:relative ${
                   mobileView === "edit" ? "block opacity-100 relative z-10" : "absolute inset-0 opacity-0 pointer-events-none lg:block lg:relative lg:opacity-100 lg:pointer-events-auto lg:z-auto"
-                }`}
+                } h-full`}
                 style={{ 
                   backgroundColor: "hsl(240 10% 3.9%)",
-                  height: 'calc(100vh - 60px - 73px)',
                 }}
               >
                 {/* Fixed Animated Background Grid - Only on desktop */}

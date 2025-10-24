@@ -798,6 +798,49 @@
         margin: inherit !important;
         padding: inherit !important;
     }
+    
+    /* Fix mobile layout issues in print */
+    /* Hide mobile navigation completely */
+    [class*="MobileNavbar"],
+    [class*="MobileBottomNav"],
+    nav[class*="fixed"],
+    nav[class*="lg:hidden"] {
+        display: none !important;
+        visibility: hidden !important;
+    }
+    
+    /* Reset mobile padding/margins for print */
+    .pt-\[60px\],
+    .pb-\[73px\],
+    [style*="padding-top"],
+    [style*="padding-bottom"] {
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+    }
+    
+    /* Force both form and preview to be hidden/shown appropriately */
+    /* Only show the preview content, hide the form */
+    .flex.flex-col.lg\:flex-row {
+        display: flex !important;
+        flex-direction: row !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    
+    /* Force preview container to be visible and full width */
+    .flex.flex-col.lg\:flex-row > div:last-child {
+        opacity: 1 !important;
+        position: static !important;
+        pointer-events: auto !important;
+        width: 100% !important;
+        min-height: auto !important;
+        display: block !important;
+    }
+    
+    /* Hide height constraints */
+    [style*="calc(100vh"] {
+        height: auto !important;
+    }
 
     /* Ensure proper page breaks */
     .no-break {
