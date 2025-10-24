@@ -56,11 +56,11 @@ const LoadUnload = () => {
 
   return (
     <>
-      <div className="flex flex-wrap gap-4 mb-2 justify-center">
-        <div className="inline-flex flex-row items-center gap-2">
-          <h2 className="text-[1.2rem] text-white">Load Data</h2>
-          <label className="tooltip p-2 text-white bg-zinc-800 rounded cursor-pointer hover:bg-zinc-700 transition-colors">
-            <FaCloudUploadAlt className="text-[1.2rem] text-white" />
+      <div className="flex flex-nowrap gap-2 sm:gap-4 mb-2 justify-center items-center">
+        <div className="inline-flex flex-row items-center gap-1 sm:gap-2">
+          <h2 className="text-[0.85rem] sm:text-[1.2rem] text-white whitespace-nowrap">Load Data</h2>
+          <label className="tooltip p-1.5 sm:p-2 text-white bg-zinc-800 rounded cursor-pointer hover:bg-zinc-700 transition-colors">
+            <FaCloudUploadAlt className="text-[0.95rem] sm:text-[1.2rem] text-white" />
             <span className="tooltiptext">Upload JSON file</span>
             <input
               aria-label="Load Data"
@@ -71,12 +71,12 @@ const LoadUnload = () => {
             />
           </label>
         </div>
-        <div className="inline-flex flex-row items-center gap-2">
-          <h2 className="text-[1.2rem] text-white">Save Data</h2>
+        <div className="inline-flex flex-row items-center gap-1 sm:gap-2">
+          <h2 className="text-[0.85rem] sm:text-[1.2rem] text-white whitespace-nowrap">Save Data</h2>
           <div className="tooltip">
             <button
               aria-label="Save Data"
-              className="p-2 text-white bg-zinc-800 rounded hover:bg-zinc-700 transition-colors"
+              className="p-1.5 sm:p-2 text-white bg-zinc-800 rounded hover:bg-zinc-700 transition-colors"
               onClick={(event) =>
                 handleDownload(
                   resumeData,
@@ -85,20 +85,20 @@ const LoadUnload = () => {
                 )
               }
             >
-              <FaCloudDownloadAlt className="text-[1.2rem] text-white" />
+              <FaCloudDownloadAlt className="text-[0.95rem] sm:text-[1.2rem] text-white" />
             </button>
             <span className="tooltiptext">Download JSON file</span>
           </div>
         </div>
-        <div className="inline-flex flex-row items-center gap-2">
-          <h2 className="text-[1.2rem] text-white">Reset</h2>
+        <div className="inline-flex flex-row items-center gap-1 sm:gap-2">
+          <h2 className="text-[0.85rem] sm:text-[1.2rem] text-white whitespace-nowrap">Reset</h2>
           <div className="tooltip">
             <button
               aria-label="Reset to Default"
-              className="p-2 text-white bg-red-700 rounded hover:bg-red-600 transition-colors"
+              className="p-1.5 sm:p-2 text-white bg-red-700 rounded hover:bg-red-600 transition-colors"
               onClick={handleResetClick}
             >
-              <FaRedo className="text-[1.2rem] text-white" />
+              <FaRedo className="text-[0.95rem] sm:text-[1.2rem] text-white" />
             </button>
             <span className="tooltiptext">Reset to default data</span>
           </div>
