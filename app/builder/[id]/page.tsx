@@ -9,8 +9,20 @@ import LogoutLoader from "@/components/auth/LogoutLoader";
 // Import your existing builder components
 import Language from "@/components/form/Language";
 import LoadUnload from "@/components/form/LoadUnload";
-import Preview from "@/components/preview/Preview";
 import DefaultResumeData from "@/components/utility/DefaultResumeData";
+
+// Lazy load Preview for better initial performance
+const Preview = dynamic(() => import("@/components/preview/Preview"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-screen flex items-center justify-center bg-slate-100">
+      <div className="text-center">
+        <div className="w-16 h-16 border-4 border-pink-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+        <p className="text-gray-600">Loading preview...</p>
+      </div>
+    </div>
+  ),
+});
 import SocialMedia from "@/components/form/SocialMedia";
 import WorkExperience from "@/components/form/WorkExperience";
 import Skill from "@/components/form/Skill";
@@ -89,12 +101,25 @@ export default function BuilderPage() {
 
   // Mobile view state - "edit" or "preview"
   const [mobileView, setMobileView] = useState<"edit" | "preview">("edit");
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   // Handle mobile view change with smooth transition
   const handleMobileViewChange = (view: "edit" | "preview") => {
-    setMobileView(view);
-    // Scroll to top on view change for better UX
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (view === mobileView || isTransitioning) return;
+    
+    setIsTransitioning(true);
+    
+    // Add fade transition
+    requestAnimationFrame(() => {
+      setMobileView(view);
+      
+      // Reset transition state after animation completes
+      setTimeout(() => {
+        setIsTransitioning(false);
+        // Scroll to top on view change for better UX
+        window.scrollTo({ top: 0, behavior: "instant" });
+      }, 200);
+    });
   };
 
   // Profile picture handler
@@ -173,13 +198,15 @@ export default function BuilderPage() {
             onViewChange={handleMobileViewChange}
           />
 
-          <div className='flex flex-col lg:flex-row min-h-screen max-w-full overflow-hidden pt-[60px] lg:pt-0 pb-[73px] lg:pb-0'>
+          <div className='flex flex-col lg:flex-row min-h-screen max-w-full overflow-hidden pt-[60px] lg:pt-0 pb-[73px] lg:pb-0 bg-[hsl(240_10%_3.9%)] lg:bg-transparent relative'>
             {!formClose && (
               <div
-                className={`w-full lg:w-[45%] xl:w-[40%] h-screen lg:h-screen md:h-auto exclude-print relative ${
-                  mobileView === "edit" ? "block" : "hidden lg:block"
+                className={`w-full lg:w-[45%] xl:w-[40%] h-screen lg:h-screen md:h-auto exclude-print transition-opacity duration-200 lg:relative ${
+                  mobileView === "edit" ? "block opacity-100 relative z-10" : "absolute inset-0 opacity-0 pointer-events-none lg:block lg:relative lg:opacity-100 lg:pointer-events-auto lg:z-auto"
                 }`}
-                style={{ backgroundColor: "hsl(240 10% 3.9%)" }}
+                style={{ 
+                  backgroundColor: "hsl(240 10% 3.9%)",
+                }}
               >
                 {/* Fixed Animated Background Grid */}
                 <div className='fixed inset-0 w-full lg:w-[45%] xl:w-[40%] h-screen z-0 hidden lg:block'>
@@ -455,8 +482,8 @@ export default function BuilderPage() {
               className={`${
                 formClose ? "w-full" : "w-full lg:w-[55%] xl:w-[60%]"
               } ${
-                mobileView === "preview" ? "block" : "hidden lg:block"
-              } transition-all duration-300 min-h-screen lg:min-h-0`}
+                mobileView === "preview" ? "block opacity-100 relative z-10" : "absolute inset-0 opacity-0 pointer-events-none lg:block lg:relative lg:opacity-100 lg:pointer-events-auto lg:z-auto"
+              } transition-opacity duration-200 min-h-screen lg:min-h-0 bg-slate-100 lg:bg-transparent`}
             >
               <Preview />
             </div>

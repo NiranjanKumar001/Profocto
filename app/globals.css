@@ -17,6 +17,23 @@
     
     body {
         @apply font-[sans-serif];
+        /* Mobile performance optimizations */
+        -webkit-overflow-scrolling: touch;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Mobile-specific scroll optimizations */
+    @media (max-width: 1024px) {
+        body {
+            overscroll-behavior: none;
+        }
+        
+        /* Optimize scrollable containers on mobile */
+        .overflow-y-auto,
+        .overflow-auto {
+            -webkit-overflow-scrolling: touch;
+            will-change: scroll-position;
+        }
     }
 
     ::-webkit-scrollbar {

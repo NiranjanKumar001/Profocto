@@ -1,16 +1,20 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 
 /**
  * TemplateWrapper - Ensures resume looks exactly the same in preview and print/export
  * Fixed A4 dimensions with proper scaling for all devices
+ * Optimized for mobile performance
  */
 const TemplateWrapper = ({ children }) => {
   const [isOverflowing, setIsOverflowing] = useState(false);
   const [scale, setScale] = useState(1);
+  const [isClient, setIsClient] = useState(false);
   const contentRef = useRef(null);
   const containerRef = useRef(null);
+  const resizeTimeoutRef = useRef(null);
+  const observerTimeoutRef = useRef(null);
 
   // A4 dimensions in pixels at 96 DPI (standard screen resolution)
   const A4_WIDTH_PX = 794; // 210mm = 794px at 96 DPI
@@ -20,74 +24,134 @@ const TemplateWrapper = ({ children }) => {
   const MARGIN_TOP_BOTTOM = 38; // 10mm
   const MARGIN_LEFT_RIGHT = 45; // 12mm (~0.47 inches)
 
-  useEffect(() => {
-    const checkOverflow = () => {
+  // Memoized overflow check with debouncing
+  const checkOverflow = useCallback(() => {
+    if (!contentRef.current) return;
+    
+    // Use RAF for better performance
+    requestAnimationFrame(() => {
       if (contentRef.current) {
         const contentHeight = contentRef.current.scrollHeight;
-        setIsOverflowing(contentHeight > A4_HEIGHT_PX);
+        const newIsOverflowing = contentHeight > A4_HEIGHT_PX;
+        setIsOverflowing(prev => prev !== newIsOverflowing ? newIsOverflowing : prev);
       }
-    };
+    });
+  }, [A4_HEIGHT_PX]);
 
-    const calculateScale = () => {
-      if (containerRef.current && typeof window !== 'undefined') {
-        const containerWidth = containerRef.current.offsetWidth;
-        const padding = 32; // Total horizontal padding
-        const availableWidth = containerWidth - padding;
-        const newScale = Math.min(availableWidth / A4_WIDTH_PX, 1);
-        setScale(newScale);
-      }
-    };
+  // Memoized scale calculation with debouncing
+  const calculateScale = useCallback(() => {
+    if (!containerRef.current || typeof window === 'undefined') return;
+    
+    const containerWidth = containerRef.current.offsetWidth;
+    const padding = 32; // Total horizontal padding
+    const availableWidth = containerWidth - padding;
+    const newScale = Math.min(availableWidth / A4_WIDTH_PX, 1);
+    
+    // Only update if scale changed significantly (avoid micro-updates)
+    setScale(prev => Math.abs(prev - newScale) > 0.01 ? newScale : prev);
+  }, [A4_WIDTH_PX]);
 
-    // Initial calculations
-    const timeoutId = setTimeout(() => {
-      checkOverflow();
+  // Client-side hydration
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // Initial setup and resize handling
+  useEffect(() => {
+    if (!isClient) return;
+
+    // Initial calculations with slight delay for DOM to settle
+    const initTimeout = setTimeout(() => {
       calculateScale();
+      checkOverflow();
     }, 100);
 
-    // Resize handler
+    // Debounced resize handler
     const handleResize = () => {
-      checkOverflow();
-      calculateScale();
+      if (resizeTimeoutRef.current) {
+        clearTimeout(resizeTimeoutRef.current);
+      }
+      
+      resizeTimeoutRef.current = setTimeout(() => {
+        calculateScale();
+        checkOverflow();
+      }, 150); // Debounce resize events
     };
 
-    window.addEventListener('resize', handleResize);
-
-    // Mutation observer for content changes
-    const observer = new MutationObserver(() => {
-      setTimeout(checkOverflow, 50);
-    });
-
-    if (contentRef.current) {
-      observer.observe(contentRef.current, {
-        childList: true,
-        subtree: true,
-        characterData: true,
-        attributes: true,
-      });
-    }
+    window.addEventListener('resize', handleResize, { passive: true });
 
     return () => {
-      clearTimeout(timeoutId);
+      clearTimeout(initTimeout);
+      if (resizeTimeoutRef.current) {
+        clearTimeout(resizeTimeoutRef.current);
+      }
       window.removeEventListener('resize', handleResize);
+    };
+  }, [isClient, calculateScale, checkOverflow]);
+
+  // Optimized mutation observer - only for critical changes
+  useEffect(() => {
+    if (!isClient || !contentRef.current) return;
+
+    // Debounced observer callback
+    const handleMutation = () => {
+      if (observerTimeoutRef.current) {
+        clearTimeout(observerTimeoutRef.current);
+      }
+      
+      observerTimeoutRef.current = setTimeout(() => {
+        checkOverflow();
+      }, 200); // Debounce mutations
+    };
+
+    const observer = new MutationObserver(handleMutation);
+
+    observer.observe(contentRef.current, {
+      childList: true,
+      subtree: true,
+      characterData: false, // Don't watch text changes
+      attributes: false, // Don't watch attribute changes
+    });
+
+    return () => {
+      if (observerTimeoutRef.current) {
+        clearTimeout(observerTimeoutRef.current);
+      }
       observer.disconnect();
     };
-  }, [A4_WIDTH_PX, A4_HEIGHT_PX]);
+  }, [isClient, checkOverflow]);
+
+  // Show loading skeleton before client hydration
+  if (!isClient) {
+    return (
+      <div className="w-full flex justify-center items-start bg-gradient-to-br from-slate-100 via-gray-100 to-slate-200 min-h-screen py-8 px-4">
+        <div className="w-[794px] h-[1123px] bg-white rounded-lg shadow-lg animate-pulse" />
+      </div>
+    );
+  }
 
   return (
     <>
-      {/* Container - responsive background */}
+      {/* Container - responsive background with GPU acceleration */}
       <div 
         ref={containerRef}
-        className="w-full flex justify-center items-start bg-gradient-to-br from-slate-100 via-gray-100 to-slate-200 min-h-screen py-8 px-4 print:p-0 print:bg-white print:min-h-0"
+        className="w-full flex justify-center items-start bg-slate-100 min-h-screen py-8 px-4 print:p-0 print:bg-white print:min-h-0"
+        style={{
+          willChange: 'auto',
+          contain: 'layout style paint',
+        }}
       >
-        {/* A4 Paper Container with scaling */}
+        {/* A4 Paper Container with scaling - GPU accelerated */}
         <div
           style={{
             width: `${A4_WIDTH_PX}px`,
             height: `${A4_HEIGHT_PX}px`,
-            transform: `scale(${scale})`,
+            transform: `scale(${scale}) translateZ(0)`,
             transformOrigin: 'top center',
-            transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+            transition: 'transform 0.2s ease-out',
+            willChange: 'transform',
+            backfaceVisibility: 'hidden',
+            WebkitFontSmoothing: 'antialiased',
           }}
           className="print:!transform-none"
         >
@@ -97,6 +161,7 @@ const TemplateWrapper = ({ children }) => {
             style={{
               width: `${A4_WIDTH_PX}px`,
               height: `${A4_HEIGHT_PX}px`,
+              willChange: 'auto',
             }}
           >
             {/* Resume Content - Fixed dimensions with margins */}
@@ -114,6 +179,7 @@ const TemplateWrapper = ({ children }) => {
                 printColorAdjust: 'exact',
                 WebkitPrintColorAdjust: 'exact',
                 colorAdjust: 'exact',
+                contain: 'layout style paint',
               }}
             >
               {children}
