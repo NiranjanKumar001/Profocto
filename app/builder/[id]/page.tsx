@@ -191,10 +191,10 @@ export default function BuilderPage() {
             onViewChange={handleMobileViewChange}
           />
 
-          <div className='flex flex-col lg:flex-row h-screen max-w-full overflow-hidden pt-[60px] lg:pt-0 pb-[73px] lg:pb-0 relative'>
+          <div className='flex flex-col lg:flex-row h-screen max-w-full overflow-hidden pt-[60px] lg:pt-0 pb-[73px] lg:pb-0 relative print:!h-auto print:!pt-0 print:!pb-0 print:!overflow-visible'>
             {!formClose && (
               <div
-                className={`w-full lg:w-[45%] xl:w-[40%] exclude-print transition-opacity duration-200 lg:relative ${
+                className={`w-full lg:w-[45%] xl:w-[40%] exclude-print transition-opacity duration-200 lg:relative print:!hidden ${
                   mobileView === "edit" ? "block opacity-100 relative z-10" : "absolute inset-0 opacity-0 pointer-events-none lg:block lg:relative lg:opacity-100 lg:pointer-events-auto lg:z-auto"
                 } h-full`}
                 style={{ 
@@ -469,7 +469,7 @@ export default function BuilderPage() {
                 formClose ? "w-full" : "w-full lg:w-[55%] xl:w-[60%]"
               } ${
                 mobileView === "preview" ? "block opacity-100 relative z-10" : "absolute inset-0 opacity-0 pointer-events-none lg:block lg:relative lg:opacity-100 lg:pointer-events-auto lg:z-auto"
-              } transition-opacity duration-200 min-h-screen lg:min-h-0`}
+              } transition-opacity duration-200 min-h-screen lg:min-h-0 print:!block print:!opacity-100 print:!static print:!w-full print:!min-h-0`}
             >
               <Preview />
             </div>

@@ -724,6 +724,21 @@
         size: A4;
         margin: -3mm 8mm; /* Reduced margins for more content space */
     }
+    
+    /* Force all body/html to white background, no padding */
+    html, body {
+        margin: 0 !important;
+        padding: 0 !important;
+        background: white !important;
+        overflow: visible !important;
+        height: auto !important;
+        width: 100% !important;
+    }
+
+    /* Hide everything we don't want in print */
+    body > *:not(main):not([class*="flex"]) {
+        display: none !important;
+    }
 
     .preview {
         overflow-y: visible !important;
@@ -751,15 +766,9 @@
         margin: 0 !important;
     }
 
-    /* Ensure single page layout */
-    body, html {
-        margin: 0 !important;
-        padding: 0 !important;
-        background: white !important;
-    }
-
     /* Hide any unnecessary elements during print */
-    .bg-gray-50 {
+    .bg-gray-50,
+    .bg-slate-100 {
         background: white !important;
     }
 
@@ -783,42 +792,65 @@
     [class*="MobileNavbar"],
     [class*="MobileBottomNav"],
     nav[class*="fixed"],
-    nav[class*="lg:hidden"] {
+    nav[class*="lg:hidden"],
+    .fixed.bottom-0,
+    .fixed.top-0 {
         display: none !important;
         visibility: hidden !important;
     }
     
     /* Reset mobile padding/margins for print */
     .pt-\[60px\],
-    .pb-\[73px\],
-    [style*="padding-top"],
-    [style*="padding-bottom"] {
+    .pb-\[73px\] {
         padding-top: 0 !important;
         padding-bottom: 0 !important;
     }
     
-    /* Force both form and preview to be hidden/shown appropriately */
-    /* Only show the preview content, hide the form */
-    .flex.flex-col.lg\:flex-row {
-        display: flex !important;
-        flex-direction: row !important;
-        padding: 0 !important;
-        margin: 0 !important;
+    /* Force desktop layout in print - hide form, show only preview */
+    body > * {
+        overflow: visible !important;
     }
     
-    /* Force preview container to be visible and full width */
-    .flex.flex-col.lg\:flex-row > div:last-child {
-        opacity: 1 !important;
+    /* Hide the builder form/sidebar in print */
+    .exclude-print,
+    [class*="exclude-print"] {
+        display: none !important;
+        visibility: hidden !important;
+    }
+    
+    /* Force preview to full width and visibility */
+    .preview,
+    [class*="preview"] {
         position: static !important;
-        pointer-events: auto !important;
         width: 100% !important;
-        min-height: auto !important;
+        min-width: 100% !important;
+        opacity: 1 !important;
         display: block !important;
+        pointer-events: auto !important;
+        transform: none !important;
     }
     
-    /* Hide height constraints */
-    [style*="calc(100vh"] {
-        height: auto !important;
+    /* Override all Tailwind responsive classes in print */
+    /* Force all elements to use desktop layout */
+    div[class*="absolute"],
+    div[class*="fixed"] {
+        position: static !important;
+    }
+    
+    /* Remove opacity tricks used for mobile */
+    div[class*="opacity-0"] {
+        opacity: 1 !important;
+    }
+    
+    /* Make everything pointer-events auto */
+    div[class*="pointer-events-none"] {
+        pointer-events: auto !important;
+    }
+    
+    /* Reset all transforms and transitions for print */
+    * {
+        transition: none !important;
+        animation: none !important;
     }
 
     /* Ensure proper page breaks */
@@ -830,6 +862,26 @@
     /* Remove any transforms that might cause issues */
     * {
         transform: none !important;
+    }
+    
+    /* Override mobile-first responsive behavior */
+    .w-full {
+        width: 100% !important;
+    }
+    
+    /* Remove min-height constraints */
+    .min-h-screen {
+        min-height: 0 !important;
+    }
+    
+    /* Force specific container to show properly */
+    main,
+    [role="main"],
+    .builder-container {
+        display: block !important;
+        width: 100% !important;
+        height: auto !important;
+        overflow: visible !important;
     }
 }
 
