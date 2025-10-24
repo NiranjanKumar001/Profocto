@@ -114,7 +114,7 @@ const TemplateFour = ({
             <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.summary || "Professional Summary"}
             </h2>
-            <p className='content !text-gray-800 text-justify'>
+            <p className='content !text-gray-600 text-justify'>
               {resumeData.summary}
             </p>
           </div>
@@ -135,7 +135,7 @@ const TemplateFour = ({
                   <h3 className='content font-semibold text-gray-900'>
                     {item.school}
                   </h3>
-                  <p className='content !text-gray-800'>{item.degree}</p>
+                  <p className='content !text-gray-600'>{item.degree}</p>
                 </div>
                 <div className='ml-4 text-right'>
                   <DateRange
@@ -170,7 +170,7 @@ const TemplateFour = ({
                       <div className='flex-1'>
                         <h3 className='content flex items-center gap-1 i-bold text-gray-900'>
                           {item.position} |{" "}
-                          <p className='content !text-gray-800 !font-medium'>
+                          <p className='content !text-gray-600 !font-medium'>
                             {" "}
                             {item.company}
                           </p>
@@ -184,18 +184,18 @@ const TemplateFour = ({
                         />
                       </div>
                     </div>
-                    <p className='content !text-gray-800 mb-2'>
+                    <p className='content !text-gray-600 mb-2'>
                       {item.description}
                     </p>
                     {item.keyAchievements === "string" &&
                       item.keyAchievements.trim() && (
-                        <ul className='content !text-gray-800 ml-4 space-y-1'>
+                        <ul className='content !text-gray-600 ml-4 space-y-1'>
                           {item.keyAchievements
                             .split("\n")
                             .filter((achievement) => achievement.trim())
                             .map((achievement, subIndex) => (
                               <li key={`${item.company}-${index}-${subIndex}`} className='flex items-start gap-2'>
-                                <span className='text-gray-700 font-bold mt-0.5'>▸</span>
+                                <span className='text-gray-600 font-bold mt-0.5'>▸</span>
                                 <span className='flex-1'>{achievement}</span>
                               </li>
                             ))}
@@ -255,18 +255,18 @@ const TemplateFour = ({
                         />
                       </div>
                     </div>
-                    <p className='content !text-gray-800 mb-2'>
+                    <p className='content !text-gray-600 mb-2'>
                       {item.description}
                     </p>
                     {typeof item.keyAchievements === "string" &&
                       item.keyAchievements.trim() && (
-                        <ul className='content !text-gray-800 ml-4 space-y-1'>
+                        <ul className='content !text-gray-600 ml-4 space-y-1'>
                           {item.keyAchievements
                             .split("\n")
                             .filter((achievement) => achievement.trim())
                             .map((achievement, subIndex) => (
                               <li key={`${item.name}-${index}-${subIndex}`} className='flex items-start gap-2'>
-                                <span className='text-gray-700 font-bold mt-0.5'>▸</span>
+                                <span className='text-gray-600 font-bold mt-0.5'>▸</span>
                                 <span className='flex-1'>{achievement}</span>
                               </li>
                             ))}
@@ -292,7 +292,7 @@ const TemplateFour = ({
                   <h3 className='content i-bold text-gray-900 mb-1'>
                     {skill.title}
                   </h3>
-                  <p className='content !text-gray-800'>
+                  <p className='content !text-gray-600'>
                     {skill.skills.join(", ")}
                   </p>
                 </div>
@@ -306,7 +306,7 @@ const TemplateFour = ({
             <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.softSkills || "Soft Skills"}
             </h2>
-            <p className='content !text-gray-800'>
+            <p className='content !text-gray-600'>
               {section.content.join(", ")}
             </p>
           </div>
@@ -318,7 +318,7 @@ const TemplateFour = ({
             <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.languages || "Languages"}
             </h2>
-            <p className='content !text-gray-800'>
+            <p className='content !text-gray-600'>
               {resumeData.languages.join(", ")}
             </p>
           </div>
@@ -330,10 +330,10 @@ const TemplateFour = ({
             <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.certifications || "Certifications"}
             </h2>
-            <ul className='content !text-gray-800 ml-4 space-y-1'>
+            <ul className='content !text-gray-600 ml-4 space-y-1'>
               {resumeData.certifications.map((cert, index) => (
                 <li key={index} className='flex items-start gap-2'>
-                  <span className='text-gray-700 font-bold mt-0.5'>▸</span>
+                  <span className='text-gray-600 font-bold mt-0.5'>▸</span>
                   <div className='flex-1 flex items-center gap-2'>
                     <span>
                       {typeof cert === "string" ? cert : cert.name}

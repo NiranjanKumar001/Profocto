@@ -691,7 +691,7 @@ const ClassicTemplate = ({
             <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.summary || "Professional Summary"}
             </h2>
-            <p className="content font-sans  text-black text-justify">{resumeData.summary}</p>
+            <p className="content font-sans  text-gray-700 text-justify">{resumeData.summary}</p>
           </div>
         );
 
@@ -748,9 +748,9 @@ const ClassicTemplate = ({
                         />
                       </div>
                     </div>
-                    <p className="content font-sans  text-black mb-1">{item.description}</p>
+                    <p className="content font-sans  text-gray-700 mb-1">{item.description}</p>
                     {typeof item.keyAchievements === "string" && item.keyAchievements.trim() && (
-                      <ul className="list-disc list-inside content font-sans  text-black ml-4">
+                      <ul className="list-disc list-inside content font-sans  text-gray-700 ml-4">
                         {item.keyAchievements
                           .split("\n")
                           .filter(achievement => achievement.trim())
@@ -814,9 +814,9 @@ const ClassicTemplate = ({
                         />
                       </div>
                     </div>
-                    <p className="content font-sans  text-black mb-1">{item.description}</p>
+                    <p className="content font-sans  text-gray-700 mb-1">{item.description}</p>
                     {typeof item.keyAchievements === "string" && item.keyAchievements.trim() && (
-                      <ul className="list-disc list-inside content font-sans  text-black ml-4">
+                      <ul className="list-disc list-inside content font-sans  text-gray-700 ml-4">
                         {item.keyAchievements
                           .split("\n")
                           .filter(achievement => achievement.trim())
@@ -845,7 +845,7 @@ const ClassicTemplate = ({
               .map((skill, index) => (
                 <div key={`SKILLS-${index}`} className="mb-1">
                   <h3 className="content i-bold text-gray-900 mb-1">{skill.title}</h3>
-                  <p className="content font-sans  text-black">{skill.skills.join(", ")}</p>
+                  <p className="content font-sans  text-gray-700">{skill.skills.join(", ")}</p>
                 </div>
               ))}
           </div>
@@ -857,7 +857,7 @@ const ClassicTemplate = ({
             <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.softSkills || "Soft Skills"}
             </h2>
-            <p className="content font-sans  text-black">
+            <p className="content font-sans  text-gray-700">
               {section.content.join(", ")}
             </p>
           </div>
@@ -869,7 +869,7 @@ const ClassicTemplate = ({
             <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.languages || "Languages"}
             </h2>
-            <p className="content font-sans  text-black">{resumeData.languages.join(", ")}</p>
+            <p className="content font-sans  text-gray-700">{resumeData.languages.join(", ")}</p>
           </div>
         ) : null;
 
@@ -879,14 +879,14 @@ const ClassicTemplate = ({
             <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.certifications || "Certifications"}
             </h2>
-            <ul className="list-disc list-inside content font-sans  text-black">
+            <ul className="list-disc list-inside content font-sans  text-gray-700">
               {resumeData.certifications.map((cert, index) => (
                 <li key={index} className='mb-1'>
                   <div className='flex items-center gap-2'>
                     <span>
                       {typeof cert === 'string' ? cert : cert.name}
                       {typeof cert === 'object' && cert.issuer && (
-                        <span className="font-sans  text-black"> - {cert.issuer}</span>
+                        <span className="font-sans  text-gray-700"> - {cert.issuer}</span>
                       )}
                     </span>
                     {typeof cert === "object" &&
