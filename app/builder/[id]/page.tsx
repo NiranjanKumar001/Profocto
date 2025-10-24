@@ -25,6 +25,8 @@ import { ResumeContext } from "@/contexts/ResumeContext";
 import Squares from "@/components/ui/Squares";
 import type { ResumeData } from "../../types/resume";
 import { FaChevronUp, FaOctopusDeploy } from "react-icons/fa";
+import MobileNavbar from "@/components/ui/MobileNavbar";
+import MobileBottomNav from "@/components/ui/MobileBottomNav";
 
 // server side rendering false
 const Print = dynamic(() => import("@/components/utility/WinPrint"), {
@@ -84,6 +86,16 @@ export default function BuilderPage() {
 
   // Form hide/show
   const [formClose, setFormClose] = useState(false);
+
+  // Mobile view state - "edit" or "preview"
+  const [mobileView, setMobileView] = useState<"edit" | "preview">("edit");
+
+  // Handle mobile view change with smooth transition
+  const handleMobileViewChange = (view: "edit" | "preview") => {
+    setMobileView(view);
+    // Scroll to top on view change for better UX
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   // Profile picture handler
   const handleProfilePicture = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -152,10 +164,21 @@ export default function BuilderPage() {
             handleChange,
           }}
         >
-          <div className='flex flex-col lg:flex-row min-h-screen max-w-full overflow-hidden'>
+          {/* Mobile Top Navbar - Only visible on mobile/tablet */}
+          <MobileNavbar />
+
+          {/* Mobile Bottom Navigation - Only visible on mobile/tablet */}
+          <MobileBottomNav
+            activeView={mobileView}
+            onViewChange={handleMobileViewChange}
+          />
+
+          <div className='flex flex-col lg:flex-row min-h-screen max-w-full overflow-hidden pt-[60px] lg:pt-0 pb-[73px] lg:pb-0'>
             {!formClose && (
               <div
-                className='w-full lg:w-[45%] xl:w-[40%] h-screen lg:h-screen md:h-auto exclude-print relative'
+                className={`w-full lg:w-[45%] xl:w-[40%] h-screen lg:h-screen md:h-auto exclude-print relative ${
+                  mobileView === "edit" ? "block" : "hidden lg:block"
+                }`}
                 style={{ backgroundColor: "hsl(240 10% 3.9%)" }}
               >
                 {/* Fixed Animated Background Grid */}
@@ -431,6 +454,8 @@ export default function BuilderPage() {
             <div
               className={`${
                 formClose ? "w-full" : "w-full lg:w-[55%] xl:w-[60%]"
+              } ${
+                mobileView === "preview" ? "block" : "hidden lg:block"
               } transition-all duration-300 min-h-screen lg:min-h-0`}
             >
               <Preview />
