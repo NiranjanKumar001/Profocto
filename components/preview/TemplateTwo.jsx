@@ -520,13 +520,13 @@ const TemplateTwo = ({
               {addressData && (
                 <div className="flex items-center gap-1.5">
                   <FaMapMarkerAlt className="text-gray-700 text-sm flex-shrink-0" />
-                  <span className="text-gray-800">{addressData}</span>
+                  <span className="text-gray-800 font-normal">{addressData}</span>
                 </div>
               )}
               {contactData && (
                 <div className="flex items-center gap-1.5">
                   <FaPhoneAlt className="text-gray-700 text-sm flex-shrink-0" />
-                  <span className="text-gray-800">{contactData}</span>
+                  <span className="text-gray-800 font-medium">{contactData}</span>
                 </div>
               )}
             </div>
@@ -536,7 +536,7 @@ const TemplateTwo = ({
               {emailData && (
                 <div className="flex items-center gap-1.5">
                   <FaEnvelope className="text-gray-700 text-sm flex-shrink-0" />
-                  <span className="text-gray-800">{emailData}</span>
+                  <span className="text-gray-800 font-normal">{emailData}</span>
                 </div>
               )}
               {resumeData &&
@@ -557,7 +557,7 @@ const TemplateTwo = ({
                         }
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-gray-800 hover:text-gray-900"
+                        className="text-gray-800 hover:text-gray-900 font-medium"
                       >
                         {social.displayText || social.link}
                       </a>

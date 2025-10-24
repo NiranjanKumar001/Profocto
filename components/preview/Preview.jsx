@@ -28,6 +28,7 @@ import TemplateTwo from "./TemplateTwo";
 import TemplateThree from "./TemplateThree"
 import TemplateFour from "./TemplateFour"
 import TemplateFive from "./TemplateFive"
+import TemplateWrapper from "./TemplateWrapper"
 import { useSectionTitles } from "../../contexts/SectionTitleContext";
 import {
   DndContext,
@@ -334,7 +335,7 @@ const Preview = () => {
                         type='checkbox'
                         checked={enabledSections[sectionId]}
                         onChange={() => toggleSection(sectionId)}
-                        className='w-4 h-4 text-pink-600 bg-white border-2 border-gray-300 rounded focus:ring-pink-500 focus:ring-2 checked:bg-pink-600 checked:border-pink-600'
+                        className='w-4 h-4 text-pink-600 bg-white border-2 border-black rounded focus:ring-pink-500 focus:ring-2 checked:bg-pink-600 checked:border-pink-600'
                       />
                       <span className='text-sm text-gray-900 flex-1'>
                         {sectionLabels[sectionId]}
@@ -422,7 +423,7 @@ const Preview = () => {
           </div>
         </div>
       </div>
-      <A4PageWrapper>
+      <TemplateWrapper>
   {(() => {
     switch (currentTemplate) {
       case "template1":
@@ -513,7 +514,7 @@ const Preview = () => {
         );
     }
   })()}
-</A4PageWrapper>
+</TemplateWrapper>
 
 
     </div>
@@ -678,7 +679,7 @@ const ClassicTemplate = ({
       case "summary":
         return (
           <div>
-            <h2 className='section-title border-b-2 border-gray-300 mb-1 text-gray-900'>
+            <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.summary || "Professional Summary"}
             </h2>
             <p className="content font-sans  text-black text-justify">{resumeData.summary}</p>
@@ -688,7 +689,7 @@ const ClassicTemplate = ({
       case "education":
         return resumeData.education.length > 0 ? (
           <div>
-            <h2 className='section-title border-b-2 border-gray-300 mb-1 text-gray-900'>
+            <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.education || "Education"}
             </h2>
             {resumeData.education.map((item, index) => (
@@ -712,7 +713,7 @@ const ClassicTemplate = ({
       case "experience":
         return resumeData.workExperience.length > 0 ? (
           <div>
-            <h2 className='section-title border-b-2 border-gray-300 mb-1 text-gray-900'>
+            <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.experience || "Professional Experience"}
             </h2>
             <DndContext
@@ -761,7 +762,7 @@ const ClassicTemplate = ({
       case "projects":
         return resumeData.projects.length > 0 ? (
           <div>
-            <h2 className='section-title border-b-2 border-gray-300 mb-1 text-gray-900'>
+            <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.projects || "Projects"}
             </h2>
             <DndContext
@@ -827,7 +828,7 @@ const ClassicTemplate = ({
       case "skills":
         return (
           <div>
-            <h2 className='section-title border-b-2 border-gray-300 mb-1 text-gray-900'>
+            <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.skills || "Technical Skills"}
             </h2>
             {resumeData.skills
@@ -844,7 +845,7 @@ const ClassicTemplate = ({
       case "softSkills":
         return (
           <div>
-            <h2 className='section-title border-b-2 border-gray-300 mb-1 text-gray-900'>
+            <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.softSkills || "Soft Skills"}
             </h2>
             <p className="content font-sans  text-black">
@@ -856,7 +857,7 @@ const ClassicTemplate = ({
       case "languages":
         return resumeData.languages.length > 0 ? (
           <div>
-            <h2 className='section-title border-b-2 border-gray-300 mb-1 text-gray-900'>
+            <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.languages || "Languages"}
             </h2>
             <p className="content font-sans  text-black">{resumeData.languages.join(", ")}</p>
@@ -866,7 +867,7 @@ const ClassicTemplate = ({
       case "certifications":
         return resumeData.certifications.length > 0 ? (
           <div>
-            <h2 className='section-title border-b-2 border-gray-300 mb-1 text-gray-900'>
+            <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.certifications || "Certifications"}
             </h2>
             <ul className="list-disc list-inside content font-sans  text-black">
@@ -912,7 +913,7 @@ const ClassicTemplate = ({
         
         
         ">
-          <h1 className="text-2xl font-bold text-gray-900">{resumeData.name}</h1>
+          <h1 className="text-4xl font-bold text-gray-900">{resumeData.name}</h1>
           <p className="text-lg text-gray-700">{resumeData.position}</p>
         </div>
         <div className='animate-pulse'>
@@ -1000,6 +1001,9 @@ const ClassicTemplate = ({
   );
 };
 
+// Old A4PageWrapper - Replaced by TemplateWrapper for better isolation
+// Keeping for reference, can be removed later
+/*
 const A4PageWrapper = ({ children }) => {
   const [isOverflowing, setIsOverflowing] = useState(false);
   const contentRef = useRef(null);
@@ -1074,5 +1078,6 @@ const A4PageWrapper = ({ children }) => {
     </div>
   );
 };
+*/
 
 export default Preview;

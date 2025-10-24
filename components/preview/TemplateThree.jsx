@@ -111,7 +111,7 @@ const TemplateFour = ({
       case "summary":
         return (
           <div>
-            <h2 className='section-title border-b-2 border-gray-300 mb-1 text-gray-900'>
+            <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.summary || "Professional Summary"}
             </h2>
             <p className='content !text-gray-800 text-justify'>
@@ -123,7 +123,7 @@ const TemplateFour = ({
       case "education":
         return resumeData.education.length > 0 ? (
           <div>
-            <h2 className='section-title border-b-2 border-gray-300 mb-1 text-gray-900'>
+            <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.education || "Education"}
             </h2>
             {resumeData.education.map((item, index) => (
@@ -152,7 +152,7 @@ const TemplateFour = ({
       case "experience":
         return resumeData.workExperience.length > 0 ? (
           <div>
-            <h2 className='section-title border-b-2 border-gray-300 mb-1 text-gray-900'>
+            <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.experience || "Professional Experience"}
             </h2>
             <DndContext
@@ -211,7 +211,7 @@ const TemplateFour = ({
       case "projects":
         return resumeData.projects.length > 0 ? (
           <div>
-            <h2 className='section-title border-b-2 border-gray-300 mb-1 text-gray-900'>
+            <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.projects || "Projects"}
             </h2>
             <DndContext
@@ -282,7 +282,7 @@ const TemplateFour = ({
       case "skills":
         return (
           <div>
-            <h2 className='section-title border-b-2 border-gray-300 mb-1 text-gray-900'>
+            <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.skills || "Technical Skills"}
             </h2>
             {resumeData.skills
@@ -303,7 +303,7 @@ const TemplateFour = ({
       case "softSkills":
         return (
           <div>
-            <h2 className='section-title border-b-2 border-gray-300 mb-1 text-gray-900'>
+            <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.softSkills || "Soft Skills"}
             </h2>
             <p className='content !text-gray-800'>
@@ -315,7 +315,7 @@ const TemplateFour = ({
       case "languages":
         return resumeData.languages.length > 0 ? (
           <div>
-            <h2 className='section-title border-b-2 border-gray-300 mb-1 text-gray-900'>
+            <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.languages || "Languages"}
             </h2>
             <p className='content !text-gray-800'>
@@ -327,7 +327,7 @@ const TemplateFour = ({
       case "certifications":
         return resumeData.certifications.length > 0 ? (
           <div>
-            <h2 className='section-title border-b-2 border-gray-300 mb-1 text-gray-900'>
+            <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.certifications || "Certifications"}
             </h2>
             <ul className='content !text-gray-800 ml-4 space-y-1'>
