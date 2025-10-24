@@ -474,7 +474,7 @@ export default function BuilderPage() {
               <Preview />
             </div>
           </div>
-          <Print />
+          <Print mobileView={mobileView} />
         </ResumeContext.Provider>
       </SectionTitleProvider>
 
