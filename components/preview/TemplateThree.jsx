@@ -428,7 +428,7 @@ const TemplateFour = ({
                         : "https://www."
                   }${socialMedia.link}`}
                   key={index}
-                  className='inline-flex items-center gap-1 text-black transition-colors font-bold'
+                  className='inline-flex items-center gap-1 text-black transition-colors'
                   target='_blank'
                   rel='noopener noreferrer'
                 >
