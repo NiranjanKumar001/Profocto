@@ -937,19 +937,19 @@ const ClassicTemplate = ({
         {/* Contact Information & Social Media */}
         <div className="flex justify-center items-center gap-6 contact mb-0 flex-wrap">
           <div className="flex items-center gap-1">
-            <MdPhone className="text-gray-500" />
+            <MdPhone className="text-black" />
             <a href={`tel:${resumeData.contactInformation}`}>
               {resumeData.contactInformation}
             </a>
           </div>
           <div className='flex items-center gap-1'>
-            <MdEmail className='text-gray-500' />
+            <MdEmail className='text-black' />
             <a href={`mailto:${resumeData.email}`}>
               {resumeData.email}
             </a>
           </div>
           <div className='flex items-center gap-1'>
-            <MdLocationOn className='text-gray-500' />
+            <MdLocationOn className='text-black' />
             <span>{resumeData.address}</span>
           </div>
           
@@ -968,11 +968,11 @@ const ClassicTemplate = ({
                       : "https://www."
                 }${socialMedia.link}`}
                 key={index}
-                className='inline-flex items-center gap-1'
+                className='inline-flex items-center gap-1 text-black'
                 target='_blank'
                 rel='noopener noreferrer'
               >
-                {icon && icon.icon}
+                {icon && React.cloneElement(icon.icon, { className: 'text-black' })}
                 <span>{socialMedia.displayText || socialMedia.link}</span>
               </a>
             );

@@ -1,4 +1,5 @@
 "use client";
+import React, { useEffect, useState } from "react";
 import { FaExternalLinkSquareAlt } from "react-icons/fa";
 import DateRange from "../utility/DateRange";
 import {
@@ -12,7 +13,6 @@ import Link from "next/link";
 import { useSectionTitles } from "../../contexts/SectionTitleContext";
 import { MdEmail, MdLocationOn, MdPhone } from "react-icons/md";
 import { SortableItem, SortableSection } from "./Preview";
-import { useEffect, useState } from "react";
 
 // Classic Template Component - Professional and Clean
 const TemplateFour = ({
@@ -397,15 +397,15 @@ const TemplateFour = ({
         {/* Contact Information */}
         <div className='flex justify-center items-center gap-4 contact mb-2'>
           <div className='flex items-center gap-1'>
-            <MdPhone className='text-gray-500' />
+            <MdPhone className='text-black' />
             <span>{resumeData.contactInformation}</span>
           </div>
           <div className='flex items-center gap-1'>
-            <MdEmail className='text-gray-500' />
+            <MdEmail className='text-black' />
             <span>{resumeData.email}</span>
           </div>
           <div className='flex items-center gap-1'>
-            <MdLocationOn className='text-gray-500' />
+            <MdLocationOn className='text-black' />
             <span>{resumeData.address}</span>
           </div>
         </div>
@@ -428,11 +428,11 @@ const TemplateFour = ({
                         : "https://www."
                   }${socialMedia.link}`}
                   key={index}
-                  className='inline-flex items-center gap-1 text-gray-800 transition-colors font-bold'
+                  className='inline-flex items-center gap-1 text-black transition-colors font-bold'
                   target='_blank'
                   rel='noopener noreferrer'
                 >
-                  {icon && icon.icon}
+                  {icon && React.cloneElement(icon.icon, { className: 'text-black' })}
                   <span>{socialMedia.displayText || socialMedia.link}</span>
                   {index !== resumeData.socialMedia.length - 1 && (
                     <span>|</span>
