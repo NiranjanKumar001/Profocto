@@ -228,7 +228,7 @@ export default function BuilderPage() {
                   {!isHydrated ? (
                     <FormSkeleton />
                   ) : (
-                    <div className='p-4 sm:p-6 lg:p-5 relative' style={{ minHeight: '100%' }}>
+                    <div className='p-4 sm:p-6 lg:p-5 relative z-20 lg:backdrop-blur-[1.5px]' style={{ minHeight: '100%' }}>
                       {/* Header */}
 
                       <div className='bg-black/85 border border-pink-400/80 hover:border-pink-400  h-12 relative md:p-0 overflow-hidden flex flex-col gap-1 justify-center items-center mb-6 w-full rounded-full'>

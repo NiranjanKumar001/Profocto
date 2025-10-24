@@ -31,15 +31,23 @@
         
         /* Optimize scrollable containers on mobile */
         .overflow-y-auto,
+        .overflow-y-scroll,
         .overflow-auto {
             -webkit-overflow-scrolling: touch;
-            will-change: scroll-position;
+            /* Prevent expensive compositing during scroll */
+            contain: layout style paint;
             /* Force GPU acceleration */
             transform: translateZ(0);
             -webkit-transform: translateZ(0);
             /* Prevent black flashing during scroll */
             backface-visibility: hidden;
             -webkit-backface-visibility: hidden;
+        }
+        
+        /* Prevent form elements from triggering repaints during scroll */
+        input, textarea, select, button {
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
         }
         
         /* Ensure smooth repainting on mobile */
@@ -564,22 +572,32 @@
 }
 
 .form-section {
-    @apply bg-[#171717] rounded-lg border-2 p-6 mb-4 shadow-lg;
-    background: linear-gradient(135deg, #171717 0%, #1a1a1a 100%);
+    @apply bg-[#171717] rounded-lg border-2 p-6 mb-4;
     border-color: hsl(330 81% 60% / 0.3);
     border-width: 2px;
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
     position: relative;
-    /* Improve mobile scroll performance */
-    will-change: transform;
+    /* Optimize for mobile scroll - no expensive effects */
     transform: translateZ(0);
     backface-visibility: hidden;
+    /* Simple background on mobile */
+    background: #171717;
+    /* Simple shadow on mobile */
+    box-shadow: 0 2px 4px rgb(0 0 0 / 0.2);
 }
 
-.form-section:hover {
-    border-color: hsl(330 81% 60% / 0.5);
-    transform: translateY(-1px) translateZ(0);
-    box-shadow: 0 6px 12px -2px rgb(0 0 0 / 0.4), 0 4px 8px -2px rgb(0 0 0 / 0.3);
+/* Add gradient and enhanced shadows only on desktop */
+@media (min-width: 1024px) {
+    .form-section {
+        background: linear-gradient(135deg, #171717 0%, #1a1a1a 100%);
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+        will-change: transform;
+    }
+    
+    .form-section:hover {
+        border-color: hsl(330 81% 60% / 0.5);
+        transform: translateY(-1px) translateZ(0);
+        box-shadow: 0 6px 12px -2px rgb(0 0 0 / 0.4), 0 4px 8px -2px rgb(0 0 0 / 0.3);
+    }
 }
 
 .form-section-title {
@@ -590,19 +608,31 @@
 }
 
 .section-card {
-    @apply bg-transparent rounded-md border p-4 mb-3 shadow-sm;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.01) 100%);
+    @apply bg-transparent rounded-md border p-4 mb-3;
     border-color: hsl(330 81% 60% / 0.15);
     border-width: 1px;
-    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.2), 0 1px 2px -1px rgb(0 0 0 / 0.2);
-    transition: all 0.2s ease;
+    /* Optimize for mobile - simple background and shadow */
+    background: rgba(255, 255, 255, 0.01);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.15);
+    /* GPU acceleration */
+    transform: translateZ(0);
+    backface-visibility: hidden;
 }
 
-.section-card:hover {
-    border-color: hsl(330 81% 60% / 0.3);
-    background: linear-gradient(135deg, rgba(236, 72, 153, 0.03) 0%, rgba(236, 72, 153, 0.01) 100%);
-    transform: translateY(-1px);
-    box-shadow: 0 2px 6px 0 rgb(0 0 0 / 0.25), 0 2px 4px -1px rgb(0 0 0 / 0.2);
+/* Add gradients and enhanced effects only on desktop */
+@media (min-width: 1024px) {
+    .section-card {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.01) 100%);
+        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.2), 0 1px 2px -1px rgb(0 0 0 / 0.2);
+        transition: all 0.2s ease;
+    }
+    
+    .section-card:hover {
+        border-color: hsl(330 81% 60% / 0.3);
+        background: linear-gradient(135deg, rgba(236, 72, 153, 0.03) 0%, rgba(236, 72, 153, 0.01) 100%);
+        transform: translateY(-1px) translateZ(0);
+        box-shadow: 0 2px 6px 0 rgb(0 0 0 / 0.25), 0 2px 4px -1px rgb(0 0 0 / 0.2);
+    }
 }
 
 .clean-button {
