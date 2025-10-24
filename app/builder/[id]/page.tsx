@@ -469,7 +469,7 @@ export default function BuilderPage() {
                 formClose ? "w-full" : "w-full lg:w-[55%] xl:w-[60%]"
               } ${
                 mobileView === "preview" ? "block opacity-100 relative z-10" : "absolute inset-0 opacity-0 pointer-events-none lg:block lg:relative lg:opacity-100 lg:pointer-events-auto lg:z-auto"
-              } transition-opacity duration-200 min-h-screen lg:min-h-0 print:!block print:!opacity-100 print:!static print:!w-full print:!min-h-0`}
+              } transition-opacity duration-200 h-auto lg:min-h-screen print:!block print:!opacity-100 print:!static print:!w-full print:!min-h-0`}
             >
               <Preview />
             </div>
