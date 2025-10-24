@@ -184,10 +184,8 @@ export default function BuilderPage() {
             handleChange,
           }}
         >
-          {/* Mobile Top Navbar - Only visible on mobile/tablet */}
           <MobileNavbar />
 
-          {/* Mobile Bottom Navigation - Only visible on mobile/tablet */}
           <MobileBottomNav
             activeView={mobileView}
             onViewChange={handleMobileViewChange}
@@ -203,7 +201,6 @@ export default function BuilderPage() {
                   backgroundColor: "hsl(240 10% 3.9%)",
                 }}
               >
-                {/* Fixed Animated Background Grid - Only on desktop */}
                 <div className='absolute inset-0 w-full h-full z-0 hidden lg:block overflow-hidden pointer-events-none'>
                   <Squares
                     speed={0.3}
@@ -228,8 +225,6 @@ export default function BuilderPage() {
                     <FormSkeleton />
                   ) : (
                     <div className='p-4 sm:p-6 lg:p-5 relative z-20 lg:backdrop-blur-[1.5px]' style={{ minHeight: '100%' }}>
-                      {/* Header */}
-
                       <div className='bg-black/85 border border-pink-400/80 hover:border-pink-400  h-12 relative md:p-0 overflow-hidden flex flex-col gap-1 justify-center items-center mb-6 w-full rounded-full'>
                         <div className=' flex gap-0.5 items-center'>
                           <h1 className='text-2xl md:text-3-xl text-gray-200 font-bold tracking-wide'>
@@ -244,7 +239,6 @@ export default function BuilderPage() {
                         <FaOctopusDeploy className='text-pink-300 size-6 absolute right-16 -top-1 opacity-20 rotate-180' />
                       </div>
 
-                      {/* Form Sections */}
                       <div className='space-y-4 lg:space-y-6'>
                       <LoadUnload />
                       <PersonalInformation />
@@ -254,7 +248,6 @@ export default function BuilderPage() {
                       <WorkExperience />
                       <Projects />
 
-                      {/* Technical Skills Section */}
                       <div className='form-section'>
                         <EditableFormTitle
                           sectionKey='skills'
@@ -278,7 +271,6 @@ export default function BuilderPage() {
                         </div>
                       </div>
 
-                      {/* Soft Skills Section */}
                       {resumeData.skills
                         .filter(
                           (skill: { title: string; skills: string[] }) =>
@@ -297,7 +289,6 @@ export default function BuilderPage() {
                       <Certification />
                     </div>
 
-                    {/* Floating Profile Pocket - stick only on large screens to avoid overlap */}
                     <div className='relative lg:sticky bottom-0 left-0 right-0 p-4 z-10 mt-6'>
                       <div
                         className='relative p-4 rounded-xl border backdrop-blur-sm'
@@ -307,7 +298,6 @@ export default function BuilderPage() {
                           boxShadow: "0 8px 32px rgba(0, 0, 0, 0.5)",
                         }}
                       >
-                        {/* Enhanced decorative elements for floating pocket effect */}
                         <div
                           className='absolute -top-1 left-4 right-4 h-2 rounded-b-lg opacity-60'
                           style={{ backgroundColor: "hsl(240 3.7% 20%)" }}
@@ -319,7 +309,6 @@ export default function BuilderPage() {
                         <div className='absolute inset-0 rounded-xl border border-pink-500/20 animate-pulse'></div>
 
                         <div className='flex items-center space-x-3'>
-                          {/* Profile Image */}
                           <div className='relative'>
                             <div
                               className='w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold text-lg shadow-lg ring-2 ring-pink-500/30 overflow-hidden'
@@ -336,7 +325,6 @@ export default function BuilderPage() {
                                   height={40}
                                   className='w-full h-full rounded-full object-cover'
                                   onError={(e) => {
-                                    // Hide the image on error and show initials instead
                                     const target = e.target as HTMLImageElement;
                                     target.style.display = "none";
                                   }}
@@ -355,7 +343,6 @@ export default function BuilderPage() {
                             ></div>
                           </div>
 
-                          {/* Name and Info */}
                           <div className='flex-1 min-w-0'>
                             <p
                               className='text-sm font-medium truncate'
@@ -367,14 +354,11 @@ export default function BuilderPage() {
                               className='text-xs truncate'
                               style={{ color: "hsl(240 5% 64.9%)" }}
                             >
-                              {/* Show Google email */}
                               {session?.user?.email || "Resume Builder"}
                             </p>
                           </div>
 
-                          {/* Action Buttons */}
                           <div className='flex items-center space-x-2 relative z-50'>
-                            {/* Logout Button */}
                             <button
                               onClick={handleSignOut}
                               disabled={isLoggingOut}
@@ -409,7 +393,6 @@ export default function BuilderPage() {
                               {" "}
                               <FaChevronUp />
                             </button>
-                            {/* Sidebar Close Button */}
                             <button
                               onClick={(e) => {
                                 e.preventDefault();
@@ -450,13 +433,11 @@ export default function BuilderPage() {
               </div>
             )}
 
-            {/* Show Sidebar Button - appears when sidebar is closed */}
             {formClose && (
               <button
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  // Show sidebar button clicked
                   setFormClose(false);
                 }}
                 className='fixed top-4 left-4 p-3 rounded-lg bg-gray-800 hover:bg-gray-700 text-white cursor-pointer shadow-lg transition-all duration-200 hover:scale-105'
@@ -497,7 +478,6 @@ export default function BuilderPage() {
         </ResumeContext.Provider>
       </SectionTitleProvider>
 
-      {/* Logout Loading */}
       <LogoutLoader isVisible={isLoggingOut} />
     </>
   );

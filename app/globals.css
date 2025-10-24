@@ -4,7 +4,6 @@
 
 @layer base {
     
-    /* Custom text selection color */
     ::selection {
         background-color: hsl(330 81% 60% / 0.3);
         color: hsl(0 0% 98%);
@@ -17,40 +16,32 @@
     
     body {
         @apply font-[sans-serif];
-        /* Mobile performance optimizations */
         -webkit-overflow-scrolling: touch;
         -webkit-tap-highlight-color: transparent;
     }
 
-    /* Mobile-specific scroll optimizations */
     @media (max-width: 1024px) {
         body {
             overscroll-behavior: none;
             background-color: hsl(240 10% 3.9%);
         }
         
-        /* Optimize scrollable containers on mobile */
         .overflow-y-auto,
         .overflow-y-scroll,
         .overflow-auto {
             -webkit-overflow-scrolling: touch;
-            /* Prevent expensive compositing during scroll */
             contain: layout style paint;
-            /* Force GPU acceleration */
             transform: translateZ(0);
             -webkit-transform: translateZ(0);
-            /* Prevent black flashing during scroll */
             backface-visibility: hidden;
             -webkit-backface-visibility: hidden;
         }
         
-        /* Prevent form elements from triggering repaints during scroll */
         input, textarea, select, button {
             transform: translateZ(0);
             -webkit-transform: translateZ(0);
         }
         
-        /* Ensure smooth repainting on mobile */
         * {
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
@@ -77,7 +68,6 @@
         @apply focus:outline-none;
     }
 
-    /* Custom Checkbox Styling */
     input[type="checkbox"] {
         @apply appearance-none;
         background-color: white !important;
@@ -110,7 +100,6 @@
         box-shadow: 0 0 0 2px #ec4899;
     }
 
-    /* Shadcn-inspired Textarea */
     textarea {
         @apply px-3 py-2 text-gray-50 bg-[#282828] rounded-md text-sm border-2 border-gray-600 transition-all duration-200 hover:border-gray-700 focus:border-pink-600 focus:outline-none focus:ring-1 focus:ring-pink-600/50 resize-none;
         background: #282828;
@@ -158,7 +147,6 @@
         padding-inline-start: 0;
     }
 
-    /* Fix bullet point alignment for all list variations */
     ul.list-disc {
         list-style-type: disc;
         list-style-position: outside;
@@ -180,7 +168,6 @@
         line-height: 1;
     }
 
-    /* Specific fix for list-inside variation */
     ul.list-inside {
         list-style-position: outside !important;
         padding-left: 1rem;
@@ -194,14 +181,12 @@
         display: list-item;
     }
 
-    /* Ensure proper alignment for nested content */
     ul.list-disc .content,
     ul.list-disc .sub-content {
         line-height: 1.2;
         vertical-align: baseline;
     }
 
-    /* Print optimization for lists */
     @media print {
         ul.list-disc li {
             line-height: 1.2;
@@ -264,7 +249,6 @@
 }
 
 @layer components{
-    /* Shadcn-inspired Input System */
     .pi{
         @apply px-3 py-2 mb-2 text-gray-50 bg-[#282828] rounded-md text-sm border-2 border-gray-600 transition-all duration-200 focus:border-pink-600 focus:outline-none focus:ring-1 focus:ring-pink-600/50;
         line-height: 1.3;
@@ -321,7 +305,6 @@
         box-shadow: 0 0 0 2px hsl(330 81% 60% / 0.2);
     }
 
-    /* Date Input Styling - Match other inputs */
     input[type="date"] {
         @apply px-3 py-2 mb-2 text-gray-50 bg-[#282828] rounded-md text-sm border-2 border-gray-600 transition-all duration-200 hover:border-gray-700 focus:border-pink-600 focus:outline-none focus:ring-1 focus:ring-pink-600/50;
         line-height: 1.3;
@@ -345,7 +328,6 @@
         box-shadow: 0 0 0 2px hsl(330 81% 60% / 0.2) !important;
     }
 
-    /* Calendar icon styling */
     input[type="date"]::-webkit-calendar-picker-indicator {
         background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23ffffff' viewBox='0 0 20 20'%3e%3cpath fill-rule='evenodd' d='M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z' clip-rule='evenodd'/%3e%3c/svg%3e");
         filter: none !important;
@@ -366,7 +348,6 @@
         border-radius: 4px;
     }
 
-    /* Date field text styling */
     input[type="date"]::-webkit-datetime-edit-text {
         font-weight: 500;
         color: hsl(0 0% 98%) !important;
@@ -424,7 +405,6 @@
         margin-top: 0;
     }
 
-    /* Shadcn-inspired Card Variants */
     .card-elevated {
         @apply bg-gray-950 rounded-lg border border-gray-800 shadow-lg;
         background: hsl(240 10% 3.9%);
@@ -439,7 +419,6 @@
         box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.2);
     }
 
-    /* Shadcn-inspired Text Styles */
     .text-muted {
         color: hsl(240 5% 64.9%);
     }
