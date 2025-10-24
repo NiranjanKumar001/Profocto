@@ -225,8 +225,8 @@ export default function BuilderPage() {
                     <FormSkeleton />
                   ) : (
                     <div className='p-4 sm:p-6 lg:p-5 relative z-20 lg:backdrop-blur-[1.5px]' style={{ minHeight: '100%' }}>
-                      <div className='bg-black/85 border border-pink-400/80 hover:border-pink-400  h-12 relative md:p-0 overflow-hidden flex flex-col gap-1 justify-center items-center mb-6 w-full rounded-full'>
-                        <div className=' flex gap-0.5 items-center'>
+                      <div className='hidden lg:flex bg-black/85 border border-pink-400/80 hover:border-pink-400  h-12 relative md:p-0 overflow-hidden flex-col gap-1 justify-center items-center mb-6 w-full rounded-full'>
+                        <div className='flex gap-0.5 items-center'>
                           <h1 className='text-2xl md:text-3-xl text-gray-200 font-bold tracking-wide'>
                             Profocto
                           </h1>
