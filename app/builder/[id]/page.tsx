@@ -196,15 +196,16 @@ export default function BuilderPage() {
           <div className='flex flex-col lg:flex-row min-h-screen max-w-full overflow-hidden pt-[60px] lg:pt-0 pb-[73px] lg:pb-0 relative'>
             {!formClose && (
               <div
-                className={`w-full lg:w-[45%] xl:w-[40%] h-screen lg:h-screen md:h-auto exclude-print transition-opacity duration-200 lg:relative ${
+                className={`w-full lg:w-[45%] xl:w-[40%] exclude-print transition-opacity duration-200 lg:relative ${
                   mobileView === "edit" ? "block opacity-100 relative z-10" : "absolute inset-0 opacity-0 pointer-events-none lg:block lg:relative lg:opacity-100 lg:pointer-events-auto lg:z-auto"
                 }`}
                 style={{ 
                   backgroundColor: "hsl(240 10% 3.9%)",
+                  height: 'calc(100vh - 60px - 73px)',
                 }}
               >
                 {/* Fixed Animated Background Grid - Only on desktop */}
-                <div className='absolute inset-0 w-full h-full z-0 hidden lg:block overflow-hidden'>
+                <div className='absolute inset-0 w-full h-full z-0 hidden lg:block overflow-hidden pointer-events-none'>
                   <Squares
                     speed={0.3}
                     squareSize={30}
@@ -215,16 +216,19 @@ export default function BuilderPage() {
                 </div>
                 <div
                   ref={divRef}
-                  className='h-full border-r relative z-10 overflow-y-auto'
+                  className='h-full w-full border-r relative z-10 overflow-y-scroll overflow-x-hidden'
                   style={{ 
                     borderColor: "hsl(240 3.7% 15.9%)",
                     backgroundColor: "hsl(240 10% 3.9%)",
+                    WebkitOverflowScrolling: 'touch',
+                    scrollbarWidth: 'thin',
+                    scrollbarColor: 'rgba(236, 72, 153, 0.3) transparent',
                   }}
                 >
                   {!isHydrated ? (
                     <FormSkeleton />
                   ) : (
-                    <div className='p-4 sm:p-6 lg:p-5 relative z-20 backdrop-blur-[1.5px]' style={{ minHeight: '100vh' }}>
+                    <div className='p-4 sm:p-6 lg:p-5 relative' style={{ minHeight: '100%' }}>
                       {/* Header */}
 
                       <div className='bg-black/85 border border-pink-400/80 hover:border-pink-400  h-12 relative md:p-0 overflow-hidden flex flex-col gap-1 justify-center items-center mb-6 w-full rounded-full'>

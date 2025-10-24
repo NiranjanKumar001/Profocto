@@ -393,11 +393,10 @@ const Preview = () => {
                         setCurrentTemplate(template.id);
                         setIsDropdownOpen(false);
                       }}
-                      className={`w-full px-4 py-3 flex items-center gap-3 hover:bg-pink-50 transition-colors ${
-                        currentTemplate === template.id
+                      className={`w-full px-4 py-3 flex items-center gap-3 hover:bg-pink-50 transition-colors ${currentTemplate === template.id
                           ? "bg-pink-50 border-r-2 border-pink-500"
                           : ""
-                      }`}
+                        }`}
                     >
                       <IconComponent
                         className={`w-4 h-4 ${currentTemplate === template.id ? "text-pink-600" : "text-gray-600"}`}
@@ -424,97 +423,97 @@ const Preview = () => {
         </div>
       </div>
       <TemplateWrapper>
-  {(() => {
-    switch (currentTemplate) {
-      case "template1":
-        return (
-          <ClassicTemplate
-            resumeData={resumeData}
-            sectionOrder={sectionOrder}
-            enabledSections={enabledSections}
-            handleDragEnd={handleDragEnd}
-            sensors={sensors}
-            icons={icons}
-            setResumeData={setResumeData}
-          />
-        );
-      case "template2":
-        return (
-          <TemplateTwo
-            namedata={resumeData.name}
-            positionData={resumeData.position}
-            contactData={resumeData.contactInformation}
-            emailData={resumeData.email}
-            addressData={resumeData.address}
-            telIcon={<MdPhone />}
-            emailIcon={<MdEmail />}
-            addressIcon={<MdLocationOn />}
-            summaryData={resumeData.summary}
-            educationData={resumeData.education}
-            projectsData={resumeData.projects}
-            workExperienceData={resumeData.workExperience}
-            skillsData={resumeData.skills}
-            languagesData={resumeData.languages}
-            certificationsData={resumeData.certifications}
-            sectionOrder={sectionOrder}
-            enabledSections={enabledSections}
-            onDragEnd={onDragEnd}
-            resumeData={resumeData}
-            setResumeData={setResumeData}
-            icons={icons}
-          />
-        );
-      case "template3":
-        return (
-          <TemplateThree
-            resumeData={resumeData}
-            sectionOrder={sectionOrder}
-            enabledSections={enabledSections}
-            handleDragEnd={handleDragEnd}
-            sensors={sensors}
-            icons={icons}
-            setResumeData={setResumeData}
-          />
-        );
-      case "template4":
-        return (
-          <TemplateFour
-            resumeData={resumeData}
-            sectionOrder={sectionOrder}
-            enabledSections={enabledSections}
-            handleDragEnd={handleDragEnd}
-            sensors={sensors}
-            icons={icons}
-            setResumeData={setResumeData}
-          />
-        );
-      case "template5":
-        return (
-          <TemplateFive
-            resumeData={resumeData}
-            sectionOrder={sectionOrder}
-            enabledSections={enabledSections}
-            handleDragEnd={handleDragEnd}
-            sensors={sensors}
-            icons={icons}
-            setResumeData={setResumeData}
-          />
-        );
-      default:
-        return (
-          <TemplateThree
-            resumeData={resumeData}
-            sectionOrder={sectionOrder}
-            enabledSections={enabledSections}
-            handleDragEnd={handleDragEnd}
-            sensors={sensors}
-            icons={icons}
-            setResumeData={setResumeData}
-          />
-        );
-    }
-  })()}
-</TemplateWrapper>
+        {(() => {
+          switch (currentTemplate) {
+            case "template1":
+              return (
+                <ClassicTemplate
+                  resumeData={resumeData}
+                  sectionOrder={sectionOrder}
+                  enabledSections={enabledSections}
+                  handleDragEnd={handleDragEnd}
+                  sensors={sensors}
+                  icons={icons}
+                  setResumeData={setResumeData}
+                />
+              );
+            case "template2":
+              return (
+                <TemplateTwo
+                  namedata={resumeData.name}
+                  positionData={resumeData.position}
+                  contactData={resumeData.contactInformation}
+                  emailData={resumeData.email}
+                  addressData={resumeData.address}
+                  telIcon={<MdPhone />}
+                  emailIcon={<MdEmail />}
+                  addressIcon={<MdLocationOn />}
+                  summaryData={resumeData.summary}
+                  educationData={resumeData.education}
+                  projectsData={resumeData.projects}
+                  workExperienceData={resumeData.workExperience}
+                  skillsData={resumeData.skills}
+                  languagesData={resumeData.languages}
+                  certificationsData={resumeData.certifications}
+                  sectionOrder={sectionOrder}
+                  enabledSections={enabledSections}
+                  onDragEnd={onDragEnd}
+                  resumeData={resumeData}
+                  setResumeData={setResumeData}
+                  icons={icons}
+                />
+              );
+            case "template3":
+              return (
+                <TemplateThree
+                  resumeData={resumeData}
+                  sectionOrder={sectionOrder}
+                  enabledSections={enabledSections}
+                  handleDragEnd={handleDragEnd}
+                  sensors={sensors}
+                  icons={icons}
+                  setResumeData={setResumeData}
+                />
+              );
+            case "template4":
+              return (
+                <TemplateFour
+                  resumeData={resumeData}
+                  sectionOrder={sectionOrder}
+                  enabledSections={enabledSections}
+                  handleDragEnd={handleDragEnd}
+                  sensors={sensors}
+                  icons={icons}
+                  setResumeData={setResumeData}
+                />
+              );
+            case "template5":
+              return (
+                <TemplateFive
+                  resumeData={resumeData}
+                  sectionOrder={sectionOrder}
+                  enabledSections={enabledSections}
+                  handleDragEnd={handleDragEnd}
+                  sensors={sensors}
+                  icons={icons}
+                  setResumeData={setResumeData}
+                />
+              );
+            default:
+              return (
+                <TemplateThree
+                  resumeData={resumeData}
+                  sectionOrder={sectionOrder}
+                  enabledSections={enabledSections}
+                  handleDragEnd={handleDragEnd}
+                  sensors={sensors}
+                  icons={icons}
+                  setResumeData={setResumeData}
+                />
+              );
+          }
+        })()}
+      </TemplateWrapper>
 
 
     </div>
@@ -933,7 +932,7 @@ const ClassicTemplate = ({
       <div className="text-center mb-2 no-break">
         <h1 className="name">{resumeData.name}</h1>
         <h2 className="profession">{resumeData.position}</h2>
-        
+
         {/* Contact Information & Social Media */}
         <div className="flex justify-center items-center gap-6 contact mb-0 flex-wrap">
           <div className="flex items-center gap-1">
@@ -952,7 +951,7 @@ const ClassicTemplate = ({
             <MdLocationOn className='text-black' />
             <span>{resumeData.address}</span>
           </div>
-          
+
           {/* Social Media Links */}
           {resumeData.socialMedia.length > 0 && resumeData.socialMedia.map((socialMedia, index) => {
             const icon = icons.find(
@@ -960,13 +959,12 @@ const ClassicTemplate = ({
             );
             return (
               <a
-                href={`${
-                  socialMedia.socialMedia.toLowerCase() === "website"
+                href={`${socialMedia.socialMedia.toLowerCase() === "website"
                     ? "https://"
                     : socialMedia.socialMedia.toLowerCase() === "linkedin"
                       ? "https://www."
                       : "https://www."
-                }${socialMedia.link}`}
+                  }${socialMedia.link}`}
                 key={index}
                 className='inline-flex items-center gap-1 text-black'
                 target='_blank'
