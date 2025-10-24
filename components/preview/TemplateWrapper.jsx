@@ -124,8 +124,35 @@ const TemplateWrapper = ({ children }) => {
   // Show loading skeleton before client hydration
   if (!isClient) {
     return (
-      <div className="w-full flex justify-center items-start bg-gradient-to-br from-slate-100 via-gray-100 to-slate-200 min-h-screen py-8 px-4">
-        <div className="w-[794px] h-[1123px] bg-white rounded-lg shadow-lg animate-pulse" />
+      <div className="w-full flex justify-center items-start bg-slate-100 min-h-screen py-8 px-4">
+        <div className="animate-pulse space-y-4" style={{ width: '794px', maxWidth: '100%' }}>
+          {/* A4 Paper Skeleton */}
+          <div className="bg-white rounded-lg shadow-lg" style={{ height: '1123px', maxHeight: '80vh' }}>
+            <div className="p-8 space-y-6">
+              {/* Header */}
+              <div className="text-center space-y-3 border-b border-gray-200 pb-6">
+                <div className="h-8 bg-gray-200 rounded w-1/2 mx-auto"></div>
+                <div className="h-4 bg-gray-200 rounded w-1/3 mx-auto"></div>
+                <div className="flex justify-center gap-4 mt-4">
+                  <div className="h-3 bg-gray-200 rounded w-24"></div>
+                  <div className="h-3 bg-gray-200 rounded w-24"></div>
+                  <div className="h-3 bg-gray-200 rounded w-24"></div>
+                </div>
+              </div>
+              {/* Content */}
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="space-y-3">
+                  <div className="h-5 bg-gray-200 rounded w-1/4"></div>
+                  <div className="space-y-2">
+                    <div className="h-4 bg-gray-100 rounded"></div>
+                    <div className="h-4 bg-gray-100 rounded"></div>
+                    <div className="h-4 bg-gray-100 rounded w-4/5"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

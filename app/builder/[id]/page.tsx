@@ -14,14 +14,7 @@ import DefaultResumeData from "@/components/utility/DefaultResumeData";
 // Lazy load Preview for better initial performance
 const Preview = dynamic(() => import("@/components/preview/Preview"), {
   ssr: false,
-  loading: () => (
-    <div className="w-full h-screen flex items-center justify-center bg-slate-100">
-      <div className="text-center">
-        <div className="w-16 h-16 border-4 border-pink-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-        <p className="text-gray-600">Loading preview...</p>
-      </div>
-    </div>
-  ),
+  loading: () => <PreviewSkeleton />,
 });
 import SocialMedia from "@/components/form/SocialMedia";
 import WorkExperience from "@/components/form/WorkExperience";
@@ -39,6 +32,8 @@ import type { ResumeData } from "../../types/resume";
 import { FaChevronUp, FaOctopusDeploy } from "react-icons/fa";
 import MobileNavbar from "@/components/ui/MobileNavbar";
 import MobileBottomNav from "@/components/ui/MobileBottomNav";
+import FormSkeleton from "@/components/ui/FormSkeleton";
+import PreviewSkeleton from "@/components/ui/PreviewSkeleton";
 
 // server side rendering false
 const Print = dynamic(() => import("@/components/utility/WinPrint"), {
@@ -198,7 +193,7 @@ export default function BuilderPage() {
             onViewChange={handleMobileViewChange}
           />
 
-          <div className='flex flex-col lg:flex-row min-h-screen max-w-full overflow-hidden pt-[60px] lg:pt-0 pb-[73px] lg:pb-0 bg-[hsl(240_10%_3.9%)] lg:bg-transparent relative'>
+          <div className='flex flex-col lg:flex-row min-h-screen max-w-full overflow-hidden pt-[60px] lg:pt-0 pb-[73px] lg:pb-0 relative'>
             {!formClose && (
               <div
                 className={`w-full lg:w-[45%] xl:w-[40%] h-screen lg:h-screen md:h-auto exclude-print transition-opacity duration-200 lg:relative ${
@@ -223,25 +218,28 @@ export default function BuilderPage() {
                   className='h-full border-r relative z-10 overflow-y-auto'
                   style={{ borderColor: "hsl(240 3.7% 15.9%)" }}
                 >
-                  <div className='p-4 sm:p-6 lg:p-5 relative z-20 backdrop-blur-[1.5px]'>
-                    {/* Header */}
+                  {!isHydrated ? (
+                    <FormSkeleton />
+                  ) : (
+                    <div className='p-4 sm:p-6 lg:p-5 relative z-20 backdrop-blur-[1.5px]'>
+                      {/* Header */}
 
-                    <div className='bg-black/85 border border-pink-400/80 hover:border-pink-400  h-12 relative md:p-0 overflow-hidden flex flex-col gap-1 justify-center items-center mb-6 w-full rounded-full'>
-                      <div className=' flex gap-0.5 items-center'>
-                        <h1 className='text-2xl md:text-3-xl text-gray-200 font-bold tracking-wide'>
-                          Profocto
-                        </h1>
-                        <FaOctopusDeploy className='text-pink-500 size-6 ' />
+                      <div className='bg-black/85 border border-pink-400/80 hover:border-pink-400  h-12 relative md:p-0 overflow-hidden flex flex-col gap-1 justify-center items-center mb-6 w-full rounded-full'>
+                        <div className=' flex gap-0.5 items-center'>
+                          <h1 className='text-2xl md:text-3-xl text-gray-200 font-bold tracking-wide'>
+                            Profocto
+                          </h1>
+                          <FaOctopusDeploy className='text-pink-500 size-6 ' />
+                        </div>
+                        <FaOctopusDeploy className='text-pink-300 size-6 absolute left-5 bottom-2 opacity-20 -rotate-12' />
+                        <FaOctopusDeploy className='text-pink-300 size-6 absolute right-5 bottom-2 opacity-20 rotate-12' />
+
+                        <FaOctopusDeploy className='text-pink-300 size-6 absolute left-16 -top-1 opacity-20 rotate-180' />
+                        <FaOctopusDeploy className='text-pink-300 size-6 absolute right-16 -top-1 opacity-20 rotate-180' />
                       </div>
-                      <FaOctopusDeploy className='text-pink-300 size-6 absolute left-5 bottom-2 opacity-20 -rotate-12' />
-                      <FaOctopusDeploy className='text-pink-300 size-6 absolute right-5 bottom-2 opacity-20 rotate-12' />
 
-                      <FaOctopusDeploy className='text-pink-300 size-6 absolute left-16 -top-1 opacity-20 rotate-180' />
-                      <FaOctopusDeploy className='text-pink-300 size-6 absolute right-16 -top-1 opacity-20 rotate-180' />
-                    </div>
-
-                    {/* Form Sections */}
-                    <div className='space-y-4 lg:space-y-6'>
+                      {/* Form Sections */}
+                      <div className='space-y-4 lg:space-y-6'>
                       <LoadUnload />
                       <PersonalInformation />
                       <SocialMedia />
@@ -441,6 +439,7 @@ export default function BuilderPage() {
                       </div>
                     </div>
                   </div>
+                  )}
                 </div>
               </div>
             )}
@@ -483,7 +482,7 @@ export default function BuilderPage() {
                 formClose ? "w-full" : "w-full lg:w-[55%] xl:w-[60%]"
               } ${
                 mobileView === "preview" ? "block opacity-100 relative z-10" : "absolute inset-0 opacity-0 pointer-events-none lg:block lg:relative lg:opacity-100 lg:pointer-events-auto lg:z-auto"
-              } transition-opacity duration-200 min-h-screen lg:min-h-0 bg-slate-100 lg:bg-transparent`}
+              } transition-opacity duration-200 min-h-screen lg:min-h-0`}
             >
               <Preview />
             </div>
