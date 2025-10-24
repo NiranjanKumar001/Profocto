@@ -203,8 +203,8 @@ export default function BuilderPage() {
                   backgroundColor: "hsl(240 10% 3.9%)",
                 }}
               >
-                {/* Fixed Animated Background Grid */}
-                <div className='fixed inset-0 w-full lg:w-[45%] xl:w-[40%] h-screen z-0 hidden lg:block'>
+                {/* Fixed Animated Background Grid - Only on desktop */}
+                <div className='absolute inset-0 w-full h-full z-0 hidden lg:block overflow-hidden'>
                   <Squares
                     speed={0.3}
                     squareSize={30}
@@ -216,12 +216,15 @@ export default function BuilderPage() {
                 <div
                   ref={divRef}
                   className='h-full border-r relative z-10 overflow-y-auto'
-                  style={{ borderColor: "hsl(240 3.7% 15.9%)" }}
+                  style={{ 
+                    borderColor: "hsl(240 3.7% 15.9%)",
+                    backgroundColor: "hsl(240 10% 3.9%)",
+                  }}
                 >
                   {!isHydrated ? (
                     <FormSkeleton />
                   ) : (
-                    <div className='p-4 sm:p-6 lg:p-5 relative z-20 backdrop-blur-[1.5px]'>
+                    <div className='p-4 sm:p-6 lg:p-5 relative z-20 backdrop-blur-[1.5px]' style={{ minHeight: '100vh' }}>
                       {/* Header */}
 
                       <div className='bg-black/85 border border-pink-400/80 hover:border-pink-400  h-12 relative md:p-0 overflow-hidden flex flex-col gap-1 justify-center items-center mb-6 w-full rounded-full'>

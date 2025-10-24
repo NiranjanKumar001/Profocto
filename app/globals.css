@@ -26,6 +26,7 @@
     @media (max-width: 1024px) {
         body {
             overscroll-behavior: none;
+            background-color: hsl(240 10% 3.9%);
         }
         
         /* Optimize scrollable containers on mobile */
@@ -33,6 +34,18 @@
         .overflow-auto {
             -webkit-overflow-scrolling: touch;
             will-change: scroll-position;
+            /* Force GPU acceleration */
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
+            /* Prevent black flashing during scroll */
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        
+        /* Ensure smooth repainting on mobile */
+        * {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
     }
 
@@ -557,11 +570,15 @@
     border-width: 2px;
     box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
     position: relative;
+    /* Improve mobile scroll performance */
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
 }
 
 .form-section:hover {
     border-color: hsl(330 81% 60% / 0.5);
-    transform: translateY(-1px);
+    transform: translateY(-1px) translateZ(0);
     box-shadow: 0 6px 12px -2px rgb(0 0 0 / 0.4), 0 4px 8px -2px rgb(0 0 0 / 0.3);
 }
 
