@@ -14,7 +14,6 @@ import { useSectionTitles } from "../../contexts/SectionTitleContext";
 import { MdEmail, MdLocationOn, MdPhone } from "react-icons/md";
 import { SortableItem, SortableSection } from "./Preview";
 
-// Classic Template Component - Professional and Clean
 const TemplateFour = ({
   resumeData,
   sectionOrder,
