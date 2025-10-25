@@ -10,6 +10,11 @@ const Certification = () => {
   const skillType = "certifications";
   const title = "Certifications";
 
+  // Auto-select text when input is focused
+  const handleFocus = (e) => {
+    e.target.select();
+  };
+
   const handleCertification = (e, index) => {
     const newCertifications = [...resumeData[skillType]];
     newCertifications[index] = {
@@ -56,6 +61,7 @@ const Certification = () => {
                 className="other-input w-full"
                 value={certification.name}
                 onChange={(e) => handleCertification(e, index)}
+                onFocus={handleFocus}
               />
             </div>
             <div>
@@ -67,6 +73,7 @@ const Certification = () => {
                 className="other-input w-full"
                 value={certification.issuer}
                 onChange={(e) => handleCertification(e, index)}
+                onFocus={handleFocus}
               />
             </div>
           </div>
@@ -80,6 +87,7 @@ const Certification = () => {
               className="other-input w-full"
               value={certification.link || ""}
               onChange={(e) => handleCertification(e, index)}
+              onFocus={handleFocus}
               pattern="https?://.+"
               title="Please enter a valid URL starting with http:// or https://"
             />

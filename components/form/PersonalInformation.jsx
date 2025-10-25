@@ -73,6 +73,11 @@ const PersonalInformation = ({}) => {
   // Check if current image is the default
   const isDefaultImage = resumeData.profilePicture === DEFAULT_PROFILE_PICTURE;
 
+  // Auto-select text when input is focused
+  const handleFocus = (e) => {
+    e.target.select();
+  };
+
   return (
     <div className="form-section">
       <h2 className="form-section-title">Personal Information</h2>
@@ -88,6 +93,7 @@ const PersonalInformation = ({}) => {
               className="pi w-full"
               value={resumeData.name}
               onChange={handleChange}
+              onFocus={handleFocus}
             />
           </div>
           <div>
@@ -99,6 +105,7 @@ const PersonalInformation = ({}) => {
               className="pi w-full"
               value={resumeData.position}
               onChange={handleChange}
+              onFocus={handleFocus}
             />
           </div>
         </div>
@@ -113,6 +120,7 @@ const PersonalInformation = ({}) => {
               className="pi w-full"
               value={resumeData.contactInformation}
               onChange={handleChange}
+              onFocus={handleFocus}
               pattern="^\+?[1-9]\d{1,14}$"
               title="Please enter a valid international phone number"
               minLength="10"
@@ -128,6 +136,7 @@ const PersonalInformation = ({}) => {
               className="pi w-full"
               value={resumeData.email}
               onChange={handleChange}
+              onFocus={handleFocus}
             />
           </div>
         </div>
@@ -141,6 +150,7 @@ const PersonalInformation = ({}) => {
             className="pi w-full"
             value={resumeData.address}
             onChange={handleChange}
+            onFocus={handleFocus}
           />
         </div>
 

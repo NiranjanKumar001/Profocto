@@ -11,6 +11,11 @@ const WorkExperience = () => {
     setResumeData,
   } = useContext(ResumeContext);
 
+  // Auto-select text when input is focused
+  const handleFocus = (e) => {
+    e.target.select();
+  };
+
   const handleWorkExperience = (e, index) => {
     const newworkExperience = [...resumeData.workExperience];
     newworkExperience[index][e.target.name] = e.target.value;
@@ -62,6 +67,7 @@ const WorkExperience = () => {
                 className="other-input w-full"
                 value={workExperience.company}
                 onChange={(e) => handleWorkExperience(e, index)}
+                onFocus={handleFocus}
               />
             </div>
             <div>
@@ -73,6 +79,7 @@ const WorkExperience = () => {
                 className="other-input w-full"
                 value={workExperience.position}
                 onChange={(e) => handleWorkExperience(e, index)}
+                onFocus={handleFocus}
               />
             </div>
           </div>
@@ -113,6 +120,7 @@ const WorkExperience = () => {
               value={workExperience.description}
               maxLength="250"
               onChange={(e) => handleWorkExperience(e, index)}
+              onFocus={handleFocus}
             />
           </div>
           
@@ -124,6 +132,7 @@ const WorkExperience = () => {
               className="other-input w-full h-28 resize-none"
               value={workExperience.keyAchievements}
               onChange={(e) => handleWorkExperience(e, index)}
+              onFocus={handleFocus}
             />
           </div>
         </div>

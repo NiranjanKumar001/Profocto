@@ -10,6 +10,11 @@ const Projects = () => {
   const { resumeData, setResumeData } = useContext(ResumeContext);
   const todayDate = useTodayDate();
 
+  // Auto-select text when input is focused
+  const handleFocus = (e) => {
+    e.target.select();
+  };
+
   const handleProjects = (e, index) => {
     const newProjects = [...resumeData.projects];
     newProjects[index][e.target.name] = e.target.value;
@@ -63,6 +68,7 @@ const Projects = () => {
                 className="other-input w-full"
                 value={project.name}
                 onChange={(e) => handleProjects(e, index)}
+                onFocus={handleFocus}
               />
             </div>
             <div>
@@ -74,6 +80,7 @@ const Projects = () => {
                 className="other-input w-full"
                 value={project.link}
                 onChange={(e) => handleProjects(e, index)}
+                onFocus={handleFocus}
                 pattern="https?://.+"
                 title="Please enter a valid URL starting with http:// or https://"
               />
@@ -116,6 +123,7 @@ const Projects = () => {
               value={project.description}
               maxLength="250"
               onChange={(e) => handleProjects(e, index)}
+              onFocus={handleFocus}
             />
           </div>
 
@@ -127,6 +135,7 @@ const Projects = () => {
               className="other-input w-full h-28 resize-none"
               value={project.keyAchievements}
               onChange={(e) => handleProjects(e, index)}
+              onFocus={handleFocus}
             />
           </div>
         </div>

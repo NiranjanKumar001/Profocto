@@ -7,6 +7,11 @@ import { ResumeContext } from "../../contexts/ResumeContext";
 const SocialMedia = () => {
   const { resumeData, setResumeData } = useContext(ResumeContext);
 
+  // Auto-select text when input is focused
+  const handleFocus = (e) => {
+    e.target.select();
+  };
+
   // Available platform options
   const platformOptions = [
     { value: "", label: "Select Platform" },
@@ -84,6 +89,7 @@ const SocialMedia = () => {
                   className="other-input w-full mt-2"
                   value={socialMedia.socialMedia === "Custom" ? "" : socialMedia.socialMedia}
                   onChange={(e) => handleSocialMedia(e, index)}
+                  onFocus={handleFocus}
                 />
               )}
             </div>
@@ -96,6 +102,7 @@ const SocialMedia = () => {
                 className="other-input w-full"
                 value={socialMedia.displayText || ""}
                 onChange={(e) => handleSocialMedia(e, index)}
+                onFocus={handleFocus}
               />
             </div>
           </div>
@@ -108,6 +115,7 @@ const SocialMedia = () => {
               className="other-input w-full"
               value={socialMedia.link}
               onChange={(e) => handleSocialMedia(e, index)}
+              onFocus={handleFocus}
             />
           </div>
         </div>
