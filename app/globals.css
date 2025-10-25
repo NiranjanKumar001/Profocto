@@ -792,6 +792,16 @@
         padding: inherit !important;
     }
     
+    /* Apply font-light weight for descriptions and bullets in print */
+    .font-light,
+    p.font-light,
+    ul.font-light,
+    .content.font-light,
+    p.content.font-light,
+    ul.content.font-light {
+        font-weight: 300 !important;
+    }
+    
     /* Fix mobile layout issues in print */
     /* Hide mobile navigation completely */
     [class*="MobileNavbar"],
