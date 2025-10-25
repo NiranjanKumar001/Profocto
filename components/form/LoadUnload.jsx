@@ -96,7 +96,7 @@ const LoadUnload = () => {
           <div className="tooltip">
             <button
               aria-label="Reset to Default"
-              className="p-2 sm:p-2 text-white bg-red-700 rounded hover:bg-red-600 transition-colors"
+              className="p-2 sm:p-2 text-white bg-zinc-800 rounded hover:bg-zinc-700 transition-colors"
               onClick={handleResetClick}
             >
               <RiResetLeftLine className="text-[1.1rem] sm:text-[1.2rem] text-white" />
