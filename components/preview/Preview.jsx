@@ -1,22 +1,22 @@
 "use client";
 
 import {
-  FaLinkedin,
-  FaTwitter,
-  FaFacebook,
-  FaInstagram,
-  FaYoutube,
-  FaExternalLinkAlt,
-  FaChevronDown,
-  FaFileAlt,
-  FaTh,
-  FaEyeSlash,
-  FaHackerrank,
-  FaMedium,
-  FaStackOverflow,
-  FaBehance,
-  FaDribbble,
-  FaGitlab,
+  FaLinkedin,
+  FaTwitter,
+  FaFacebook,
+  FaInstagram,
+  FaYoutube,
+  FaExternalLinkAlt,
+  FaChevronDown,
+  FaFileAlt,
+  FaTh,
+  FaEyeSlash,
+ FaMedium,
+  FaStackOverflow,   
+  FaBehance,         
+  FaDribbble,        
+  FaGitlab , 
+  FaHackerrank,
 } from "react-icons/fa";
 import { MdEmail, MdLocationOn, MdPhone } from "react-icons/md";
 import { CgWebsite } from "react-icons/cg";
@@ -31,19 +31,19 @@ import TemplateFive from "./TemplateFive"
 import TemplateWrapper from "./TemplateWrapper"
 import { useSectionTitles } from "../../contexts/SectionTitleContext";
 import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
   TouchSensor,
-  useSensor,
-  useSensors,
+  useSensor,
+  useSensors,
 } from "@dnd-kit/core";
 import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
@@ -51,147 +51,149 @@ import { ImGithub } from "react-icons/im";
 import { SiCodeforces, SiLeetcode } from "react-icons/si";
 
 const Preview = () => {
-  const { resumeData, setResumeData } = useContext(ResumeContext);
-  const [currentTemplate, setCurrentTemplate] = useState("template1");
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isClient, setIsClient] = useState(false);
+  const { resumeData, setResumeData } = useContext(ResumeContext);
+  const [currentTemplate, setCurrentTemplate] = useState("template1");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isClient, setIsClient] = useState(false);
 
-  // Handle client-side initialization
-  useEffect(() => {
-    setIsClient(true);
-    if (typeof window !== "undefined") {
-      const savedTemplate = localStorage.getItem("currentTemplate");
-      if (savedTemplate) {
-        setCurrentTemplate(savedTemplate);
-      }
-    }
-  }, []);
+  // Handle client-side initialization
+  useEffect(() => {
+    setIsClient(true);
+    if (typeof window !== "undefined") {
+      const savedTemplate = localStorage.getItem("currentTemplate");
+      if (savedTemplate) {
+        setCurrentTemplate(savedTemplate);
+      }
+    }
+  }, []);
 
-  // Save template selection to localStorage
-  useEffect(() => {
-    if (isClient && typeof window !== "undefined") {
-      localStorage.setItem("currentTemplate", currentTemplate);
-    }
-  }, [currentTemplate, isClient]);
+  // Save template selection to localStorage
+  useEffect(() => {
+    if (isClient && typeof window !== "undefined") {
+      localStorage.setItem("currentTemplate", currentTemplate);
+    }
+  }, [currentTemplate, isClient]);
 
-  // Available templates
-  const templates = [
-    {
-      id: "template1",
-      name: "Classic Template",
-      description: "Clean and professional layout",
-      icon: FaFileAlt,
-    },
-    {
-      id: "template2",
-      name: "Modern Template",
-      description: "Dynamic with drag-and-drop sections",
-      icon: FaTh,
-    },
-    {
-      id: "template3",
-      name: "Classic Template II",
-      description: "Clean and ATS friendly",
-      icon: FaTh,
-    },
-    {
+  // Available templates
+  const templates = [
+    {
+      id: "template1",
+      name: "Classic Template",
+      description: "Clean and professional layout",
+      icon: FaFileAlt,
+    },
+    {
+      id: "template2",
+      name: "Modern Template",
+      description: "Dynamic with drag-and-drop sections",
+      icon: FaTh,
+    },
+    {
+      id: "template3",
+      name: "Classic Template II",
+      description: "Clean and ATS friendly",
+      icon: FaTh,
+    },
+    {
       id: "template4",
-      name: "Fancy Template",
-      description: "New modern layout",
-      icon: FaFileAlt,
-    },
-    {
+    name: "Fancy Template",
+    description: "New modern layout",
+    icon: FaFileAlt,
+  },
+  {
       id: "template5",
-      name: "Smart Template",
-      description: "clean layout with divisions",
-      icon: FaFileAlt,
-    },
-  ];
+    name: "Smart Template",
+    description: "clean layout with divisions",
+    icon: FaFileAlt,
+  },
+  ];
 
-  const defaultSections = [
-    "summary",
-    "education",
-    "experience",
-    "projects",
-    "skills",
-    "softSkills",
-    "languages",
-    "certifications",
-  ];
+  const defaultSections = [
+    "summary",
+    "education",
+    "experience",
+    "projects",
+    "skills",
+    "softSkills",
+    "languages",
+    "certifications",
+    "awards",
+  ];
 
-  const sectionLabels = {
-    summary: "Professional Summary",
-    education: "Education",
-    experience: "Professional Experience",
-    projects: "Projects",
-    skills: "Technical Skills",
-    softSkills: "Soft Skills",
-    languages: "Languages",
-    certifications: "Certifications",
-  };
+  const sectionLabels = {
+    summary: "Professional Summary",
+    education: "Education",
+    experience: "Professional Experience",
+    projects: "Projects",
+    skills: "Technical Skills",
+    softSkills: "Soft Skills",
+    languages: "Languages",
+    certifications: "Certifications",
+    awards: "Awards and Recognition",
+  };
 
-  const [sectionOrder, setSectionOrder] = useState(defaultSections);
-  const [enabledSections, setEnabledSections] = useState(() => {
-    // All sections enabled by default
-    const initial = {};
-    defaultSections.forEach((section) => {
-      initial[section] = true;
-    });
-    return initial;
-  });
-  const [showSectionToggle, setShowSectionToggle] = useState(false);
-  const dropdownRef = useRef(null);
-  const toggleRef = useRef(null);
+  const [sectionOrder, setSectionOrder] = useState(defaultSections);
+  const [enabledSections, setEnabledSections] = useState(() => {
+    // All sections enabled by default
+    const initial = {};
+    defaultSections.forEach((section) => {
+      initial[section] = true;
+    });
+    return initial;
+  });
+  const [showSectionToggle, setShowSectionToggle] = useState(false);
+  const dropdownRef = useRef(null);
+  const toggleRef = useRef(null);
 
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsDropdownOpen(false);
-      }
-      if (toggleRef.current && !toggleRef.current.contains(event.target)) {
-        setShowSectionToggle(false);
-      }
-    };
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+      if (toggleRef.current && !toggleRef.current.contains(event.target)) {
+        setShowSectionToggle(false);
+      }
+    };
 
-    const handleKeyDown = (event) => {
-      if (event.key === "Escape") {
-        setIsDropdownOpen(false);
-        setShowSectionToggle(false);
-      }
-    };
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        setIsDropdownOpen(false);
+        setShowSectionToggle(false);
+      }
+    };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
-  // Handle section toggle
-  const toggleSection = (sectionId) => {
-    setEnabledSections((prev) => {
-      const updated = {
-        ...prev,
-        [sectionId]: !prev[sectionId],
-      };
-      if (isClient) {
-        localStorage.setItem("enabledSections", JSON.stringify(updated));
-      }
-      return updated;
-    });
-  };
+  // Handle section toggle
+  const toggleSection = (sectionId) => {
+    setEnabledSections((prev) => {
+      const updated = {
+        ...prev,
+        [sectionId]: !prev[sectionId],
+      };
+      if (isClient) {
+        localStorage.setItem("enabledSections", JSON.stringify(updated));
+      }
+      return updated;
+    });
+  };
 
-  const icons = [
-    { name: "linkedin", icon: <FaLinkedin /> },
-    { name: "twitter", icon: <FaTwitter /> },
-    { name: "facebook", icon: <FaFacebook /> },
-    { name: "instagram", icon: <FaInstagram /> },
-    { name: "youtube", icon: <FaYoutube /> },
-    { name: "website", icon: <CgWebsite /> },
-    { name: "github", icon: <ImGithub /> },
-    { name: "leetcode", icon: <SiLeetcode /> },
+  const icons = [
+    { name: "linkedin", icon: <FaLinkedin /> },
+    { name: "twitter", icon: <FaTwitter /> },
+    { name: "facebook", icon: <FaFacebook /> },
+    { name: "instagram", icon: <FaInstagram /> },
+    { name: "youtube", icon: <FaYoutube /> },
+    { name: "website", icon: <CgWebsite /> },
+    { name: "github", icon: <ImGithub /> },
+    { name: "leetcode", icon: <SiLeetcode /> },
     { name: "hackerrank", icon: <FaHackerrank /> },
     { name: "hacker rank", icon: <FaHackerrank /> },
     { name: "codeforces", icon: <SiCodeforces /> },
@@ -201,9 +203,9 @@ const Preview = () => {
     { name: "dribbble", icon: <FaDribbble /> },
     { name: "gitlab", icon: <FaGitlab /> },
     { name: "custom", icon: <CgWebsite /> }, // Default icon for custom platforms
-  ];
+  ];
 
-  const sensors = useSensors(
+  const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
         distance: 8, // 8px movement required before drag starts
@@ -215,59 +217,70 @@ const Preview = () => {
         tolerance: 5, // 5px tolerance for touch movement
       },
     }),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
-  useEffect(() => {
-    if (isClient) {
-      const savedOrder = localStorage.getItem("sectionOrder");
-      const savedEnabled = localStorage.getItem("enabledSections");
+  useEffect(() => {
+    if (isClient) {
+      const savedOrder = localStorage.getItem("sectionOrder");
+      const savedEnabled = localStorage.getItem("enabledSections");
 
-      if (savedOrder) {
-        const parsedOrder = JSON.parse(savedOrder);
-        // Add missing sections
-        if (!parsedOrder.includes("certifications")) {
-          parsedOrder.push("certifications");
+      if (savedOrder) {
+        const parsedOrder = JSON.parse(savedOrder);
+        // Add missing sections
+        if (!parsedOrder.includes("certifications")) {
+          parsedOrder.push("certifications");
+        }
+        if (!parsedOrder.includes("education")) {
+          // Insert education after summary if it exists, otherwise at the beginning
+          const summaryIndex = parsedOrder.indexOf("summary");
+          if (summaryIndex !== -1) {
+            parsedOrder.splice(summaryIndex + 1, 0, "education");
+          } else {
+            parsedOrder.unshift("education");
+          }
+        }
+        
+        if (!parsedOrder.includes("awards")) {
+            
+            const certsIndex = parsedOrder.indexOf("certifications");
+            if (certsIndex !== -1) {
+                parsedOrder.splice(certsIndex + 1, 0, "awards");
+            } else {
+                parsedOrder.push("awards");
+            }
         }
-        if (!parsedOrder.includes("education")) {
-          // Insert education after summary if it exists, otherwise at the beginning
-          const summaryIndex = parsedOrder.indexOf("summary");
-          if (summaryIndex !== -1) {
-            parsedOrder.splice(summaryIndex + 1, 0, "education");
-          } else {
-            parsedOrder.unshift("education");
-          }
-        }
-        setSectionOrder(parsedOrder);
-      } else {
-        localStorage.setItem("sectionOrder", JSON.stringify(defaultSections));
-      }
+        
+        setSectionOrder(parsedOrder);
+      } else {
+        localStorage.setItem("sectionOrder", JSON.stringify(defaultSections));
+      }
 
-      if (savedEnabled) {
-        const parsedEnabled = JSON.parse(savedEnabled);
-        // Ensure all default sections are represented
-        const updatedEnabled = {};
-        defaultSections.forEach((section) => {
-          updatedEnabled[section] = parsedEnabled.hasOwnProperty(section)
-            ? parsedEnabled[section]
-            : true;
-        });
-        setEnabledSections(updatedEnabled);
-      } else {
-        const initial = {};
-        defaultSections.forEach((section) => {
-          initial[section] = true;
-        });
-        localStorage.setItem("enabledSections", JSON.stringify(initial));
-      }
-    }
-  }, [isClient]);
+      if (savedEnabled) {
+        const parsedEnabled = JSON.parse(savedEnabled);
+        // Ensure all default sections are represented
+        const updatedEnabled = {};
+        defaultSections.forEach((section) => {
+          updatedEnabled[section] = parsedEnabled.hasOwnProperty(section)
+            ? parsedEnabled[section]
+            : true;
+        });
+        setEnabledSections(updatedEnabled);
+      } else {
+        const initial = {};
+        defaultSections.forEach((section) => {
+          initial[section] = true;
+        });
+        localStorage.setItem("enabledSections", JSON.stringify(initial));
+      }
+    }
+  }, [isClient]);
 
   // Handle drag and drop for section reordering using @dnd-kit
   const handleDragEnd = (event) => {
@@ -405,9 +418,9 @@ const Preview = () => {
                         setIsDropdownOpen(false);
                       }}
                       className={`w-full px-4 py-3 flex items-center gap-3 hover:bg-pink-50 transition-colors ${currentTemplate === template.id
-                        ? "bg-pink-50 border-r-2 border-pink-500"
-                        : ""
-                        }`}
+                          ? "bg-pink-50 border-r-2 border-pink-500"
+                          : ""
+                      }`}
                     >
                       <IconComponent
                         className={`w-4 h-4 ${currentTemplate === template.id ? "text-pink-600" : "text-gray-600"}`}
@@ -434,43 +447,44 @@ const Preview = () => {
         </div>
       </div>
       <TemplateWrapper>
-        {(() => {
-          switch (currentTemplate) {
-            case "template1":
-              return (
-                <ClassicTemplate
-                  resumeData={resumeData}
-                  sectionOrder={sectionOrder}
-                  enabledSections={enabledSections}
-                  handleDragEnd={handleDragEnd}
-                  sensors={sensors}
-                  icons={icons}
-                  setResumeData={setResumeData}
-                />
-              );
-            case "template2":
-              return (
-                <TemplateTwo
-                  namedata={resumeData.name}
-                  positionData={resumeData.position}
-                  contactData={resumeData.contactInformation}
-                  emailData={resumeData.email}
-                  addressData={resumeData.address}
-                  telIcon={<MdPhone />}
-                  emailIcon={<MdEmail />}
-                  addressIcon={<MdLocationOn />}
-                  summaryData={resumeData.summary}
-                  educationData={resumeData.education}
-                  projectsData={resumeData.projects}
-                  workExperienceData={resumeData.workExperience}
-                  skillsData={resumeData.skills}
-                  languagesData={resumeData.languages}
-                  certificationsData={resumeData.certifications}
-                  sectionOrder={sectionOrder}
-                  enabledSections={enabledSections}
-                  onDragEnd={onDragEnd}
-                  resumeData={resumeData}
-                  setResumeData={setResumeData}
+  {(() => {
+    switch (currentTemplate) {
+      case "template1":
+        return (
+          <ClassicTemplate
+            resumeData={resumeData}
+            sectionOrder={sectionOrder}
+            enabledSections={enabledSections}
+            handleDragEnd={handleDragEnd}
+            sensors={sensors}
+            icons={icons}
+            setResumeData={setResumeData}
+          />
+        );
+      case "template2":
+        return (
+          <TemplateTwo
+            namedata={resumeData.name}
+            positionData={resumeData.position}
+            contactData={resumeData.contactInformation}
+            emailData={resumeData.email}
+            addressData={resumeData.address}
+            telIcon={<MdPhone />}
+            emailIcon={<MdEmail />}
+            addressIcon={<MdLocationOn />}
+            summaryData={resumeData.summary}
+            educationData={resumeData.education}
+            projectsData={resumeData.projects}
+            workExperienceData={resumeData.workExperience}
+            skillsData={resumeData.skills}
+            languagesData={resumeData.languages}
+            certificationsData={resumeData.certifications}
+            awardsData={resumeData.awards}
+            sectionOrder={sectionOrder}
+            enabledSections={enabledSections}
+            onDragEnd={onDragEnd}
+            resumeData={resumeData}
+            setResumeData={setResumeData}
                   icons={icons}
                 />
               );
@@ -496,34 +510,35 @@ const Preview = () => {
                   sensors={sensors}
                   icons={icons}
                   setResumeData={setResumeData}
-                />
-              );
-            case "template5":
-              return (
-                <TemplateFive
-                  resumeData={resumeData}
-                  sectionOrder={sectionOrder}
-                  enabledSections={enabledSections}
-                  handleDragEnd={handleDragEnd}
-                  sensors={sensors}
-                  icons={icons}
-                  setResumeData={setResumeData}
-                />
-              );
-            default:
-              return (
+          />
+        );
+      case "template5":
+        return (
+          <TemplateFive
+            resumeData={resumeData}
+            sectionOrder={sectionOrder}
+            enabledSections={enabledSections}
+            handleDragEnd={handleDragEnd}
+            sensors={sensors}
+            icons={icons}
+            setResumeData={setResumeData}
+          />
+        );
+      
+      default:
+        return (
                 <TemplateThree
-                  resumeData={resumeData}
-                  sectionOrder={sectionOrder}
-                  enabledSections={enabledSections}
-                  handleDragEnd={handleDragEnd}
-                  sensors={sensors}
-                  icons={icons}
-                  setResumeData={setResumeData}
-                />
-              );
-          }
-        })()}
+            resumeData={resumeData}
+            sectionOrder={sectionOrder}
+            enabledSections={enabledSections}
+            handleDragEnd={handleDragEnd}
+            sensors={sensors}
+            icons={icons}
+            setResumeData={setResumeData}
+          />
+        );
+    }
+  })()}
       </TemplateWrapper>
 
 
@@ -669,6 +684,11 @@ const ClassicTemplate = ({
       id: "certifications",
       title: "Certifications",
       content: resumeData.certifications,
+    },
+    {
+      id: "awards",
+      title: "Awards and Recognition",
+      content: resumeData.awards, // Assumes awards data is in resumeData.awards
     },
   ];
 
@@ -816,7 +836,7 @@ const ClassicTemplate = ({
                     </div>
                     <p className="content font-sans font-light text-black mb-1">{item.description}</p>
                     {typeof item.keyAchievements === "string" && item.keyAchievements.trim() && (
-                      <ul className="list-disc list-inside content font-sans font-light text-black ml-4">
+                      <ul className="list-disc list-inside content font-sans  text-black ml-4">
                         {item.keyAchievements
                           .split("\n")
                           .filter(achievement => achievement.trim())
@@ -892,14 +912,14 @@ const ClassicTemplate = ({
                     {typeof cert === "object" &&
                       cert.link &&
                       cert.link.trim() !== "" && (
-                        <a
+                        <Link
                           href={cert.link}
                           className='text-black hover:text-gray-700 transition-colors'
                           target='_blank'
                           rel='noopener noreferrer'
                         >
                           <FaExternalLinkAlt className='w-3 h-3' />
-                        </a>
+                        </Link>
                       )}
                   </div>
                 </li>
@@ -907,6 +927,48 @@ const ClassicTemplate = ({
             </ul>
           </div>
         ) : null;
+        case "awards":
+  return resumeData.awards && resumeData.awards.length > 0 ? (
+    <div>
+      <h2 className='section-title border-b-2 border-gray-300 mb-1 text-gray-900'>
+        {customSectionTitles.awards || "Awards and Recognition"}
+      </h2>
+      <ul className="content font-sans text-black space-y-1">
+        {resumeData.awards.map((award, index) => (
+          <li key={index}>
+            <div className='flex justify-between items-center'>
+              {/* LEFT: name, issuer, and link */}
+              <div className='flex items-center gap-1'>
+                <span className='font-semibold'>
+                  {award.name}
+                  {award.issuer && (
+                    <span className="font-normal text-black"> - {award.issuer}</span>
+                  )}
+                </span>
+                {award.link && award.link.trim() !== "" && (
+                  <Link
+                    href={award.link}
+                    className='text-blue-600 hover:text-blue-800 transition-colors'
+                    target='_blank'
+                    rel='noopener noreferrer'
+                  >
+                    <FaExternalLinkAlt className='w-3 h-3' />
+                  </Link>
+                )}
+              </div>
+
+              {/* RIGHT: date */}
+              {(award.year || award.date || award.startDate) && (
+                <span className="font-sans text-gray-600 text-sm">
+                  {award.year || award.date || award.startDate}
+                </span>
+              )}
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  ) : null;
 
       default:
         return null;
@@ -938,7 +1000,7 @@ const ClassicTemplate = ({
       <div className="text-center mb-2 no-break">
         <h1 className="name">{resumeData.name}</h1>
         <h2 className="profession">{resumeData.position}</h2>
-
+        
         {/* Contact Information & Social Media */}
         <div className="flex justify-center items-center gap-6 contact mb-0 flex-wrap">
           <div className="flex items-center gap-1">
@@ -956,32 +1018,32 @@ const ClassicTemplate = ({
           <div className='flex items-center gap-1'>
             <MdLocationOn className='text-black' />
             <span>{resumeData.address}</span>
-          </div>
+        </div>
 
           {/* Social Media Links */}
           {resumeData.socialMedia.length > 0 && resumeData.socialMedia.map((socialMedia, index) => {
-            const icon = icons.find(
-              (icon) => icon.name === socialMedia.socialMedia.toLowerCase()
-            );
-            return (
+              const icon = icons.find(
+                (icon) => icon.name === socialMedia.socialMedia.toLowerCase()
+              );
+              return (
               <a
                 href={`${socialMedia.socialMedia.toLowerCase() === "website"
-                  ? "https://"
-                  : socialMedia.socialMedia.toLowerCase() === "linkedin"
-                    ? "https://www."
-                    : "https://www."
+                      ? "https://"
+                      : socialMedia.socialMedia.toLowerCase() === "linkedin"
+                        ? "https://www."
+                        : "https://www."
                   }${socialMedia.link}`}
-                key={index}
+                  key={index}
                 className='inline-flex items-center gap-1 text-black'
-                target='_blank'
-                rel='noopener noreferrer'
-              >
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
                 {icon && React.cloneElement(icon.icon, { className: 'text-black' })}
                 <span>{socialMedia.displayText || socialMedia.link}</span>
               </a>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
       </div>
 
       {/* Draggable Sections with Same System as Modern Template */}
@@ -1005,5 +1067,79 @@ const ClassicTemplate = ({
   );
 };
 
+const A4PageWrapper = ({ children }) => {
+  const [isOverflowing, setIsOverflowing] = useState(false);
+  const contentRef = useRef(null);
+
+  useEffect(() => {
+    const checkOverflow = () => {
+      if (contentRef.current) {
+        // Get the actual A4 dimensions in pixels (at 96 DPI)
+        // A4 = 210mm x 297mm = 793.7px x 1122.5px at 96 DPI
+        const a4HeightPx = 1122.5;
+        const marginsPx = (10 + 10) * 3.7795; // 10mm top + 10mm bottom converted to px
+        const availableHeight = a4HeightPx - marginsPx;
+
+        // Get the actual content height
+        const contentHeight = contentRef.current.scrollHeight;
+
+        // Check if content exceeds available space
+        const overflow = contentHeight > availableHeight;
+
+        // A4 Height Check (console log removed)
+
+        setIsOverflowing(overflow);
+      }
+    };
+
+    // Initial check with longer delay to ensure content is rendered
+    const timeoutId = setTimeout(checkOverflow, 200);
+
+    // Check on resize
+    window.addEventListener("resize", checkOverflow);
+
+    // Enhanced mutation observer
+    const observer = new MutationObserver(() => {
+      setTimeout(checkOverflow, 100);
+    });
+
+    if (contentRef.current) {
+      observer.observe(contentRef.current, {
+        childList: true,
+        subtree: true,
+        characterData: true,
+        attributes: true,
+        attributeOldValue: true,
+        characterDataOldValue: true,
+      });
+    }
+
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener("resize", checkOverflow);
+      observer.disconnect();
+    };
+  }, []);
+
+  return (
+    <div className="w-full  flex justify-center p-2 md:p-4 lg:p-6 print:p-0">
+      <div className={`a4-preview lg:top-10 sm:top-14 top-10 print:shadow-none print:rounded-none print:border-none print:p-0 ${isOverflowing ? 'overflow-content' : ''}`}>
+        <div 
+          ref={contentRef}
+          className='preview-content w-full h-full bg-white text-black relative'
+        >
+          {children}
+          {isOverflowing && (
+            <div className='absolute bottom-0 left-0 right-0 bg-gradient-to-t from-red-100 to-transparent h-8 pointer-events-none print:hidden'>
+              <div className='absolute bottom-1 left-1/2 transform -translate-x-1/2 text-red-600 text-xs font-medium bg-red-100 px-2 py-1 rounded'>
+                Content will continue on next page
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default Preview;

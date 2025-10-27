@@ -3,7 +3,7 @@
 import { FaExternalLinkAlt } from "react-icons/fa";
 import { MdEmail, MdLocationOn, MdPhone } from "react-icons/md";
 import { GiGraduateCap } from "react-icons/gi";
-import { BiBriefcase, BiBookAlt, BiCodeAlt } from "react-icons/bi";
+import { BiBriefcase, BiBookAlt, BiCodeAlt, BiAward } from "react-icons/bi";
 import DateRange from "../utility/DateRange";
 import { DndContext, closestCenter } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
@@ -50,6 +50,11 @@ const TemplateFive = ({
           ...prev,
           workExperience: updateArray(resumeData.workExperience),
         }));
+      if (sectionType === "awards")
+        setResumeData((prev) => ({
+          ...prev,
+          awards: updateArray(resumeData.awards || []),
+        }));
     }
   };
 
@@ -57,6 +62,7 @@ const TemplateFive = ({
     { id: "summary", title: "Professional Summary", content: resumeData.summary },
     { id: "experience", title: "Experience", content: resumeData.workExperience },
     { id: "projects", title: "Projects", content: resumeData.projects },
+    { id: "awards", title: "Awards", content: resumeData.awards || [] },
   ];
 
   const sidebarSections = [
@@ -79,19 +85,14 @@ const TemplateFive = ({
       icon: <BiBookAlt />,
     },
     { id: "languages", title: "Languages", content: resumeData.languages, icon: <BiBookAlt /> },
-    {
-      id: "certifications",
-      title: "Certifications",
-      content: resumeData.certifications,
-      icon: <BiBookAlt />,
-    },
+    { id: "certifications", title: "Certifications", content: resumeData.certifications, icon: <BiBookAlt /> },
+    
   ];
 
   const orderedSections = sectionOrder
     .map((id) => sections.find((s) => s.id === id))
     .filter((s) => {
       if (!s || !enabledSections[s.id]) return false;
-      // Filter out empty content
       if (Array.isArray(s.content)) return s.content.length > 0;
       return s.content && s.content.length > 0;
     });
@@ -99,95 +100,59 @@ const TemplateFive = ({
   const renderMainSection = (section) => {
     switch (section.id) {
       case "summary":
-        return (
-          <div className="mb-3 print:mb-2">
-            <h2 className="section-title-main flex items-center gap-1 text-black font-bold pb-0.5 mb-1 border-b border-gray-900">
+      return (
+        <div className="mb-3 print:mb-2">
+          <h2 className="section-title-main flex items-center gap-1 text-black font-bold pb-0.5 mb-1 border-b border-gray-900">
               <BiBookAlt className="w-4 h-4" />{" "}
               {customSectionTitles.summary || "Professional Summary"}
-            </h2>
+          </h2>
             <p className="text-gray-800 text-justify text-sm leading-snug">
               {section.content}
             </p>
-          </div>
-        );
-      case "experience":
-        return (
-          <div className="mb-3 print:mb-2">
-            <h2 className="section-title-main flex items-center gap-1 text-black font-bold pb-0.5 mb-2 border-b border-gray-900">
-              <BiBriefcase className="w-4 h-4" />{" "}
-              {customSectionTitles.experience || "Professional Experience"}
-            </h2>
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragEnd={(e) => handleItemDragEnd(e, "experience")}
-            >
-              <SortableContext
-                items={resumeData.workExperience.map((_, i) => `work-${i}`)}
-                strategy={verticalListSortingStrategy}
-              >
-                {resumeData.workExperience.map((item, index) => (
-                  <SortableItem key={`work-${index}`} id={`work-${index}`}>
-                    <div className="relative pl-4 mb-2">
-                      <div className="absolute left-0 top-1 w-2 h-2 bg-black rounded-full"></div>
-                      <div className="p-0 bg-white ml-1">
-                        <h3 className="font-bold text-gray-900 text-sm leading-snug">
-                          {item.position} | {item.company}
-                        </h3>
-                        <DateRange
-                          startYear={item.startYear}
-                          endYear={item.endYear}
-                          id={`exp-${index}`}
-                          className="text-xs text-gray-700 block"
-                        />
-                        <p className="text-gray-800 mt-1 text-sm leading-snug">
-                          {item.description}
-                        </p>
-                        {item.keyAchievements && (
-                          <ul className="list-disc list-inside text-gray-800 mt-1 ml-3 text-sm leading-snug">
-                            {item.keyAchievements
-                              .split("\n")
-                              .filter((a) => a.trim())
-                              .map((a, idx) => <li key={idx}>{a}</li>)}
-                          </ul>
-                        )}
-                      </div>
-                    </div>
-                  </SortableItem>
-                ))}
-              </SortableContext>
-            </DndContext>
-          </div>
-        );
-      case "projects":
-        return (
-          <div className="mb-3 print:mb-2">
-            <h2 className="section-title-main flex items-center gap-1 text-black font-bold pb-0.5 mb-2 border-b border-gray-900">
-              <BiCodeAlt className="w-4 h-4" />{" "}
-              {customSectionTitles.projects || "Projects"}
-            </h2>
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragEnd={(e) => handleItemDragEnd(e, "projects")}
-            >
-              <SortableContext
-                items={resumeData.projects.map((_, i) => `project-${i}`)}
-                strategy={verticalListSortingStrategy}
-              >
-                {resumeData.projects.map((item, index) => (
-                  <SortableItem key={`project-${index}`} id={`project-${index}`}>
-                    <div className="relative pl-4 mb-2">
-                      <div className="absolute left-0 top-1 w-2 h-2 bg-black rounded-full"></div>
-                      <div className="p-0 bg-white ml-1">
+        </div>
+      );
+    }
+
+    // For experience, projects, awards
+    const sectionMap = {
+      experience: { data: resumeData.workExperience, icon: <BiBriefcase />, key: "work" },
+      projects: { data: resumeData.projects, icon: <BiCodeAlt />, key: "project" },
+      awards: { data: resumeData.awards || [], icon: <BiAward />, key: "award" },
+    };
+
+    const sec = sectionMap[section.id];
+
+    return (
+      <div className="mb-3 print:mb-2">
+        <h2 className="section-title-main flex items-center gap-1 text-black font-bold pb-0.5 mb-2 border-b border-gray-900">
+          {sec.icon} {customSectionTitles[section.id] || section.title}
+        </h2>
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={(e) => handleItemDragEnd(e, section.id)}
+        >
+          <SortableContext
+            items={sec.data.map((_, i) => `${sec.key}-${i}`)}
+            strategy={verticalListSortingStrategy}
+          >
+            {sec.data.map((item, index) => (
+              <SortableItem key={`${sec.key}-${index}`} id={`${sec.key}-${index}`}>
+                <div className="relative pl-4 mb-2">
+                  <div className="absolute left-0 top-1 w-2 h-2 bg-black rounded-full"></div>
+                  <div className="p-0 bg-white ml-1">
+                    {section.id === "awards" ? (
+                      <>
+                        <p className="font-bold text-gray-900 text-sm leading-snug">{item.title || item.name}</p>
+                        {item.issuer && <p className="text-xs text-gray-700">{item.issuer}</p>}
+                        {item.date && <p className="text-xs text-gray-700">{item.date}</p>}
+                      </>
+                    ) : (
+                      <>
                         <h3 className="font-bold text-gray-900 text-sm leading-snug flex items-center gap-1">
-                          {item.name}
-                          {item.link && (
-                            <Link
-                              href={item.link}
-                              target="_blank"
-                              className="text-black hover:text-gray-700"
-                            >
+                          {section.id === "experience" ? `${item.position} | ${item.company}` : item.name}
+                          {section.id === "projects" && item.link && (
+                            <Link href={item.link} target="_blank" className="text-black hover:text-gray-700">
                               <FaExternalLinkAlt className="w-3 h-3" />
                             </Link>
                           )}
@@ -195,36 +160,35 @@ const TemplateFive = ({
                         <DateRange
                           startYear={item.startYear}
                           endYear={item.endYear}
-                          id={`proj-${index}`}
+                          id={`${sec.key}-${index}`}
                           className="text-xs text-gray-700 block"
                         />
-                        <p className="text-gray-800 mt-1 text-sm leading-snug">
-                          {item.description}
-                        </p>
-                      </div>
-                    </div>
-                  </SortableItem>
-                ))}
-              </SortableContext>
-            </DndContext>
-          </div>
-        );
-      default:
-        return null;
-    }
+                        <p className="text-gray-800 mt-1 text-sm leading-snug">{item.description}</p>
+                        {item.keyAchievements && section.id === "experience" && (
+                          <ul className="list-disc list-inside text-gray-800 mt-1 ml-3 text-sm leading-snug">
+                            {item.keyAchievements.split("\n").filter(a => a.trim()).map((a, idx) => <li key={idx}>{a}</li>)}
+                          </ul>
+                        )}
+                      </>
+                    )}
+                  </div>
+                </div>
+              </SortableItem>
+            ))}
+          </SortableContext>
+        </DndContext>
+      </div>
+    );
   };
 
   const renderSidebarSection = (section) => {
-    if (!section.content || (Array.isArray(section.content) && section.content.length === 0))
-      return null;
+    if (!section.content || (Array.isArray(section.content) && section.content.length === 0)) return null;
 
     return (
       <div className="mb-3 print:mb-2">
         <h2 className="flex items-center gap-1 text-black font-bold pb-0.5 mb-1 border-b border-gray-900">
           <span className="text-black">{section.icon}</span>{" "}
-          <span className="text-sm uppercase">
-            {customSectionTitles[section.id] || section.title}
-          </span>
+          <span className="text-sm uppercase">{customSectionTitles[section.id] || section.title}</span>
         </h2>
 
         {section.id === "education" ? (
@@ -233,12 +197,7 @@ const TemplateFive = ({
               <li key={idx}>
                 <p className="font-semibold">{item.school}</p>
                 <div className="text-xs text-gray-700">
-                  {item.degree} -{" "}
-                  <DateRange
-                    startYear={item.startYear}
-                    endYear={item.endYear}
-                    id={`edu-range-${idx}`}
-                  />
+                  {item.degree} - <DateRange startYear={item.startYear} endYear={item.endYear} id={`edu-range-${idx}`} />
                 </div>
               </li>
             ))}
@@ -255,18 +214,14 @@ const TemplateFive = ({
                 ))
               ) : (
                 <p>
-                  {section.content
-                    .map((s) => (typeof s === "string" ? s : s.skills?.join(", ")))
-                    .join(", ")}
+                  {section.content.map(s => (typeof s === "string" ? s : s.skills?.join(", "))).join(", ")}
                 </p>
               )}
             </div>
           ) : (
             <ul className="list-disc list-inside text-gray-800 text-sm ml-2 space-y-1">
               {section.content.map((item, idx) => (
-                <li key={idx}>
-                  {typeof item === "string" ? item : item.school || item.name}
-                </li>
+                <li key={idx}>{typeof item === "string" ? item : item.school || item.name}</li>
               ))}
             </ul>
           )
@@ -277,20 +232,14 @@ const TemplateFive = ({
     );
   };
 
-  if (!isClient)
-    return <div className="animate-pulse p-4 bg-white h-full w-full"></div>;
+  if (!isClient) return <div className="animate-pulse p-4 bg-white h-full w-full"></div>;
 
   return (
     <div className="w-full h-full bg-white p-6 print:p-0">
       {/* Header */}
       <div className="text-center mb-4 border-b border-gray-900 pb-1">
-        <h1 className="text-2xl font-bold text-gray-900 inline-block px-0 py-0">
-          {resumeData.name}
-        </h1>
-        <h2 className="text-base font-semibold text-gray-800 mt-0.5">
-          {resumeData.position}
-        </h2>
-
+        <h1 className="text-2xl font-bold text-gray-900 inline-block px-0 py-0">{resumeData.name}</h1>
+        <h2 className="text-base font-semibold text-gray-800 mt-0.5">{resumeData.position}</h2>
         <div className="flex justify-center flex-wrap gap-x-4 gap-y-0.5 mt-1 text-gray-700 text-sm">
           {resumeData.contactInformation && (
             <div className="flex items-center gap-1">
@@ -316,22 +265,15 @@ const TemplateFive = ({
       {/* Two-column layout */}
       <div className="flex flex-col md:flex-row gap-4 print:gap-3">
         <div className="w-full md:w-1/3 p-0 bg-white">
-          {sidebarSections.map((section) => (
+          {sidebarSections.map(section => (
             <div key={section.id}>{renderSidebarSection(section)}</div>
           ))}
         </div>
 
         <div className="w-full md:w-2/3 p-0 border-l border-gray-300 pl-4 print:pl-3">
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragEnd={handleDragEnd}
-          >
-            <SortableContext
-              items={orderedSections.map((s) => s.id)}
-              strategy={verticalListSortingStrategy}
-            >
-              {orderedSections.map((section) => (
+          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+            <SortableContext items={orderedSections.map(s => s.id)} strategy={verticalListSortingStrategy}>
+              {orderedSections.map(section => (
                 <SortableSection key={section.id} id={section.id}>
                   {renderMainSection(section)}
                 </SortableSection>
