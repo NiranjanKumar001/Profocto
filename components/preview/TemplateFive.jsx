@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import React from "react";
 import { FaExternalLinkAlt, FaEnvelope, FaPhoneAlt, FaMapMarkerAlt, FaLinkedin } from "react-icons/fa";
 import { ImGithub } from "react-icons/im";
@@ -90,7 +90,7 @@ const TemplateFive = ({
         resumeData.skills.find((skill) => skill.title === "Soft Skills")
           ?.skills || [],
     },
-    { id: "languages", title: "Languages", content: resumeData.languages },
+    { id: "languages", title: "Languages", content: resumeData.languages || [] },
     {
       id: "certifications",
       title: "Certifications",
@@ -140,7 +140,7 @@ const TemplateFive = ({
                 className='mb-3'
               >
                 <div className='flex justify-between items-baseline mb-1'>
-                  <h3 className='text-xs font-bold'>
+                  <h3 className='text-xs font-semibold text-black'>
                     {item.degree}
                   </h3>
                   <DateRange
@@ -150,7 +150,7 @@ const TemplateFive = ({
                     className='text-xs text-gray-600'
                   />
                 </div>
-                <p className='text-xs text-gray-700'>{item.school}</p>
+                <p className='text-xs font-light text-black'>{item.school}</p>
               </div>
             ))}
           </div>
@@ -318,15 +318,20 @@ const TemplateFive = ({
         );
 
       case "languages":
-        return resumeData.languages.length > 0 ? (
+        console.log("Languages Debug:", {
+          sectionContent: section.content,
+          resumeLanguages: resumeData.languages,
+          hasContent: section.content && section.content.length > 0
+        });
+        return section.content && section.content.length > 0 ? (
           <div className='mb-4'>
             <h2 className='text-sm font-bold uppercase mb-2 pb-0.5 border-b border-gray-400'>
               {customSectionTitles.languages || "Languages"}
             </h2>
-            <p className='text-xs font-sans leading-relaxed text-gray-800'>
-              {resumeData.languages.map((lang, index) => 
-                typeof lang === "string" ? lang : lang.name
-              ).join(" • ")}
+            <p className='text-xs font-light leading-relaxed text-black'>
+              {section.content.map((lang) => 
+                typeof lang === "string" ? lang : (lang.name || lang)
+              ).join(", ")}
             </p>
           </div>
         ) : null;
@@ -337,35 +342,47 @@ const TemplateFive = ({
             <h2 className='text-sm font-bold uppercase mb-2 pb-0.5 border-b border-gray-400'>
               {customSectionTitles.certifications || "Certifications"}
             </h2>
-            {resumeData.certifications.map((cert, index) => (
-              <div key={index} className='mb-2'>
-                <div className='flex justify-between items-baseline mb-0.5'>
-                  <div className='flex items-center gap-2'>
-                    <h3 className='text-xs font-bold text-gray-900'>
-                      {typeof cert === "string" ? cert : cert.name}
-                    </h3>
-                    {typeof cert === "object" &&
-                      cert.link &&
-                      cert.link.trim() !== "" && (
-                        <Link
-                          href={cert.link}
-                          className='text-black hover:text-gray-700 transition-colors'
-                          target='_blank'
-                          rel='noopener noreferrer'
-                        >
-                          <FaExternalLinkAlt className='w-3 h-3 text-black' />
-                        </Link>
-                      )}
+            {resumeData.certifications.map((cert, index) => {
+              // Format date to match DateRange style
+              const formatDate = (dateString) => {
+                if (!dateString) return '';
+                const date = new Date(dateString);
+                if (isNaN(date.getTime())) return dateString;
+                const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                               'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                return `${months[date.getMonth()]}, ${date.getFullYear()}`;
+              };
+              
+              return (
+                <div key={index} className='mb-2'>
+                  <div className='flex justify-between items-baseline mb-0.5'>
+                    <div className='flex items-center gap-2'>
+                      <h3 className='text-xs font-bold text-gray-900'>
+                        {typeof cert === "string" ? cert : cert.name}
+                      </h3>
+                      {typeof cert === "object" &&
+                        cert.link &&
+                        cert.link.trim() !== "" && (
+                          <Link
+                            href={cert.link}
+                            className='text-black hover:text-gray-700 transition-colors'
+                            target='_blank'
+                            rel='noopener noreferrer'
+                          >
+                            <FaExternalLinkAlt className='w-3 h-3 text-black' />
+                          </Link>
+                        )}
+                    </div>
+                    {typeof cert === "object" && cert.date && (
+                      <span className='text-xs text-gray-600'>{formatDate(cert.date)}</span>
+                    )}
                   </div>
-                  {typeof cert === "object" && cert.date && (
-                    <span className='text-xs text-gray-600'>{cert.date}</span>
+                  {typeof cert === "object" && cert.issuer && (
+                    <p className='text-xs text-gray-700'>{cert.issuer}</p>
                   )}
                 </div>
-                {typeof cert === "object" && cert.issuer && (
-                  <p className='text-xs text-gray-700'>{cert.issuer}</p>
-                )}
-              </div>
-            ))}
+              );
+            })}
           </div>
         ) : null;
 
@@ -375,43 +392,55 @@ const TemplateFive = ({
       <h2 className='text-sm font-bold uppercase mb-2 pb-0.5 border-b border-gray-400'>
         {customSectionTitles.awards || "Awards"}
       </h2>
-      {resumeData.awards.map((award, index) => (
-        <div key={index} className='mb-2'>
-          <div className='flex justify-between items-baseline mb-0.5'>
-            {/* Award Name (now main heading) */}
-            <h3 className='text-xs font-bold text-gray-900'>
-              {award.name || "Award Name"}
-            </h3>
+      {resumeData.awards.map((award, index) => {
+        // Format date to match DateRange style
+        const formatDate = (dateString) => {
+          if (!dateString) return '';
+          const date = new Date(dateString);
+          if (isNaN(date.getTime())) return dateString;
+          const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                         'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+          return `${months[date.getMonth()]}, ${date.getFullYear()}`;
+        };
+        
+        return (
+          <div key={index} className='mb-2'>
+            <div className='flex justify-between items-baseline mb-0.5'>
+              {/* Award Name (now main heading) */}
+              <h3 className='text-xs font-bold text-gray-900'>
+                {award.name || "Award Name"}
+              </h3>
 
-            {/* Date or Year on the Right */}
-            <span className='text-xs text-gray-600'>
-              {award.date ? (
-                award.date
-              ) : (
-                <DateRange
-                  startYear={award.startYear}
-                  endYear={award.endYear}
-                  id={`award-${index}`}
-                />
-              )}
-            </span>
+              {/* Date or Year on the Right */}
+              <div className='text-xs text-gray-600'>
+                {award.date ? (
+                  <span>{formatDate(award.date)}</span>
+                ) : (
+                  <DateRange
+                    startYear={award.startYear}
+                    endYear={award.endYear}
+                    id={`award-${index}`}
+                  />
+                )}
+              </div>
+            </div>
+
+            {/* Issuer */}
+            {award.issuer && (
+              <p className='text-xs text-gray-700'>
+                Issued by: {award.issuer}
+              </p>
+            )}
+
+            {/* Description (optional) */}
+            {award.description && (
+              <p className='text-xs text-gray-800 font-sans leading-relaxed'>
+                {award.description}
+              </p>
+            )}
           </div>
-
-          {/* Issuer */}
-          {award.issuer && (
-            <p className='text-xs text-gray-700'>
-              Issued by: {award.issuer}
-            </p>
-          )}
-
-          {/* Description (optional) */}
-          {award.description && (
-            <p className='text-xs text-gray-800 font-sans leading-relaxed'>
-              {award.description}
-            </p>
-          )}
-        </div>
-      ))}
+        );
+      })}
     </div>
   ) : null;
 

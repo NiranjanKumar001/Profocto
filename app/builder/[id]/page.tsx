@@ -52,7 +52,22 @@ export default function BuilderPage() {
     if (savedData) {
       try {
         const parsedData = JSON.parse(savedData);
-        setResumeData(parsedData);
+        
+        // Merge saved data with default data to ensure all new fields exist
+        const migratedData = {
+          ...JSON.parse(JSON.stringify(DefaultResumeData)),
+          ...parsedData,
+          // Ensure arrays are properly merged (keep saved data if it exists)
+          education: parsedData.education || DefaultResumeData.education,
+          workExperience: parsedData.workExperience || DefaultResumeData.workExperience,
+          projects: parsedData.projects || DefaultResumeData.projects,
+          skills: parsedData.skills || DefaultResumeData.skills,
+          certifications: parsedData.certifications || DefaultResumeData.certifications,
+          languages: parsedData.languages || DefaultResumeData.languages,
+          socialMedia: parsedData.socialMedia || DefaultResumeData.socialMedia,
+        };
+        
+        setResumeData(migratedData as ResumeData);
       } catch (error) {
         console.warn("Failed to parse saved resume data:", error);
         // If parsing fails, use default data (deep copy)

@@ -313,7 +313,7 @@ const TemplateFour = ({
             <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.languages || "Languages"}
             </h2>
-            <p className='content !font-light !text-black'>
+            <p className='text-sm font-light text-black leading-tight'>
               {resumeData.languages.join(", ")}
             </p>
           </div>
@@ -365,46 +365,60 @@ const TemplateFour = ({
       </h2>
 
       <ul className='content !font-light !text-black space-y-2'>
-        {resumeData.awards.map((award, index) => (
-          <li
-            key={index}
-            className='flex flex-row justify-between items-start gap-2 w-full'
-          >
-            <div className='flex flex-col flex-1'>
-              {/* Award Name as main heading */}
-              <span className='font-semibold text-gray-900'>
-                {award.name || "Award Name"}
-              </span>
-
-              {/* Issuer */}
-              {award.issuer && (
-                <span className='text-gray-600'>
-                  Issued by: {award.issuer}
+        {resumeData.awards.map((award, index) => {
+          // Format date to match DateRange style
+          const formatDate = (dateString) => {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) return dateString;
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                           'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            return `${months[date.getMonth()]}, ${date.getFullYear()}`;
+          };
+          
+          return (
+            <li
+              key={index}
+              className='flex flex-row justify-between items-start gap-2 w-full'
+            >
+              <div className='flex flex-col flex-1'>
+                {/* Award Name as main heading */}
+                <span className='font-semibold text-gray-900'>
+                  {award.name || "Award Name"}
                 </span>
-              )}
 
-              {/* Optional Description */}
-              {award.description && (
-                <span className='text-gray-800'>
-                  {award.description}
-                </span>
-              )}
-            </div>
+                {/* Issuer */}
+                {award.issuer && (
+                  <span className='text-gray-600'>
+                    Issued by: {award.issuer}
+                  </span>
+                )}
 
-            {/* Date or DateRange on Right Side */}
-            <div className='text-right text-gray-500 whitespace-nowrap'>
-              {award.date ? (
-                award.date
-              ) : (
-                <DateRange
-                  startYear={award.startYear}
-                  endYear={award.endYear}
-                  id={`award-${index}`}
-                />
-              )}
-            </div>
-          </li>
-        ))}
+                {/* Optional Description */}
+                {award.description && (
+                  <span className='text-gray-800'>
+                    {award.description}
+                  </span>
+                )}
+              </div>
+
+              {/* Date or DateRange on Right Side */}
+              <div className='text-right whitespace-nowrap'>
+                {award.date ? (
+                  <p className="sub-content text-gray-500">
+                    {formatDate(award.date)}
+                  </p>
+                ) : (
+                  <DateRange
+                    startYear={award.startYear}
+                    endYear={award.endYear}
+                    id={`award-${index}`}
+                  />
+                )}
+              </div>
+            </li>
+          );
+        })}
       </ul>
     </div>
   ) : null;

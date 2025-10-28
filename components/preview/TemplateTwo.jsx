@@ -260,6 +260,82 @@ const TemplateTwo = ({
           </div>
         ) : null;
 
+      case "skills":
+        const technicalSkills = skillsData?.filter((s) => s.title !== "Soft Skills") || [];
+        return technicalSkills.length > 0 ? (
+          <div className="mb-2.5">
+            <h2 className="text-sm font-bold border-b border-black pb-0.5 mb-1.5 uppercase">
+              {customSectionTitles.skills || "Skills"}
+            </h2>
+            {technicalSkills.map((skillGroup, idx) => (
+              <div key={idx} className="mb-1.5">
+                <h3 className="text-xs font-bold">{skillGroup.title}</h3>
+                <p className="text-xs text-gray-900">{skillGroup.skills.join(" • ")}</p>
+              </div>
+            ))}
+          </div>
+        ) : null;
+
+      case "softskills":
+        const softSkillsGroup = skillsData?.find((s) => s.title === "Soft Skills");
+        return softSkillsGroup?.skills?.length > 0 ? (
+          <div className="mb-2.5">
+            <h2 className="text-sm font-bold border-b border-black pb-0.5 mb-1.5 uppercase">
+              {customSectionTitles.softskills || "Soft Skills"}
+            </h2>
+            <p className="text-xs text-gray-900">{softSkillsGroup.skills.join(" • ")}</p>
+          </div>
+        ) : null;
+
+      case "languages":
+        return languagesData?.length ? (
+          <div className="mb-2.5">
+            <h2 className="text-sm font-bold border-b border-black pb-0.5 mb-1.5 uppercase">
+              {customSectionTitles.languages || "Languages"}
+            </h2>
+            <p className="text-xs font-light text-gray-900 leading-relaxed">
+              {languagesData.map((lang) => 
+                typeof lang === 'string' ? lang : lang.name
+              ).join(", ")}
+            </p>
+          </div>
+        ) : null;
+
+      case "certifications":
+        return certificationsData?.length ? (
+          <div className="mb-2.5">
+            <h2 className="text-sm font-bold border-b border-black pb-0.5 mb-1.5 uppercase">
+              {customSectionTitles.certifications || "Certifications"}
+            </h2>
+            {certificationsData.map((cert, idx) => {
+              // Format date to match DateRange style
+              const formatDate = (dateString) => {
+                if (!dateString) return '';
+                const date = new Date(dateString);
+                if (isNaN(date.getTime())) return dateString;
+                const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                               'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                return `${months[date.getMonth()]}, ${date.getFullYear()}`;
+              };
+              
+              return (
+                <div key={idx} className="mb-1.5">
+                  <div className="flex items-center gap-1.5">
+                    <h3 className="text-xs font-bold">{cert.name}</h3>
+                    {cert.link && (
+                      <a href={cert.link} target="_blank" rel="noopener noreferrer" className="text-black hover:text-gray-700">
+                        <FaExternalLinkAlt className="w-2.5 h-2.5" />
+                      </a>
+                    )}
+                  </div>
+                  {cert.issuer && <p className="text-xs italic text-gray-700">{cert.issuer}</p>}
+                  {cert.date && <p className="text-xs text-gray-700">{formatDate(cert.date)}</p>}
+                </div>
+              );
+            })}
+          </div>
+        ) : null;
+
       case "awards":
         return awardsData?.length ? (
           <div className="mb-2.5">
@@ -268,23 +344,35 @@ const TemplateTwo = ({
             </h2>
             <DndContext sensors={sensors} onDragEnd={(e) => handleItemDragEnd(e, "awards")}>
               <SortableContext items={awardsData.map((_, i) => `award-${i}`)} strategy={verticalListSortingStrategy}>
-                {awardsData.map((award, idx) => (
-                  <SortableItem key={`award-${idx}`} id={`award-${idx}`}>
-                    <div className="mb-1.5">
-                      <div className="flex items-center gap-1.5">
-                        <h3 className="text-xs font-bold">{award.title || award.name}</h3>
-                        {award.link && (
-                          <a href={award.link} target="_blank" rel="noopener noreferrer" className="text-black hover:text-gray-700">
-                            <FaExternalLinkAlt className="w-2.5 h-2.5" />
-                          </a>
-                        )}
+                {awardsData.map((award, idx) => {
+                  // Format date to match DateRange style
+                  const formatDate = (dateString) => {
+                    if (!dateString) return '';
+                    const date = new Date(dateString);
+                    if (isNaN(date.getTime())) return dateString;
+                    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                                   'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                    return `${months[date.getMonth()]}, ${date.getFullYear()}`;
+                  };
+                  
+                  return (
+                    <SortableItem key={`award-${idx}`} id={`award-${idx}`}>
+                      <div className="mb-1.5">
+                        <div className="flex items-center gap-1.5">
+                          <h3 className="text-xs font-bold">{award.title || award.name}</h3>
+                          {award.link && (
+                            <a href={award.link} target="_blank" rel="noopener noreferrer" className="text-black hover:text-gray-700">
+                              <FaExternalLinkAlt className="w-2.5 h-2.5" />
+                            </a>
+                          )}
+                        </div>
+                        {award.issuer && <p className="text-xs italic text-gray-700">{award.issuer}</p>}
+                        {award.date && <p className="text-xs text-gray-700">{formatDate(award.date)}</p>}
+                        {award.description && <p className="text-xs text-gray-900 mt-0.5">{award.description}</p>}
                       </div>
-                      {award.issuer && <p className="text-xs italic text-gray-700">{award.issuer}</p>}
-                      {award.date && <p className="text-xs text-gray-700">{award.date}</p>}
-                      {award.description && <p className="text-xs text-gray-900 mt-0.5">{award.description}</p>}
-                    </div>
-                  </SortableItem>
-                ))}
+                    </SortableItem>
+                  );
+                })}
               </SortableContext>
             </DndContext>
           </div>
@@ -323,14 +411,38 @@ const TemplateTwo = ({
                   <span>{contactData}</span>
                 </div>
               )}
-            </div>
-            <div className="space-y-0.5">
               {emailData && (
                 <div className="flex items-center gap-1.5">
                   <FaEnvelope className="text-gray-700 text-sm" />
                   <span>{emailData}</span>
                 </div>
               )}
+            </div>
+            <div className="space-y-0.5">
+              {/* Social Media Links */}
+              {resumeData?.socialMedia?.length > 0 && resumeData.socialMedia.map((socialMedia, index) => {
+                const icon = icons?.find(
+                  (icon) => icon.name === socialMedia.socialMedia.toLowerCase()
+                );
+                return (
+                  <a
+                    href={`${
+                      socialMedia.socialMedia.toLowerCase() === "website"
+                        ? "https://"
+                        : socialMedia.socialMedia.toLowerCase() === "linkedin"
+                        ? "https://www."
+                        : "https://www."
+                    }${socialMedia.link}`}
+                    key={index}
+                    className="flex items-center gap-1.5 text-gray-900 hover:text-gray-700"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {icon && React.cloneElement(icon.icon, { className: 'text-gray-700 text-sm' })}
+                    <span>{socialMedia.displayText || socialMedia.link}</span>
+                  </a>
+                );
+              })}
             </div>
           </div>
         </div>

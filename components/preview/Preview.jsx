@@ -889,7 +889,11 @@ const ClassicTemplate = ({
             <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.languages || "Languages"}
             </h2>
-            <p className="content font-sans font-light text-black">{resumeData.languages.join(", ")}</p>
+            <p className='text-sm font-light text-black leading-tight'>
+              {resumeData.languages.map((lang) => 
+                typeof lang === 'string' ? lang : lang.name
+              ).join(", ")}
+            </p>
           </div>
         ) : null;
 
@@ -900,72 +904,108 @@ const ClassicTemplate = ({
               {customSectionTitles.certifications || "Certifications"}
             </h2>
             <ul className="list-disc list-inside content font-sans font-light text-black">
-              {resumeData.certifications.map((cert, index) => (
-                <li key={index} className='mb-1'>
-                  <div className='flex items-center gap-2'>
-                    <span>
-                      {typeof cert === 'string' ? cert : cert.name}
-                      {typeof cert === 'object' && cert.issuer && (
-                        <span className="font-sans font-light text-black"> - {cert.issuer}</span>
+              {resumeData.certifications.map((cert, index) => {
+                // Format date to match DateRange style (e.g., "Jun, 2018")
+                const formatCertDate = (dateString) => {
+                  if (!dateString) return '';
+                  const date = new Date(dateString);
+                  if (isNaN(date.getTime())) return dateString; // Return original if invalid
+                  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                                 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                  return `${months[date.getMonth()]}, ${date.getFullYear()}`;
+                };
+                
+                const certDate = typeof cert === 'object' && cert.date ? formatCertDate(cert.date) : '';
+                
+                return (
+                  <li key={index} className='mb-1'>
+                    <div className='flex items-start justify-between gap-2'>
+                      <div className='flex items-center gap-2 flex-1'>
+                        <span>
+                          {typeof cert === 'string' ? cert : cert.name}
+                          {typeof cert === 'object' && cert.issuer && (
+                            <span className="font-sans font-light text-black"> - {cert.issuer}</span>
+                          )}
+                        </span>
+                        {typeof cert === "object" &&
+                          cert.link &&
+                          cert.link.trim() !== "" && (
+                            <Link
+                              href={cert.link}
+                              className='text-black hover:text-gray-700 transition-colors'
+                              target='_blank'
+                              rel='noopener noreferrer'
+                            >
+                              <FaExternalLinkAlt className='w-3 h-3' />
+                            </Link>
+                          )}
+                      </div>
+                      {certDate && (
+                        <p className="sub-content text-right">
+                          {certDate}
+                        </p>
                       )}
-                    </span>
-                    {typeof cert === "object" &&
-                      cert.link &&
-                      cert.link.trim() !== "" && (
-                        <Link
-                          href={cert.link}
-                          className='text-black hover:text-gray-700 transition-colors'
-                          target='_blank'
-                          rel='noopener noreferrer'
-                        >
-                          <FaExternalLinkAlt className='w-3 h-3' />
-                        </Link>
-                      )}
-                  </div>
-                </li>
-              ))}
+                    </div>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         ) : null;
         case "awards":
   return resumeData.awards && resumeData.awards.length > 0 ? (
     <div>
-      <h2 className='section-title border-b-2 border-gray-300 mb-1 text-gray-900'>
+      <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
         {customSectionTitles.awards || "Awards and Recognition"}
       </h2>
-      <ul className="content font-sans text-black space-y-1">
-        {resumeData.awards.map((award, index) => (
-          <li key={index}>
-            <div className='flex justify-between items-center'>
-              {/* LEFT: name, issuer, and link */}
-              <div className='flex items-center gap-1'>
-                <span className='font-semibold'>
-                  {award.name}
-                  {award.issuer && (
-                    <span className="font-normal text-black"> - {award.issuer}</span>
+      <ul className="content font-sans font-light text-black space-y-1">
+        {resumeData.awards.map((award, index) => {
+          // Format date to match DateRange style (e.g., "Jun, 2018")
+          const formatAwardDate = (dateString) => {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) return dateString; // Return original if invalid
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                           'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            return `${months[date.getMonth()]}, ${date.getFullYear()}`;
+          };
+          
+          const displayDate = award.year || award.date || award.startDate;
+          const formattedDate = displayDate ? formatAwardDate(displayDate) : '';
+          
+          return (
+            <li key={index}>
+              <div className='flex justify-between items-start'>
+                {/* LEFT: name, issuer, and link */}
+                <div className='flex items-center gap-1 flex-1'>
+                  <span className='font-semibold'>
+                    {award.name}
+                    {award.issuer && (
+                      <span className="font-light text-black"> - {award.issuer}</span>
+                    )}
+                  </span>
+                  {award.link && award.link.trim() !== "" && (
+                    <Link
+                      href={award.link}
+                      className='text-black hover:text-gray-700 transition-colors'
+                      target='_blank'
+                      rel='noopener noreferrer'
+                    >
+                      <FaExternalLinkAlt className='w-3 h-3' />
+                    </Link>
                   )}
-                </span>
-                {award.link && award.link.trim() !== "" && (
-                  <Link
-                    href={award.link}
-                    className='text-blue-600 hover:text-blue-800 transition-colors'
-                    target='_blank'
-                    rel='noopener noreferrer'
-                  >
-                    <FaExternalLinkAlt className='w-3 h-3' />
-                  </Link>
+                </div>
+
+                {/* RIGHT: date */}
+                {formattedDate && (
+                  <p className="sub-content text-right">
+                    {formattedDate}
+                  </p>
                 )}
               </div>
-
-              {/* RIGHT: date */}
-              {(award.year || award.date || award.startDate) && (
-                <span className="font-sans text-gray-600 text-sm">
-                  {award.year || award.date || award.startDate}
-                </span>
-              )}
-            </div>
-          </li>
-        ))}
+            </li>
+          );
+        })}
       </ul>
     </div>
   ) : null;

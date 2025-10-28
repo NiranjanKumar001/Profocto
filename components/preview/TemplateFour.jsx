@@ -1,9 +1,11 @@
 "use client";
 
-import { FaExternalLinkAlt } from "react-icons/fa";
+import { FaExternalLinkAlt, FaLinkedin } from "react-icons/fa";
 import { MdEmail, MdLocationOn, MdPhone } from "react-icons/md";
 import { GiGraduateCap } from "react-icons/gi";
 import { BiBriefcase, BiBookAlt, BiCodeAlt, BiAward } from "react-icons/bi";
+import { ImGithub } from "react-icons/im";
+import { CgWebsite } from "react-icons/cg";
 import DateRange from "../utility/DateRange";
 import { DndContext, closestCenter } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
@@ -12,6 +14,7 @@ import { useSectionTitles } from "../../contexts/SectionTitleContext";
 import { SortableItem, SortableSection } from "./Preview";
 import { useEffect, useState } from "react";
 import { arrayMove } from "@dnd-kit/sortable";
+import React from "react";
 
 
 const TemplateFive = ({
@@ -202,6 +205,35 @@ const TemplateFive = ({
               </li>
             ))}
           </ul>
+        ) : section.id === "certifications" ? (
+          <ul className="text-gray-800 text-sm space-y-1.5">
+            {resumeData.certifications.map((cert, idx) => {
+              // Format date to match DateRange style
+              const formatDate = (dateString) => {
+                if (!dateString) return '';
+                const date = new Date(dateString);
+                if (isNaN(date.getTime())) return dateString;
+                const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                               'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                return `${months[date.getMonth()]}, ${date.getFullYear()}`;
+              };
+              
+              return (
+                <li key={idx}>
+                  <div className="flex items-center gap-1">
+                    <p className="font-semibold">{cert.name}</p>
+                    {cert.link && (
+                      <a href={cert.link} target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-gray-900">
+                        <FaExternalLinkAlt className="w-2.5 h-2.5" />
+                      </a>
+                    )}
+                  </div>
+                  {cert.issuer && <p className="text-xs italic text-gray-700">{cert.issuer}</p>}
+                  {cert.date && <p className="text-xs text-gray-700">{formatDate(cert.date)}</p>}
+                </li>
+              );
+            })}
+          </ul>
         ) : Array.isArray(section.content) ? (
           section.id === "skills" || section.id === "softSkills" || section.id === "languages" ? (
             <div className="text-gray-800 text-sm leading-snug">
@@ -209,11 +241,17 @@ const TemplateFive = ({
                 section.content.map((group, idx) => (
                   <div key={idx} className="mb-1">
                     <p className="font-semibold text-xs">{group.title}:</p>
-                    <p className="text-sm">{group.skills?.join(", ")}</p>
+                    <p className="text-sm font-light">{group.skills?.join(", ")}</p>
                   </div>
                 ))
+              ) : section.id === "languages" ? (
+                <p className="text-xs font-light text-black leading-relaxed">
+                  {section.content.map((lang) => 
+                    typeof lang === "string" ? lang : (lang.name || lang)
+                  ).join(", ")}
+                </p>
               ) : (
-                <p>
+                <p className="font-light">
                   {section.content.map(s => (typeof s === "string" ? s : s.skills?.join(", "))).join(", ")}
                 </p>
               )}
@@ -235,7 +273,7 @@ const TemplateFive = ({
   if (!isClient) return <div className="animate-pulse p-4 bg-white h-full w-full"></div>;
 
   return (
-    <div className="w-full h-full bg-white p-6 print:p-0">
+    <div className="max-w-[210mm] mx-auto bg-white p-6 print:p-0" style={{ fontFamily: "Arial, sans-serif" }}>
       {/* Header */}
       <div className="text-center mb-4 border-b border-gray-900 pb-1">
         <h1 className="text-2xl font-bold text-gray-900 inline-block px-0 py-0">{resumeData.name}</h1>
@@ -259,18 +297,42 @@ const TemplateFive = ({
               <span>{resumeData.address}</span>
             </div>
           )}
+          {/* Social Media Links */}
+          {resumeData.socialMedia?.length > 0 && resumeData.socialMedia.map((socialMedia, index) => {
+            const icon = icons?.find(
+              (icon) => icon.name === socialMedia.socialMedia.toLowerCase()
+            );
+            return (
+              <a
+                href={`${
+                  socialMedia.socialMedia.toLowerCase() === "website"
+                    ? "https://"
+                    : socialMedia.socialMedia.toLowerCase() === "linkedin"
+                    ? "https://www."
+                    : "https://www."
+                }${socialMedia.link}`}
+                key={index}
+                className="flex items-center gap-1 text-gray-700 hover:text-gray-900"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {icon && React.cloneElement(icon.icon, { className: 'w-3 h-3 text-gray-700' })}
+                <span>{socialMedia.displayText || socialMedia.link}</span>
+              </a>
+            );
+          })}
         </div>
       </div>
 
       {/* Two-column layout */}
-      <div className="flex flex-col md:flex-row gap-4 print:gap-3">
-        <div className="w-full md:w-1/3 p-0 bg-white">
+      <div className="grid grid-cols-3 gap-4 print:gap-3">
+        <div className="col-span-1 p-0 bg-white">
           {sidebarSections.map(section => (
             <div key={section.id}>{renderSidebarSection(section)}</div>
           ))}
         </div>
 
-        <div className="w-full md:w-2/3 p-0 border-l border-gray-300 pl-4 print:pl-3">
+        <div className="col-span-2 p-0 border-l border-gray-300 pl-4 print:pl-3">
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
             <SortableContext items={orderedSections.map(s => s.id)} strategy={verticalListSortingStrategy}>
               {orderedSections.map(section => (
