@@ -9,13 +9,8 @@ import LogoutLoader from "@/components/auth/LogoutLoader";
 // Import your existing builder components
 import Language from "@/components/form/Language";
 import LoadUnload from "@/components/form/LoadUnload";
+import Preview from "@/components/preview/Preview";
 import DefaultResumeData from "@/components/utility/DefaultResumeData";
-
-// Lazy load Preview for better initial performance
-const Preview = dynamic(() => import("@/components/preview/Preview"), {
-  ssr: false,
-  loading: () => <PreviewSkeleton />,
-});
 import SocialMedia from "@/components/form/SocialMedia";
 import WorkExperience from "@/components/form/WorkExperience";
 import Skill from "@/components/form/Skill";
@@ -24,6 +19,7 @@ import Summary from "@/components/form/Summary";
 import Projects from "@/components/form/Projects";
 import Education from "@/components/form/Education";
 import Certification from "@/components/form/certification";
+import Award from "@/components/form/Award"; 
 import EditableFormTitle from "../../../components/form/EditableFormTitle";
 import { SectionTitleProvider } from "@/contexts/SectionTitleContext";
 import { ResumeContext } from "@/contexts/ResumeContext";
@@ -227,17 +223,17 @@ export default function BuilderPage() {
                     <div className='p-2.5 sm:p-4 lg:p-5 relative z-20 lg:backdrop-blur-[1.5px]' style={{ minHeight: '100%' }}>
                       <div className='hidden lg:flex bg-black/85 border border-pink-400/80 hover:border-pink-400  h-12 relative md:p-0 overflow-hidden flex-col gap-1 justify-center items-center mb-6 w-full rounded-full'>
                         <div className='flex gap-0.5 items-center'>
-                          <h1 className='text-2xl md:text-3-xl text-gray-200 font-bold tracking-wide'>
-                            Profocto
-                          </h1>
-                          <FaOctopusDeploy className='text-pink-500 size-6 ' />
-                        </div>
-                        <FaOctopusDeploy className='text-pink-300 size-6 absolute left-5 bottom-2 opacity-20 -rotate-12' />
-                        <FaOctopusDeploy className='text-pink-300 size-6 absolute right-5 bottom-2 opacity-20 rotate-12' />
-
-                        <FaOctopusDeploy className='text-pink-300 size-6 absolute left-16 -top-1 opacity-20 rotate-180' />
-                        <FaOctopusDeploy className='text-pink-300 size-6 absolute right-16 -top-1 opacity-20 rotate-180' />
+                        <h1 className='text-2xl md:text-3-xl text-gray-200 font-bold tracking-wide'>
+                          Profocto
+                        </h1>
+                        <FaOctopusDeploy className='text-pink-500 size-6 ' />
                       </div>
+                      <FaOctopusDeploy className='text-pink-300 size-6 absolute left-5 bottom-2 opacity-20 -rotate-12' />
+                      <FaOctopusDeploy className='text-pink-300 size-6 absolute right-5 bottom-2 opacity-20 rotate-12' />
+
+                      <FaOctopusDeploy className='text-pink-300 size-6 absolute left-16 -top-1 opacity-20 rotate-180' />
+                      <FaOctopusDeploy className='text-pink-300 size-6 absolute right-16 -top-1 opacity-20 rotate-180' />
+                    </div>
 
                       <div className='space-y-2.5 lg:space-y-6'>
                       <LoadUnload />
@@ -287,6 +283,8 @@ export default function BuilderPage() {
 
                       <Language />
                       <Certification />
+                      
+                      <Award /> 
                     </div>
 
                     <div className='hidden lg:block relative lg:sticky bottom-0 left-0 right-0 p-4 z-10 mt-6'>

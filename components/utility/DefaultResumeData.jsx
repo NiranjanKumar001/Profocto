@@ -51,7 +51,7 @@ const DefaultResumeData = {
     }
   ],
   projects: [
-   
+    
     {
       "name": "Task Management App",
       "description": "Built a comprehensive task management application using React, Node.js, and MongoDB. Features include real-time collaboration, file attachments, and advanced filtering capabilities.",
@@ -123,6 +123,23 @@ const DefaultResumeData = {
       name: "Microsoft Azure Developer Associate",
       issuer: "Microsoft",
       link: ""
+    }
+  ],
+  
+  awards: [
+    {
+      name: "Dean's List (2018)",
+      issuer: "Stanford University",
+      link: "",
+     
+      year: "2018-06-01" 
+    },
+    {
+      name: "Regional Programming Contest Winner",
+      issuer: "ACM Chapter",
+      link: "https://example.com/award-link",
+   
+      year: "2019-11-15"
     }
   ],
 };

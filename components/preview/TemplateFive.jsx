@@ -96,6 +96,11 @@ const TemplateFive = ({
       title: "Certifications",
       content: resumeData.certifications,
     },
+    {
+      id: "awards",
+      title: "Awards",
+      content: resumeData.awards,
+    },
   ];
 
   const orderedSections = sectionOrder
@@ -363,6 +368,54 @@ const TemplateFive = ({
             ))}
           </div>
         ) : null;
+
+      case "awards":
+  return resumeData.awards && resumeData.awards.length > 0 ? (
+    <div className='mb-4'>
+      <h2 className='text-sm font-bold uppercase mb-2 pb-0.5 border-b border-gray-400'>
+        {customSectionTitles.awards || "Awards"}
+      </h2>
+      {resumeData.awards.map((award, index) => (
+        <div key={index} className='mb-2'>
+          <div className='flex justify-between items-baseline mb-0.5'>
+            {/* Award Name (now main heading) */}
+            <h3 className='text-xs font-bold text-gray-900'>
+              {award.name || "Award Name"}
+            </h3>
+
+            {/* Date or Year on the Right */}
+            <span className='text-xs text-gray-600'>
+              {award.date ? (
+                award.date
+              ) : (
+                <DateRange
+                  startYear={award.startYear}
+                  endYear={award.endYear}
+                  id={`award-${index}`}
+                />
+              )}
+            </span>
+          </div>
+
+          {/* Issuer */}
+          {award.issuer && (
+            <p className='text-xs text-gray-700'>
+              Issued by: {award.issuer}
+            </p>
+          )}
+
+          {/* Description (optional) */}
+          {award.description && (
+            <p className='text-xs text-gray-800 font-sans leading-relaxed'>
+              {award.description}
+            </p>
+          )}
+        </div>
+      ))}
+    </div>
+  ) : null;
+
+
 
       default:
         return null;

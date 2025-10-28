@@ -87,11 +87,9 @@ const TemplateFour = ({
           ?.skills || [],
     },
     { id: "languages", title: "Languages", content: resumeData.languages },
-    {
-      id: "certifications",
-      title: "Certifications",
-      content: resumeData.certifications,
-    },
+    { id: "certifications", title: "Certifications", content: resumeData.certifications },
+    
+    { id: "awards", title: "Awards", content: resumeData.awards },
   ];
 
   const orderedSections = sectionOrder
@@ -259,18 +257,18 @@ const TemplateFour = ({
                     </p>
                     {typeof item.keyAchievements === "string" &&
                       item.keyAchievements.trim() && (
-                        <ul className='content !font-light !text-black ml-4 space-y-1'>
-                          {item.keyAchievements
-                            .split("\n")
-                            .filter((achievement) => achievement.trim())
-                            .map((achievement, subIndex) => (
-                              <li key={`${item.name}-${index}-${subIndex}`} className='flex items-start gap-2'>
-                                <span className='text-black font-bold mt-0.5'>▸</span>
-                                <span className='flex-1'>{achievement}</span>
-                              </li>
-                            ))}
-                        </ul>
-                      )}
+                      <ul className='content !font-light !text-black ml-4 space-y-1'>
+                        {item.keyAchievements
+                          .split("\n")
+                          .filter((achievement) => achievement.trim())
+                          .map((achievement, subIndex) => (
+                            <li key={`${item.name}-${index}-${subIndex}`} className='flex items-start gap-2'>
+                              <span className='text-black font-bold mt-0.5'>▸</span>
+                              <span className='flex-1'>{achievement}</span>
+                            </li>
+                          ))}
+                      </ul>
+                    )}
                   </SortableItem>
                 ))}
               </SortableContext>
@@ -305,9 +303,7 @@ const TemplateFour = ({
             <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.softSkills || "Soft Skills"}
             </h2>
-            <p className='content !font-light !text-black'>
-              {section.content.join(", ")}
-            </p>
+            <p className='content !font-light !text-black'>{section.content.join(", ")}</p>
           </div>
         );
 
@@ -350,15 +346,71 @@ const TemplateFour = ({
                           rel='noopener noreferrer'
                           title='View certificate'
                         >
-                          <FaExternalLinkSquareAlt className='w-3.5 h-3.5' />
-                        </Link>
-                      )}
+                        <FaExternalLinkSquareAlt className='w-3.5 h-3.5' />
+                      </Link>
+                    )}
                   </div>
                 </li>
               ))}
             </ul>
           </div>
         ) : null;
+
+    case "awards":
+  return resumeData.awards && resumeData.awards.length > 0 ? (
+    <div>
+      {/* Keep section title */}
+      <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
+        {customSectionTitles.awards || "Awards"}
+      </h2>
+
+      <ul className='content !font-light !text-black space-y-2'>
+        {resumeData.awards.map((award, index) => (
+          <li
+            key={index}
+            className='flex flex-row justify-between items-start gap-2 w-full'
+          >
+            <div className='flex flex-col flex-1'>
+              {/* Award Name as main heading */}
+              <span className='font-semibold text-gray-900'>
+                {award.name || "Award Name"}
+              </span>
+
+              {/* Issuer */}
+              {award.issuer && (
+                <span className='text-gray-600'>
+                  Issued by: {award.issuer}
+                </span>
+              )}
+
+              {/* Optional Description */}
+              {award.description && (
+                <span className='text-gray-800'>
+                  {award.description}
+                </span>
+              )}
+            </div>
+
+            {/* Date or DateRange on Right Side */}
+            <div className='text-right text-gray-500 whitespace-nowrap'>
+              {award.date ? (
+                award.date
+              ) : (
+                <DateRange
+                  startYear={award.startYear}
+                  endYear={award.endYear}
+                  id={`award-${index}`}
+                />
+              )}
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  ) : null;
+
+
+
 
       default:
         return null;
@@ -423,8 +475,8 @@ const TemplateFour = ({
                     socialMedia.socialMedia.toLowerCase() === "website"
                       ? "https://"
                       : socialMedia.socialMedia.toLowerCase() === "linkedin"
-                        ? "https://www."
-                        : "https://www."
+                      ? "https://www."
+                      : "https://www."
                   }${socialMedia.link}`}
                   key={index}
                   className='inline-flex items-center gap-1 text-black transition-colors'
