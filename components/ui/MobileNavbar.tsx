@@ -1,8 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { FaOctopusDeploy } from "react-icons/fa";
+import { MdLogout, MdEmail } from "react-icons/md";
+import { useState, useRef, useEffect } from "react";
 
 interface MobileNavbarProps {
   className?: string;
@@ -10,6 +12,30 @@ interface MobileNavbarProps {
 
 export default function MobileNavbar({ className = "" }: MobileNavbarProps) {
   const { data: session } = useSession();
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowDropdown(false);
+      }
+    };
+
+    if (showDropdown) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showDropdown]);
+
+  const handleLogout = () => {
+    setShowDropdown(false);
+    signOut({ callbackUrl: "/" });
+  };
 
   return (
     <div
@@ -28,9 +54,10 @@ export default function MobileNavbar({ className = "" }: MobileNavbarProps) {
         </div>
 
         {/* Profile Picture */}
-        <div className="relative">
+        <div className="relative" ref={dropdownRef}>
           <div
-            className="w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center text-white font-semibold shadow-lg ring-2 ring-pink-500/30 overflow-hidden transition-transform hover:scale-105"
+            onClick={() => setShowDropdown(!showDropdown)}
+            className="w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center text-white font-semibold shadow-lg ring-2 ring-pink-500/30 overflow-hidden transition-transform hover:scale-105 cursor-pointer"
             style={{
               background:
                 "linear-gradient(135deg, hsl(322, 84%, 60%) 0%, hsl(270, 84%, 60%) 100%)",
@@ -57,6 +84,60 @@ export default function MobileNavbar({ className = "" }: MobileNavbarProps) {
           <div
             className="absolute -top-0.5 -right-0.5 w-3 h-3 sm:w-3.5 sm:h-3.5 bg-green-500 rounded-full border-2 border-[hsl(240_10%_3.9%)] animate-pulse"
           ></div>
+
+          {/* Dropdown Menu */}
+          {showDropdown && (
+            <div className="absolute right-0 top-full mt-2 w-64 bg-[hsl(240_10%_3.9%)] border border-[hsl(240_3.7%_15.9%)] rounded-lg shadow-xl overflow-hidden z-50">
+              {/* User Info */}
+              <div className="p-4 border-b border-[hsl(240_3.7%_15.9%)]">
+                <div className="flex items-center gap-3 mb-2">
+                  <div
+                    className="w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold overflow-hidden ring-2 ring-pink-500/30"
+                    style={{
+                      background:
+                        "linear-gradient(135deg, hsl(322, 84%, 60%) 0%, hsl(270, 84%, 60%) 100%)",
+                    }}
+                  >
+                    {session?.user?.image ? (
+                      <Image
+                        src={session.user.image}
+                        alt={session.user.name || "User"}
+                        width={48}
+                        height={48}
+                        className="w-full h-full rounded-full object-cover"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = "none";
+                        }}
+                      />
+                    ) : (
+                      <span className="text-xl">
+                        {session?.user?.name?.charAt(0).toUpperCase() || "U"}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-white font-semibold text-sm truncate">
+                      {session?.user?.name || "User"}
+                    </p>
+                    <div className="flex items-center gap-1 text-gray-400 text-xs mt-0.5">
+                      <MdEmail className="w-3 h-3 flex-shrink-0" />
+                      <span className="truncate">{session?.user?.email || "No email"}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Logout Button */}
+              <button
+                onClick={handleLogout}
+                className="w-full px-4 py-3 flex items-center gap-3 text-left text-red-400 hover:bg-red-500/10 transition-colors"
+              >
+                <MdLogout className="w-5 h-5" />
+                <span className="font-medium">Logout</span>
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
