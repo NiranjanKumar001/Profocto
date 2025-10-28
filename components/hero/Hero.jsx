@@ -108,7 +108,7 @@ export default function Hero() {
     };
 
     return (
-        <div className="relative w-full h-screen overflow-hidden bg-black">
+        <div className="relative w-full h-screen overflow-hidden bg-black" suppressHydrationWarning>
 
             <div
                 className="absolute top-0 left-0 w-full h-full opacity-70 transition-opacity duration-1000"
@@ -116,6 +116,7 @@ export default function Hero() {
                     background: "linear-gradient(125deg, #000000 0%, #1a1a2e 50%, #16213e 100%)",
                     display: isLoading ? 'block' : 'none'
                 }}
+                suppressHydrationWarning
             />
 
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden">

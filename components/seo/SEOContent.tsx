@@ -2,7 +2,7 @@ export default function SEOContent() {
   return (
     <>
       {/* Hidden SEO Content for Search Engines */}
-      <div className="sr-only">
+      <div className="sr-only" suppressHydrationWarning>
         <h1>Profocto - Professional Resume Builder and CV Creator</h1>
         <p>
           Create stunning professional resumes with Profocto, the most elegant online resume builder. 
