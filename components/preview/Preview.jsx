@@ -1163,7 +1163,7 @@ const A4PageWrapper = ({ children }) => {
 
   return (
     <div className="w-full  flex justify-center p-2 md:p-4 lg:p-6 print:p-0">
-      <div className={`a4-preview lg:top-10 sm:top-14 top-10 print:shadow-none print:rounded-none print:border-none print:p-0 ${isOverflowing ? 'overflow-content' : ''}`}>
+      <div className={`a4-preview lg:top-10 sm:top-14 top-10 print:shadow-none print:rounded-none print:border-none ${isOverflowing ? 'overflow-content' : ''}`}>
         <div 
           ref={contentRef}
           className='preview-content w-full h-full bg-white text-black relative'

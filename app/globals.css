@@ -773,8 +773,8 @@
         min-width: 210mm !important;
         height: auto !important;
         margin: 0 !important;
-        /* Keep same padding as preview for consistency: 5mm top/bottom, 6mm left/right */
-        padding: 5mm 6mm !important;
+        /* Keep same padding as preview for consistency: 18.9px/22.7px = 5mm/6mm at 96 DPI */
+        padding: 18.9px 22.7px !important;
         box-shadow: none !important;
         border-radius: 0 !important;
         background: white !important;
