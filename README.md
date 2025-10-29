@@ -48,7 +48,7 @@ Create professional resumes in minutes with our intuitive, modern interface.
 - **Drag & Drop Interface** - Intuitive content organization
 - **Live Preview** - See changes in real-time
 - **Editable Sections** - All form fields are customizable
-- **Export Options** - Download as PDF or share online
+- **Export Options** - Download as PDF, Word document, or share online
 - **Creative Logout Animation** - Delightful user interactions
 
 ### 🛠️ **Advanced Features**
@@ -130,7 +130,7 @@ Create professional resumes in minutes with our intuitive, modern interface.
 3. � **Choose Template**: Select from professional resume layouts
 4. ✏️ **Fill Information**: Add your personal details, experience, skills
 5. �️ **Live Preview**: See changes in real-time as you edit
-6. 📥 **Export**: Download your resume as PDF or share online
+6. 📥 **Export**: Download your resume as PDF, Word document, or share online
 
 ### 💻 **For Developers**
 
