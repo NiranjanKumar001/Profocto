@@ -297,7 +297,7 @@ const TemplateFive = ({
               <span>{resumeData.address}</span>
             </div>
           )}
-          {/* Social Media Links */}
+          
           {resumeData.socialMedia?.length > 0 && resumeData.socialMedia.map((socialMedia, index) => {
             const icon = icons?.find(
               (icon) => icon.name === socialMedia.socialMedia.toLowerCase()
