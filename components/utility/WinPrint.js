@@ -17,13 +17,13 @@ const WinPrint = ({ mobileView }) => {
     let viewportMeta = document.querySelector('meta[name="viewport"]');
     const originalViewport = viewportMeta?.content;
     
-    // Set viewport for consistent A4 rendering on mobile
+    // Set viewport for consistent rendering on mobile
     if (viewportMeta) {
-      viewportMeta.content = 'width=794, initial-scale=1'; // 794px ≈ 210mm at 96dpi
+      viewportMeta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0';
     } else {
       viewportMeta = document.createElement('meta');
       viewportMeta.name = 'viewport';
-      viewportMeta.content = 'width=794, initial-scale=1';
+      viewportMeta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0';
       document.head.appendChild(viewportMeta);
     }
     

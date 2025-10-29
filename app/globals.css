@@ -768,13 +768,13 @@
     }
 
     .a4-preview {
-        width: 210mm !important;
-        max-width: 210mm !important;
-        min-width: 210mm !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 100% !important;
         height: auto !important;
         margin: 0 !important;
-        /* Keep same padding as preview for consistency: 18.9px/22.7px = 5mm/6mm at 96 DPI */
-        padding: 18.9px 22.7px !important;
+        /* Remove padding completely - let content fill the page */
+        padding: 0 !important;
         box-shadow: none !important;
         border-radius: 0 !important;
         background: white !important;
@@ -783,11 +783,12 @@
         overflow: visible !important;
     }
     
-    /* Ensure content has no extra padding in print */
+    /* Add minimal padding to content itself for print */
     .preview-content {
-        padding: 0 !important;
+        padding: 10px 12px !important;
         margin: 0 !important;
         width: 100% !important;
+        box-sizing: border-box !important;
     }
 
     /* Hide any unnecessary elements during print */
