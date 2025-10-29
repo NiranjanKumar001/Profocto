@@ -472,8 +472,8 @@
         border-radius: 8px;
         overflow: hidden;
         position: relative;
-        /* Margins: 10mm = 37.8px at 96 DPI, 12mm = 45.4px */
-        padding: 37.8px 45.4px;
+        /* Reduced margins for more content space: 5mm = 18.9px at 96 DPI */
+        padding: 18.9px 22.7px;
         box-sizing: border-box;
     }
     
@@ -491,9 +491,9 @@
     .a4-preview::after {
         content: '';
         position: absolute;
-        bottom: 37.8px; /* Account for exact bottom margin */
-        left: 45.4px;   /* Account for exact left margin */
-        right: 45.4px;  /* Account for exact right margin */
+        bottom: 18.9px; /* Account for bottom margin */
+        left: 22.7px;   /* Account for left margin */
+        right: 22.7px;  /* Account for right margin */
         height: 2px;
         background: #ff6b6b;
         opacity: 0;
@@ -726,7 +726,7 @@
     }
 
     @page {
-        size: var(--paper-size, A4) portrait;
+        size: A4 portrait;
         margin: 0;
     }
     

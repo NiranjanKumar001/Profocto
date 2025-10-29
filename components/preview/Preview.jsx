@@ -1109,36 +1109,16 @@ const ClassicTemplate = ({
 
 const A4PageWrapper = ({ children }) => {
   const [isOverflowing, setIsOverflowing] = useState(false);
-  const [paperSize, setPaperSize] = useState("A4");
   const contentRef = useRef(null);
-
-  useEffect(() => {
-    // Load saved paper size
-    const savedSize = localStorage.getItem("paperSize");
-    if (savedSize) {
-      setPaperSize(savedSize);
-    }
-
-    // Listen for paper size changes
-    const handlePaperSizeChange = (e) => {
-      if (e.detail) {
-        setPaperSize(e.detail);
-      }
-    };
-
-    window.addEventListener('paperSizeChanged', handlePaperSizeChange);
-    return () => window.removeEventListener('paperSizeChanged', handlePaperSizeChange);
-  }, []);
 
   useEffect(() => {
     const checkOverflow = () => {
       if (contentRef.current) {
-        // Paper dimensions in pixels at 96 DPI
+        // A4 dimensions in pixels at 96 DPI
         // A4 = 210mm x 297mm = 793.7px x 1122.5px
-        // Letter = 8.5in x 11in = 816px x 1056px
-        const paperHeightPx = paperSize === "Letter" ? 1056 : 1122.5;
+        const a4HeightPx = 1122.5;
         const marginsPx = (10 + 10) * 3.7795; // 10mm top + 10mm bottom converted to px
-        const availableHeight = paperHeightPx - marginsPx;
+        const availableHeight = a4HeightPx - marginsPx;
 
         // Get the actual content height
         const contentHeight = contentRef.current.scrollHeight;
@@ -1179,22 +1159,11 @@ const A4PageWrapper = ({ children }) => {
       window.removeEventListener("resize", checkOverflow);
       observer.disconnect();
     };
-  }, [paperSize]);
-
-  // Calculate dimensions based on paper size
-  const paperDimensions = paperSize === "Letter" 
-    ? { width: '816px', height: '1056px' } // 8.5" x 11" at 96 DPI
-    : { width: '793.7px', height: '1122.5px' }; // 210mm x 297mm at 96 DPI
+  }, []);
 
   return (
     <div className="w-full  flex justify-center p-2 md:p-4 lg:p-6 print:p-0">
-      <div 
-        className={`a4-preview lg:top-10 sm:top-14 top-10 print:shadow-none print:rounded-none print:border-none print:p-0 ${isOverflowing ? 'overflow-content' : ''}`}
-        style={{
-          width: paperDimensions.width,
-          height: paperDimensions.height,
-        }}
-      >
+      <div className={`a4-preview lg:top-10 sm:top-14 top-10 print:shadow-none print:rounded-none print:border-none print:p-0 ${isOverflowing ? 'overflow-content' : ''}`}>
         <div 
           ref={contentRef}
           className='preview-content w-full h-full bg-white text-black relative'

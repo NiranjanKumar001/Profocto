@@ -9,7 +9,6 @@ import LogoutLoader from "@/components/auth/LogoutLoader";
 // Import your existing builder components
 import Language from "@/components/form/Language";
 import LoadUnload from "@/components/form/LoadUnload";
-import PaperSizeSelector from "@/components/utility/PaperSizeSelector";
 import Preview from "@/components/preview/Preview";
 import DefaultResumeData from "@/components/utility/DefaultResumeData";
 import SocialMedia from "@/components/form/SocialMedia";
@@ -489,7 +488,6 @@ export default function BuilderPage() {
             </div>
           </div>
           <Print mobileView={mobileView} />
-          <PaperSizeSelector />
         </ResumeContext.Provider>
       </SectionTitleProvider>
 
