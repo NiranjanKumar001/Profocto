@@ -773,7 +773,8 @@
         min-width: 210mm !important;
         height: auto !important;
         margin: 0 !important;
-        padding: 0 !important;
+        /* Keep same padding as preview for consistency: 5mm top/bottom, 6mm left/right */
+        padding: 5mm 6mm !important;
         box-shadow: none !important;
         border-radius: 0 !important;
         background: white !important;
@@ -782,7 +783,7 @@
         overflow: visible !important;
     }
     
-    /* Ensure content has no padding in print */
+    /* Ensure content has no extra padding in print */
     .preview-content {
         padding: 0 !important;
         margin: 0 !important;
