@@ -727,7 +727,7 @@
 
     @page {
         size: A4 portrait;
-        margin: 0;
+        margin: 0 !important;
     }
     
     /* Explicit A4 dimensions for mobile browsers that don't respect @page */
@@ -742,9 +742,15 @@
         background: white !important;
         overflow: visible !important;
         height: auto !important;
-        /* Default to A4, dynamically adjusted by inline styles based on paper size */
         width: 210mm !important;
         min-height: 297mm !important;
+    }
+    
+    /* Force main container to use full width */
+    main {
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
     }
 
     /* Hide everything we don't want in print */
@@ -757,11 +763,16 @@
         height: auto !important;
         position: static !important;
         background: white !important;
+        padding: 0 !important;
+        margin: 0 !important;
     }
 
     .a4-preview {
+        width: 210mm !important;
+        max-width: 210mm !important;
+        min-width: 210mm !important;
         height: auto !important;
-        margin: 0 auto !important;
+        margin: 0 !important;
         padding: 0 !important;
         box-shadow: none !important;
         border-radius: 0 !important;
@@ -775,6 +786,7 @@
     .preview-content {
         padding: 0 !important;
         margin: 0 !important;
+        width: 100% !important;
     }
 
     /* Hide any unnecessary elements during print */
