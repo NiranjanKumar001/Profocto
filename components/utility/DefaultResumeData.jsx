@@ -4,14 +4,16 @@ const DefaultResumeData = {
   contactInformation: "+1 555-123-4567",
   email: "john.doe@email.com",
   address: "San Francisco, CA",
-  profilePicture: "",
+  profilePicture: "https://ik.imagekit.io/profocto/christopher-campbell-rDEOVtE7vOs-unsplash.jpg?updatedAt=1760968464715",
   socialMedia: [
     {
       socialMedia: "LinkedIn",
+      displayText: "LinkedIn",
       link: "linkedin.com/in/johndoe",
     },
     {
       socialMedia: "Website",
+      displayText: "Website",
       link: "johndoe.dev",
     },
   ],
@@ -23,6 +25,12 @@ const DefaultResumeData = {
       "startYear": "2016-09-01",
       "endYear": "2020-06-01"
     },
+    {
+      "school": "MIT",
+      "degree": "Master of Science in Computer Science",
+      "startYear": "2020-09-01",
+      "endYear": "2022-06-01"
+    }
   ],
   workExperience: [
     {
@@ -43,7 +51,7 @@ const DefaultResumeData = {
     }
   ],
   projects: [
-   
+    
     {
       "name": "Task Management App",
       "description": "Built a comprehensive task management application using React, Node.js, and MongoDB. Features include real-time collaboration, file attachments, and advanced filtering capabilities.",
@@ -115,6 +123,23 @@ const DefaultResumeData = {
       name: "Microsoft Azure Developer Associate",
       issuer: "Microsoft",
       link: ""
+    }
+  ],
+  
+  awards: [
+    {
+      name: "Dean's List (2018)",
+      issuer: "Stanford University",
+      link: "",
+     
+      year: "2018-06-01" 
+    },
+    {
+      name: "Regional Programming Contest Winner",
+      issuer: "ACM Chapter",
+      link: "https://example.com/award-link",
+   
+      year: "2019-11-15"
     }
   ],
 };

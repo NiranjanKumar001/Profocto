@@ -4,7 +4,6 @@
 
 @layer base {
     
-    /* Custom text selection color */
     ::selection {
         background-color: hsl(330 81% 60% / 0.3);
         color: hsl(0 0% 98%);
@@ -17,6 +16,36 @@
     
     body {
         @apply font-[sans-serif];
+        -webkit-overflow-scrolling: touch;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    @media (max-width: 1024px) {
+        body {
+            overscroll-behavior: none;
+            background-color: hsl(240 10% 3.9%);
+        }
+        
+        .overflow-y-auto,
+        .overflow-y-scroll,
+        .overflow-auto {
+            -webkit-overflow-scrolling: touch;
+            contain: layout style paint;
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        
+        input, textarea, select, button {
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
+        }
+        
+        * {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
     }
 
     ::-webkit-scrollbar {
@@ -39,7 +68,6 @@
         @apply focus:outline-none;
     }
 
-    /* Custom Checkbox Styling */
     input[type="checkbox"] {
         @apply appearance-none;
         background-color: white !important;
@@ -72,7 +100,6 @@
         box-shadow: 0 0 0 2px #ec4899;
     }
 
-    /* Shadcn-inspired Textarea */
     textarea {
         @apply px-3 py-2 text-gray-50 bg-[#282828] rounded-md text-sm border-2 border-gray-600 transition-all duration-200 hover:border-gray-700 focus:border-pink-600 focus:outline-none focus:ring-1 focus:ring-pink-600/50 resize-none;
         background: #282828;
@@ -120,7 +147,6 @@
         padding-inline-start: 0;
     }
 
-    /* Fix bullet point alignment for all list variations */
     ul.list-disc {
         list-style-type: disc;
         list-style-position: outside;
@@ -142,7 +168,6 @@
         line-height: 1;
     }
 
-    /* Specific fix for list-inside variation */
     ul.list-inside {
         list-style-position: outside !important;
         padding-left: 1rem;
@@ -156,14 +181,12 @@
         display: list-item;
     }
 
-    /* Ensure proper alignment for nested content */
     ul.list-disc .content,
     ul.list-disc .sub-content {
         line-height: 1.2;
         vertical-align: baseline;
     }
 
-    /* Print optimization for lists */
     @media print {
         ul.list-disc li {
             line-height: 1.2;
@@ -226,7 +249,6 @@
 }
 
 @layer components{
-    /* Shadcn-inspired Input System */
     .pi{
         @apply px-3 py-2 mb-2 text-gray-50 bg-[#282828] rounded-md text-sm border-2 border-gray-600 transition-all duration-200 focus:border-pink-600 focus:outline-none focus:ring-1 focus:ring-pink-600/50;
         line-height: 1.3;
@@ -283,51 +305,34 @@
         box-shadow: 0 0 0 2px hsl(330 81% 60% / 0.2);
     }
 
-    /* Sidebar Grid Pattern Background - Replaced with animated Squares component */
-    /*
-    .sidebar-grid {
-        background-color: hsl(240 10% 3.9%);
-        background-image: 
-            linear-gradient(rgba(236, 72, 153, 0.15) 2px, transparent 2px),
-            linear-gradient(90deg, rgba(236, 72, 153, 0.15) 2px, transparent 2px);
-        background-size: 20px 20px;
-        position: relative;
-    }
-
-    .sidebar-grid::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-image: 
-            linear-gradient(rgba(236, 72, 153, 0.08) 2px, transparent 2px),
-            linear-gradient(90deg, rgba(236, 72, 153, 0.08) 2px, transparent 2px);
-        background-size: 60px 60px;
-        pointer-events: none;
-        z-index: 1;
-    }
-
-    .sidebar-grid > * {
-        position: relative;
-        z-index: 2;
-    }
-    */
-
-    /* Calendar Date Input Styling - Aggressive Pink Theme Override */
     input[type="date"] {
-        color-scheme: light !important;
+        @apply px-3 py-2 mb-2 text-gray-50 bg-[#282828] rounded-md text-sm border-2 border-gray-600 transition-all duration-200 hover:border-gray-700 focus:border-pink-600 focus:outline-none focus:ring-1 focus:ring-pink-600/50;
+        line-height: 1.3;
+        background: #282828 !important;
+        border-color: hsl(240 5% 26%) !important;
+        border-width: 2px !important;
+        color: hsl(0 0% 98%) !important;
+        color-scheme: dark !important;
         accent-color: #ec4899 !important;
-        filter: hue-rotate(255deg) saturate(1.4) brightness(1.1) !important;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
     }
 
-    /* Black calendar icon - override all previous styling */
+    input[type="date"]:hover {
+        border-color: hsl(240 5% 34%) !important;
+    }
+
+    input[type="date"]:focus {
+        border-color: hsl(330 81% 60%) !important;
+        box-shadow: 0 0 0 2px hsl(330 81% 60% / 0.2) !important;
+    }
+
     input[type="date"]::-webkit-calendar-picker-indicator {
-        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23000000' viewBox='0 0 20 20'%3e%3cpath fill-rule='evenodd' d='M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z' clip-rule='evenodd'/%3e%3c/svg%3e");
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23ffffff' viewBox='0 0 20 20'%3e%3cpath fill-rule='evenodd' d='M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z' clip-rule='evenodd'/%3e%3c/svg%3e");
         filter: none !important;
         cursor: pointer;
-        opacity: 0.8;
+        opacity: 0.7;
         transition: opacity 0.2s ease;
         background-size: 16px 16px;
         background-repeat: no-repeat;
@@ -339,56 +344,31 @@
 
     input[type="date"]::-webkit-calendar-picker-indicator:hover {
         opacity: 1;
-        background-color: hsl(330 81% 60% / 0.1);
+        background-color: hsl(330 81% 60% / 0.15);
         border-radius: 4px;
     }
 
-    /* Apply filter only when calendar is open/active */
-    input[type="date"]:focus,
-    input[type="date"]:active {
-        filter: hue-rotate(255deg) saturate(1.5) brightness(1.2) !important;
-        outline: 2px solid hsl(330 81% 60% / 0.5) !important;
-        outline-offset: 2px;
-    }
-
-    /* More aggressive browser override */
-    input[type="date"] {
-        -webkit-appearance: none;
-        -moz-appearance: textfield;
-    }
-
-    input[type="date"]::-webkit-inner-spin-button,
-    input[type="date"]::-webkit-clear-button {
-        display: none;
-    }
-
-    /* Try to override the calendar popup with CSS custom properties */
-    input[type="date"] {
-        --webkit-calendar-picker-indicator-color: #ec4899;
-    }
-
-    /* Date field text styling */
     input[type="date"]::-webkit-datetime-edit-text {
         font-weight: 500;
+        color: hsl(0 0% 98%) !important;
+    }
+
+    input[type="date"]::-webkit-datetime-edit-month-field,
+    input[type="date"]::-webkit-datetime-edit-day-field,
+    input[type="date"]::-webkit-datetime-edit-year-field {
+        color: hsl(0 0% 98%) !important;
+        padding: 2px 4px;
+        border-radius: 3px;
+        transition: all 0.2s ease;
     }
 
     input[type="date"]::-webkit-datetime-edit-month-field:focus,
     input[type="date"]::-webkit-datetime-edit-day-field:focus,
     input[type="date"]::-webkit-datetime-edit-year-field:focus {
         background-color: hsl(330 81% 60% / 0.2) !important;
-        color: hsl(330 81% 60%) !important;
+        color: hsl(330 81% 80%) !important;
         outline: 1px solid hsl(330 81% 60%) !important;
         border-radius: 3px;
-    }
-
-    /* Override browser default selections */
-    input[type="date"]::-webkit-datetime-edit-month-field,
-    input[type="date"]::-webkit-datetime-edit-day-field,
-    input[type="date"]::-webkit-datetime-edit-year-field {
-        color: hsl(0 0% 98%);
-        padding: 2px 4px;
-        border-radius: 3px;
-        transition: all 0.2s ease;
     }
 
     input[type="date"]::-webkit-datetime-edit-month-field:hover,
@@ -397,14 +377,9 @@
         background-color: hsl(330 81% 60% / 0.1);
     }
 
-    /* Global CSS to override calendar popup colors */
-    :root {
-        --calendar-bg: white;
-        --calendar-text: black;
-        --calendar-selected-bg: hsl(330 81% 60%);
-        --calendar-selected-text: white;
-        --calendar-hover-bg: hsl(330 81% 60% / 0.1);
-        --calendar-today-bg: hsl(330 81% 60% / 0.2);
+    input[type="date"]::-webkit-inner-spin-button,
+    input[type="date"]::-webkit-clear-button {
+        display: none;
     }
 
     .input-title{
@@ -418,11 +393,12 @@
     }
 
     .form-field {
-        @apply mb-4;
+        @apply mb-2.5 lg:mb-4;
     }
 
     .form-field .label-text {
-        margin-bottom: 0.25rem;
+        margin-bottom: 0.3rem;
+        line-height: 1.35;
     }
 
     .form-field .pi,
@@ -430,7 +406,6 @@
         margin-top: 0;
     }
 
-    /* Shadcn-inspired Card Variants */
     .card-elevated {
         @apply bg-gray-950 rounded-lg border border-gray-800 shadow-lg;
         background: hsl(240 10% 3.9%);
@@ -445,7 +420,6 @@
         box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.2);
     }
 
-    /* Shadcn-inspired Text Styles */
     .text-muted {
         color: hsl(240 5% 64.9%);
     }
@@ -578,41 +552,71 @@
 }
 
 .form-section {
-    @apply bg-[#171717] rounded-lg border-2 p-6 mb-4 shadow-lg;
-    background: linear-gradient(135deg, #171717 0%, #1a1a1a 100%);
+    @apply bg-[#171717] rounded-lg border-2 p-3 mb-2.5;
     border-color: hsl(330 81% 60% / 0.3);
     border-width: 2px;
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
     position: relative;
+    /* Optimize for mobile scroll - no expensive effects */
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    /* Simple background on mobile */
+    background: #171717;
+    /* Simple shadow on mobile */
+    box-shadow: 0 2px 4px rgb(0 0 0 / 0.2);
 }
 
-.form-section:hover {
-    border-color: hsl(330 81% 60% / 0.5);
-    transform: translateY(-1px);
-    box-shadow: 0 6px 12px -2px rgb(0 0 0 / 0.4), 0 4px 8px -2px rgb(0 0 0 / 0.3);
+/* Add gradient and enhanced shadows only on desktop */
+@media (min-width: 1024px) {
+    .form-section {
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        background: linear-gradient(135deg, #171717 0%, #1a1a1a 100%);
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+        will-change: transform;
+    }
+    
+    .form-section:hover {
+        border-color: hsl(330 81% 60% / 0.5);
+        transform: translateY(-1px) translateZ(0);
+        box-shadow: 0 6px 12px -2px rgb(0 0 0 / 0.4), 0 4px 8px -2px rgb(0 0 0 / 0.3);
+    }
 }
 
 .form-section-title {
-    @apply text-lg font-semibold text-gray-50 mb-4 pb-3 border-b border-gray-700 flex items-center justify-between;
-    line-height: 1.2;
+    @apply text-base lg:text-lg font-semibold text-gray-50 mb-2.5 lg:mb-4 pb-2 lg:pb-3 border-b border-gray-700 flex items-center justify-between;
+    line-height: 1.35;
     color: hsl(0 0% 98%);
     border-bottom-color: hsl(330 81% 60% / 0.2);
 }
 
 .section-card {
-    @apply bg-transparent rounded-md border p-4 mb-3 shadow-sm;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.01) 100%);
+    @apply bg-transparent rounded-md border p-2.5 mb-2;
     border-color: hsl(330 81% 60% / 0.15);
     border-width: 1px;
-    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.2), 0 1px 2px -1px rgb(0 0 0 / 0.2);
-    transition: all 0.2s ease;
+    /* Optimize for mobile - simple background and shadow */
+    background: rgba(255, 255, 255, 0.01);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.15);
+    /* GPU acceleration */
+    transform: translateZ(0);
+    backface-visibility: hidden;
 }
 
-.section-card:hover {
-    border-color: hsl(330 81% 60% / 0.3);
-    background: linear-gradient(135deg, rgba(236, 72, 153, 0.03) 0%, rgba(236, 72, 153, 0.01) 100%);
-    transform: translateY(-1px);
-    box-shadow: 0 2px 6px 0 rgb(0 0 0 / 0.25), 0 2px 4px -1px rgb(0 0 0 / 0.2);
+/* Add gradients and enhanced effects only on desktop */
+@media (min-width: 1024px) {
+    .section-card {
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.01) 100%);
+        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.2), 0 1px 2px -1px rgb(0 0 0 / 0.2);
+        transition: all 0.2s ease;
+    }
+    
+    .section-card:hover {
+        border-color: hsl(330 81% 60% / 0.3);
+        background: linear-gradient(135deg, rgba(236, 72, 153, 0.03) 0%, rgba(236, 72, 153, 0.01) 100%);
+        transform: translateY(-1px) translateZ(0);
+        box-shadow: 0 2px 6px 0 rgb(0 0 0 / 0.25), 0 2px 4px -1px rgb(0 0 0 / 0.2);
+    }
 }
 
 .clean-button {
@@ -656,104 +660,54 @@
     box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
 }
 
-/* Additional calendar styling overrides */
-input[type="date"] {
-    accent-color: hsl(330 81% 60%) !important;
-}
-
-/* Force light mode for calendar popups */
-body {
-    color-scheme: light dark;
-}
-
-/* Specific override for date inputs */
-input[type="date"]::-webkit-calendar-picker-indicator {
-    color-scheme: light !important;
-}
-
-/* Global calendar popup customization */
-input[type="date"]::-webkit-calendar-picker-indicator:focus,
-input[type="date"]::-webkit-calendar-picker-indicator:active {
-    outline: 2px solid hsl(330 81% 60%);
-    outline-offset: 2px;
-    border-radius: 4px;
-}
-
-/* Calendar popup styling for webkit browsers */
-::-webkit-calendar-picker-indicator {
-    background-size: 16px 16px;
-    background-repeat: no-repeat;
-    background-position: center;
-    padding: 4px;
-}
-
-/* Try to style calendar popup container */
-input[type="date"]:focus-within {
-    box-shadow: 0 0 0 3px hsl(330 81% 60% / 0.1);
-}
-
-/* Additional system color overrides */
-@media (prefers-color-scheme: light) {
-    input[type="date"] {
-        accent-color: hsl(330 81% 60%);
-    }
-}
-
-@media (prefers-color-scheme: dark) {
-    input[type="date"] {
-        accent-color: hsl(330 81% 60%);
-        color-scheme: light;
-    }
-}
-
 .label-text {
     @apply text-gray-200 text-sm font-medium mb-1 block;
-    line-height: 1.3;
-    margin-bottom: 0.25rem;
+    line-height: 1.35;
+    margin-bottom: 0.3rem;
     color: hsl(0 0% 85%);
 }
 
 .name{
-    font-size: 20px;
+    font-size: 32px;
     font-weight: 700;
-    line-height: 1.2;
+    line-height: 1.1;
 }
 
 .profession{
     font-size: 16px;
     font-weight: 500;
-    line-height: 1.3;
+    line-height: 1.2;
 }
 
 .contact{
     font-size: 14px;
     font-weight: 400;
-    line-height: 1.3;
+    line-height: 1.2;
 }
 
 .social-media{
     font-size: 12px;
     font-weight: 400;
-    line-height: 1.3;
+    line-height: 1.2;
 }
 
 .section-title{
     font-size: 16px;
     font-weight: 700;
-    line-height: 1.2;
+    line-height: 1.1;
 }
 
 .content{
     font-size: 14px;
     font-weight: 480;
-    line-height: 1.3;
+    line-height: 1.2;
     font-family: calibri !important;
 }
 
 .sub-content{
     font-size: 12px;
     font-weight: 400;
-    line-height: 1.3;
+    line-height: 1.2;
 }
 
 .i-bold{
@@ -774,6 +728,21 @@ input[type="date"]:focus-within {
     @page {
         size: A4;
         margin: -3mm 8mm; /* Reduced margins for more content space */
+    }
+    
+    /* Force all body/html to white background, no padding */
+    html, body {
+        margin: 0 !important;
+        padding: 0 !important;
+        background: white !important;
+        overflow: visible !important;
+        height: auto !important;
+        width: 100% !important;
+    }
+
+    /* Hide everything we don't want in print */
+    body > *:not(main):not([class*="flex"]) {
+        display: none !important;
     }
 
     .preview {
@@ -802,15 +771,9 @@ input[type="date"]:focus-within {
         margin: 0 !important;
     }
 
-    /* Ensure single page layout */
-    body, html {
-        margin: 0 !important;
-        padding: 0 !important;
-        background: white !important;
-    }
-
     /* Hide any unnecessary elements during print */
-    .bg-gray-50 {
+    .bg-gray-50,
+    .bg-slate-100 {
         background: white !important;
     }
 
@@ -821,37 +784,88 @@ input[type="date"]:focus-within {
         print-color-adjust: exact !important;
     }
 
-    /* Final aggressive calendar override */
-    html {
-        --webkit-calendar-picker-indicator-color: #ec4899 !important;
-    }
-
-    /* System-level calendar popup override */
-    input[type="date"]::-webkit-calendar-picker-indicator:focus,
-    input[type="date"]::-webkit-calendar-picker-indicator:active {
-        filter: hue-rotate(255deg) saturate(2) brightness(1.3) !important;
-    }
-
-    /* Force calendar popup to use custom colors */
-    ::-webkit-calendar-picker-indicator {
-        accent-color: #ec4899 !important;
-    }
-
-    /* Browser-specific overrides */
-    @-moz-document url-prefix() {
-        input[type="date"] {
-            color-scheme: light !important;
-            accent-color: #ec4899 !important;
-        }
-    }
-
-
     /* Ensure exact font sizes match preview */
     .a4-preview * {
         font-size: inherit !important;
         line-height: inherit !important;
         margin: inherit !important;
         padding: inherit !important;
+    }
+    
+    /* Apply font-light weight for descriptions and bullets in print */
+    .font-light,
+    p.font-light,
+    ul.font-light,
+    .content.font-light,
+    p.content.font-light,
+    ul.content.font-light {
+        font-weight: 300 !important;
+    }
+    
+    /* Fix mobile layout issues in print */
+    /* Hide mobile navigation completely */
+    [class*="MobileNavbar"],
+    [class*="MobileBottomNav"],
+    nav[class*="fixed"],
+    nav[class*="lg:hidden"],
+    .fixed.bottom-0,
+    .fixed.top-0 {
+        display: none !important;
+        visibility: hidden !important;
+    }
+    
+    /* Reset mobile padding/margins for print */
+    .pt-\[60px\],
+    .pb-\[73px\] {
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+    }
+    
+    /* Force desktop layout in print - hide form, show only preview */
+    body > * {
+        overflow: visible !important;
+    }
+    
+    /* Hide the builder form/sidebar in print */
+    .exclude-print,
+    [class*="exclude-print"] {
+        display: none !important;
+        visibility: hidden !important;
+    }
+    
+    /* Force preview to full width and visibility */
+    .preview,
+    [class*="preview"] {
+        position: static !important;
+        width: 100% !important;
+        min-width: 100% !important;
+        opacity: 1 !important;
+        display: block !important;
+        pointer-events: auto !important;
+        transform: none !important;
+    }
+    
+    /* Override all Tailwind responsive classes in print */
+    /* Force all elements to use desktop layout */
+    div[class*="absolute"],
+    div[class*="fixed"] {
+        position: static !important;
+    }
+    
+    /* Remove opacity tricks used for mobile */
+    div[class*="opacity-0"] {
+        opacity: 1 !important;
+    }
+    
+    /* Make everything pointer-events auto */
+    div[class*="pointer-events-none"] {
+        pointer-events: auto !important;
+    }
+    
+    /* Reset all transforms and transitions for print */
+    * {
+        transition: none !important;
+        animation: none !important;
     }
 
     /* Ensure proper page breaks */
@@ -864,136 +878,26 @@ input[type="date"]:focus-within {
     * {
         transform: none !important;
     }
-}
-
-/* Custom Date Picker Overlay Styles */
-.custom-datepicker-overlay {
-    z-index: 9999 !important;
-    position: fixed !important;
-}
-
-/* Ensure calendar appears above all other elements */
-.custom-datepicker-dropdown {
-    z-index: 9999 !important;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
-    backdrop-filter: blur(8px);
-    border: 2px solid rgba(236, 72, 153, 0.3) !important;
-    background: white !important;
-}
-
-.custom-datepicker-year-dropdown,
-.custom-datepicker-month-dropdown {
-    z-index: 10000 !important;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
-    background: white !important;
-    border: 1px solid #e5e7eb !important;
-}
-
-/* Additional z-index overrides for common problematic elements */
-.card, .panel, .modal, .popup, .dropdown {
-    z-index: 1 !important;
-}
-
-/* Ensure form elements don't overlap calendar */
-.form-container, .form-section, .input-group {
-    z-index: 1 !important;
-}
-
-/* Native Date Input Pink Styling */
-input[type="date"] {
-    color-scheme: light !important;
-    -webkit-appearance: none !important;
-    -moz-appearance: none !important;
-    appearance: none !important;
-}
-
-/* Override browser date picker colors with pink theme */
-input[type="date"]::-webkit-calendar-picker-indicator {
-    opacity: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    position: absolute !important;
-    left: 0 !important;
-    top: 0 !important;
-    cursor: pointer !important;
-    z-index: 20 !important;
-    filter: invert(35%) sepia(100%) saturate(500%) hue-rotate(300deg) brightness(1.2) contrast(1.1) !important;
-}
-
-/* Force pink theme on date picker popup */
-input[type="date"]::-webkit-datetime-edit {
-  
-}
-
-/* WebKit date picker styling */
-input[type="date"]::-webkit-datetime-edit-fields-wrapper {
-
-}
-
-input[type="date"]::-webkit-datetime-edit-month-field,
-input[type="date"]::-webkit-datetime-edit-day-field,
-input[type="date"]::-webkit-datetime-edit-year-field {
-    color: #fff !important;
-}
-
-input[type="date"]::-webkit-inner-spin-button,
-input[type="date"]::-webkit-outer-spin-button {
-    -webkit-appearance: none !important;
-    margin: 0 !important;
-}
-
-/* Firefox date input styling */
-input[type="date"]::-moz-focus-inner {
-    border: 0 !important;
-}
-
-/* Apply pink filter to the entire date picker when opened */
-input[type="date"]:focus,
-input[type="date"]:active {
-    outline: none !important;
-    box-shadow: none !important;
-    filter: hue-rotate(270deg) saturate(2) brightness(1.1) !important;
-}
-
-/* CSS custom properties for date picker theming */
-:root {
-    --date-picker-accent: #ec4899;
-    --date-picker-accent-light: #fdf2f8;
-    --date-picker-accent-dark: #be185d;
-}
-
-/* Try to override system date picker colors */
-input[type="date"] {
-    accent-color: #ec4899 !important;
-    color-scheme: light !important;
-}
-
-/* Aggressive pink theme application */
-input[type="date"]::-webkit-calendar-picker-indicator:hover {
-    filter: invert(35%) sepia(100%) saturate(700%) hue-rotate(300deg) brightness(1.3) contrast(1.2) !important;
-}
-
-/* Additional webkit overrides for pink theme */
-input[type="date"]:focus::-webkit-calendar-picker-indicator {
-    filter: invert(35%) sepia(100%) saturate(800%) hue-rotate(300deg) brightness(1.4) contrast(1.3) !important;
-}
-
-/* Ensure no conflicts with other inputs */
-.other-input input[type="date"] {
-    background: transparent !important;
-    border: none !important;
-    color: transparent !important;
-    cursor: pointer !important;
-    accent-color: #ec4899 !important;
-}
-
-/* Global override for all date inputs */
-input[type="date"],
-input[type="datetime-local"],
-input[type="month"],
-input[type="week"] {
-    accent-color: #ec4899 !important;
-    color-scheme: light !important;
+    
+    /* Override mobile-first responsive behavior */
+    .w-full {
+        width: 100% !important;
+    }
+    
+    /* Remove min-height constraints */
+    .min-h-screen {
+        min-height: 0 !important;
+    }
+    
+    /* Force specific container to show properly */
+    main,
+    [role="main"],
+    .builder-container {
+        display: block !important;
+        width: 100% !important;
+        height: auto !important;
+        overflow: visible !important;
+    }
 }
 
 @layer base {
@@ -1040,7 +944,6 @@ input[type="week"] {
   border-style: solid;
   border-color: rgba(20, 20, 20, 0.9) transparent transparent transparent;
 }
-
 
 .tooltip:hover .tooltiptext {
   visibility: visible;

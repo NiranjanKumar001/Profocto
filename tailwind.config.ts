@@ -52,7 +52,8 @@ const config: Config = {
   			}
   		},
   		animation: {
-  			shimmer: 'shimmer 2s linear infinite'
+  			shimmer: 'shimmer 2s linear infinite',
+  			'shiny-text': 'shiny-text 8s infinite'
   		},
   		keyframes: {
   			shimmer: {
@@ -61,6 +62,14 @@ const config: Config = {
   				},
   				to: {
   					backgroundPosition: '-200% 0'
+  				}
+  			},
+  			'shiny-text': {
+  				'0%, 90%, 100%': {
+  					'background-position': '0% 50%'
+  				},
+  				'45%': {
+  					'background-position': '100% 50%'
   				}
   			}
   		},

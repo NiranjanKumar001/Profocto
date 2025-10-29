@@ -1,17 +1,22 @@
 "use client";
 
 import {
-  FaLinkedin,
-  FaTwitter,
-  FaFacebook,
-  FaInstagram,
-  FaYoutube,
-  FaExternalLinkAlt,
-  FaChevronDown,
-  FaFileAlt,
-  FaTh,
-  FaEyeSlash,
-  FaHackerrank,
+  FaLinkedin,
+  FaTwitter,
+  FaFacebook,
+  FaInstagram,
+  FaYoutube,
+  FaExternalLinkAlt,
+  FaChevronDown,
+  FaFileAlt,
+  FaTh,
+  FaEyeSlash,
+ FaMedium,
+  FaStackOverflow,   
+  FaBehance,         
+  FaDribbble,        
+  FaGitlab , 
+  FaHackerrank,
 } from "react-icons/fa";
 import { MdEmail, MdLocationOn, MdPhone } from "react-icons/md";
 import { CgWebsite } from "react-icons/cg";
@@ -20,21 +25,25 @@ import Link from "next/link";
 import React, { useContext, useState, useEffect, useRef } from "react";
 import { ResumeContext } from "../../contexts/ResumeContext";
 import TemplateTwo from "./TemplateTwo";
+import TemplateThree from "./TemplateThree"
 import TemplateFour from "./TemplateFour"
+import TemplateFive from "./TemplateFive"
+import TemplateWrapper from "./TemplateWrapper"
 import { useSectionTitles } from "../../contexts/SectionTitleContext";
 import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
 } from "@dnd-kit/core";
 import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
@@ -42,195 +51,236 @@ import { ImGithub } from "react-icons/im";
 import { SiCodeforces, SiLeetcode } from "react-icons/si";
 
 const Preview = () => {
-  const { resumeData, setResumeData } = useContext(ResumeContext);
-  const [currentTemplate, setCurrentTemplate] = useState("template1");
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isClient, setIsClient] = useState(false);
+  const { resumeData, setResumeData } = useContext(ResumeContext);
+  const [currentTemplate, setCurrentTemplate] = useState("template1");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isClient, setIsClient] = useState(false);
 
-  // Handle client-side initialization
-  useEffect(() => {
-    setIsClient(true);
-    if (typeof window !== "undefined") {
-      const savedTemplate = localStorage.getItem("currentTemplate");
-      if (savedTemplate) {
-        setCurrentTemplate(savedTemplate);
-      }
-    }
-  }, []);
+  // Handle client-side initialization
+  useEffect(() => {
+    setIsClient(true);
+    if (typeof window !== "undefined") {
+      const savedTemplate = localStorage.getItem("currentTemplate");
+      if (savedTemplate) {
+        setCurrentTemplate(savedTemplate);
+      }
+    }
+  }, []);
 
-  // Save template selection to localStorage
-  useEffect(() => {
-    if (isClient && typeof window !== "undefined") {
-      localStorage.setItem("currentTemplate", currentTemplate);
-    }
-  }, [currentTemplate, isClient]);
+  // Save template selection to localStorage
+  useEffect(() => {
+    if (isClient && typeof window !== "undefined") {
+      localStorage.setItem("currentTemplate", currentTemplate);
+    }
+  }, [currentTemplate, isClient]);
 
-  // Available templates
-  const templates = [
-    {
-      id: "template1",
-      name: "Classic Template",
-      description: "Clean and professional layout",
-      icon: FaFileAlt,
-    },
-    {
-      id: "template2",
-      name: "Modern Template",
-      description: "Dynamic with drag-and-drop sections",
-      icon: FaTh,
-    },
-    {
-      id: "template3",
-      name: "Classic Template II",
-      description: "Clean and ATS friendly",
-      icon: FaTh,
-    },
-  ];
+  // Available templates
+  const templates = [
+    {
+      id: "template1",
+      name: "Classic Template",
+      description: "Clean and professional layout",
+      icon: FaFileAlt,
+    },
+    {
+      id: "template2",
+      name: "Modern Template",
+      description: "Dynamic with drag-and-drop sections",
+      icon: FaTh,
+    },
+    {
+      id: "template3",
+      name: "Classic Template II",
+      description: "Clean and ATS friendly",
+      icon: FaTh,
+    },
+    {
+      id: "template4",
+    name: "Fancy Template",
+    description: "New modern layout",
+    icon: FaFileAlt,
+  },
+  {
+      id: "template5",
+    name: "Smart Template",
+    description: "clean layout with divisions",
+    icon: FaFileAlt,
+  },
+  ];
 
-  const defaultSections = [
-    "summary",
-    "education",
-    "experience",
-    "projects",
-    "skills",
-    "softSkills",
-    "languages",
-    "certifications",
-  ];
+  const defaultSections = [
+    "summary",
+    "education",
+    "experience",
+    "projects",
+    "skills",
+    "softSkills",
+    "languages",
+    "certifications",
+    "awards",
+  ];
 
-  const sectionLabels = {
-    summary: "Professional Summary",
-    education: "Education",
-    experience: "Professional Experience",
-    projects: "Projects",
-    skills: "Technical Skills",
-    softSkills: "Soft Skills",
-    languages: "Languages",
-    certifications: "Certifications",
-  };
+  const sectionLabels = {
+    summary: "Professional Summary",
+    education: "Education",
+    experience: "Professional Experience",
+    projects: "Projects",
+    skills: "Technical Skills",
+    softSkills: "Soft Skills",
+    languages: "Languages",
+    certifications: "Certifications",
+    awards: "Awards and Recognition",
+  };
 
-  const [sectionOrder, setSectionOrder] = useState(defaultSections);
-  const [enabledSections, setEnabledSections] = useState(() => {
-    // All sections enabled by default
-    const initial = {};
-    defaultSections.forEach((section) => {
-      initial[section] = true;
-    });
-    return initial;
-  });
-  const [showSectionToggle, setShowSectionToggle] = useState(false);
-  const dropdownRef = useRef(null);
-  const toggleRef = useRef(null);
+  const [sectionOrder, setSectionOrder] = useState(defaultSections);
+  const [enabledSections, setEnabledSections] = useState(() => {
+    // All sections enabled by default
+    const initial = {};
+    defaultSections.forEach((section) => {
+      initial[section] = true;
+    });
+    return initial;
+  });
+  const [showSectionToggle, setShowSectionToggle] = useState(false);
+  const dropdownRef = useRef(null);
+  const toggleRef = useRef(null);
 
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsDropdownOpen(false);
-      }
-      if (toggleRef.current && !toggleRef.current.contains(event.target)) {
-        setShowSectionToggle(false);
-      }
-    };
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+      if (toggleRef.current && !toggleRef.current.contains(event.target)) {
+        setShowSectionToggle(false);
+      }
+    };
 
-    const handleKeyDown = (event) => {
-      if (event.key === "Escape") {
-        setIsDropdownOpen(false);
-        setShowSectionToggle(false);
-      }
-    };
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        setIsDropdownOpen(false);
+        setShowSectionToggle(false);
+      }
+    };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
-  // Handle section toggle
-  const toggleSection = (sectionId) => {
-    setEnabledSections((prev) => {
-      const updated = {
-        ...prev,
-        [sectionId]: !prev[sectionId],
-      };
-      if (isClient) {
-        localStorage.setItem("enabledSections", JSON.stringify(updated));
-      }
-      return updated;
-    });
-  };
+  // Handle section toggle
+  const toggleSection = (sectionId) => {
+    setEnabledSections((prev) => {
+      const updated = {
+        ...prev,
+        [sectionId]: !prev[sectionId],
+      };
+      if (isClient) {
+        localStorage.setItem("enabledSections", JSON.stringify(updated));
+      }
+      return updated;
+    });
+  };
 
-  const icons = [
-    { name: "linkedin", icon: <FaLinkedin /> },
-    { name: "twitter", icon: <FaTwitter /> },
-    { name: "facebook", icon: <FaFacebook /> },
-    { name: "instagram", icon: <FaInstagram /> },
-    { name: "youtube", icon: <FaYoutube /> },
-    { name: "website", icon: <CgWebsite /> },
-    { name: "github", icon: <ImGithub /> },
-    { name: "leetcode", icon: <SiLeetcode /> },
-    {name: "hackerrank", icon: <FaHackerrank />},
-    {name: "hacker rank", icon: <FaHackerrank />},
-    {name: "codeforces", icon: <SiCodeforces />}
-  ];
+  const icons = [
+    { name: "linkedin", icon: <FaLinkedin /> },
+    { name: "twitter", icon: <FaTwitter /> },
+    { name: "facebook", icon: <FaFacebook /> },
+    { name: "instagram", icon: <FaInstagram /> },
+    { name: "youtube", icon: <FaYoutube /> },
+    { name: "website", icon: <CgWebsite /> },
+    { name: "github", icon: <ImGithub /> },
+    { name: "leetcode", icon: <SiLeetcode /> },
+    { name: "hackerrank", icon: <FaHackerrank /> },
+    { name: "hacker rank", icon: <FaHackerrank /> },
+    { name: "codeforces", icon: <SiCodeforces /> },
+    { name: "medium", icon: <FaMedium /> },
+    { name: "stack overflow", icon: <FaStackOverflow /> },
+    { name: "behance", icon: <FaBehance /> },
+    { name: "dribbble", icon: <FaDribbble /> },
+    { name: "gitlab", icon: <FaGitlab /> },
+    { name: "custom", icon: <CgWebsite /> }, // Default icon for custom platforms
+  ];
 
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8, // 8px movement required before drag starts
+      },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 200, // 200ms delay before drag starts on touch
+        tolerance: 5, // 5px tolerance for touch movement
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
-  useEffect(() => {
-    if (isClient) {
-      const savedOrder = localStorage.getItem("sectionOrder");
-      const savedEnabled = localStorage.getItem("enabledSections");
+  useEffect(() => {
+    if (isClient) {
+      const savedOrder = localStorage.getItem("sectionOrder");
+      const savedEnabled = localStorage.getItem("enabledSections");
 
-      if (savedOrder) {
-        const parsedOrder = JSON.parse(savedOrder);
-        // Add missing sections
-        if (!parsedOrder.includes("certifications")) {
-          parsedOrder.push("certifications");
+      if (savedOrder) {
+        const parsedOrder = JSON.parse(savedOrder);
+        // Add missing sections
+        if (!parsedOrder.includes("certifications")) {
+          parsedOrder.push("certifications");
+        }
+        if (!parsedOrder.includes("education")) {
+          // Insert education after summary if it exists, otherwise at the beginning
+          const summaryIndex = parsedOrder.indexOf("summary");
+          if (summaryIndex !== -1) {
+            parsedOrder.splice(summaryIndex + 1, 0, "education");
+          } else {
+            parsedOrder.unshift("education");
+          }
+        }
+        
+        if (!parsedOrder.includes("awards")) {
+            
+            const certsIndex = parsedOrder.indexOf("certifications");
+            if (certsIndex !== -1) {
+                parsedOrder.splice(certsIndex + 1, 0, "awards");
+            } else {
+                parsedOrder.push("awards");
+            }
         }
-        if (!parsedOrder.includes("education")) {
-          // Insert education after summary if it exists, otherwise at the beginning
-          const summaryIndex = parsedOrder.indexOf("summary");
-          if (summaryIndex !== -1) {
-            parsedOrder.splice(summaryIndex + 1, 0, "education");
-          } else {
-            parsedOrder.unshift("education");
-          }
-        }
-        setSectionOrder(parsedOrder);
-      } else {
-        localStorage.setItem("sectionOrder", JSON.stringify(defaultSections));
-      }
+        
+        setSectionOrder(parsedOrder);
+      } else {
+        localStorage.setItem("sectionOrder", JSON.stringify(defaultSections));
+      }
 
-      if (savedEnabled) {
-        const parsedEnabled = JSON.parse(savedEnabled);
-        // Ensure all default sections are represented
-        const updatedEnabled = {};
-        defaultSections.forEach((section) => {
-          updatedEnabled[section] = parsedEnabled.hasOwnProperty(section)
-            ? parsedEnabled[section]
-            : true;
-        });
-        setEnabledSections(updatedEnabled);
-      } else {
-        const initial = {};
-        defaultSections.forEach((section) => {
-          initial[section] = true;
-        });
-        localStorage.setItem("enabledSections", JSON.stringify(initial));
-      }
-    }
-  }, [isClient]);
+      if (savedEnabled) {
+        const parsedEnabled = JSON.parse(savedEnabled);
+        // Ensure all default sections are represented
+        const updatedEnabled = {};
+        defaultSections.forEach((section) => {
+          updatedEnabled[section] = parsedEnabled.hasOwnProperty(section)
+            ? parsedEnabled[section]
+            : true;
+        });
+        setEnabledSections(updatedEnabled);
+      } else {
+        const initial = {};
+        defaultSections.forEach((section) => {
+          initial[section] = true;
+        });
+        localStorage.setItem("enabledSections", JSON.stringify(initial));
+      }
+    }
+  }, [isClient]);
 
   // Handle drag and drop for section reordering using @dnd-kit
   const handleDragEnd = (event) => {
@@ -268,7 +318,7 @@ const Preview = () => {
   };
 
   return (
-    <div className='w-full h-screen sticky top-0 preview rm-padding-print overflow-y-auto bg-gray-50'>
+    <div className='w-full h-auto lg:h-screen sticky top-0 preview rm-padding-print overflow-y-auto lg:overflow-y-auto bg-gray-50'>
       {/* Template Dropdown */}
       <div className="absolute top-2   right-4 sm:right-6 z-50 exclude-print">
         <div className="flex flex-row  gap-2 sm:gap-3">
@@ -309,7 +359,7 @@ const Preview = () => {
                         type='checkbox'
                         checked={enabledSections[sectionId]}
                         onChange={() => toggleSection(sectionId)}
-                        className='w-4 h-4 text-pink-600 bg-white border-2 border-gray-300 rounded focus:ring-pink-500 focus:ring-2 checked:bg-pink-600 checked:border-pink-600'
+                        className='w-4 h-4 text-pink-600 bg-white border-2 border-black rounded focus:ring-pink-500 focus:ring-2 checked:bg-pink-600 checked:border-pink-600'
                       />
                       <span className='text-sm text-gray-900 flex-1'>
                         {sectionLabels[sectionId]}
@@ -367,8 +417,7 @@ const Preview = () => {
                         setCurrentTemplate(template.id);
                         setIsDropdownOpen(false);
                       }}
-                      className={`w-full px-4 py-3 flex items-center gap-3 hover:bg-pink-50 transition-colors ${
-                        currentTemplate === template.id
+                      className={`w-full px-4 py-3 flex items-center gap-3 hover:bg-pink-50 transition-colors ${currentTemplate === template.id
                           ? "bg-pink-50 border-r-2 border-pink-500"
                           : ""
                       }`}
@@ -397,8 +446,11 @@ const Preview = () => {
           </div>
         </div>
       </div>
-      <A4PageWrapper>
-        {currentTemplate === "template1" ? (
+      <TemplateWrapper>
+  {(() => {
+    switch (currentTemplate) {
+      case "template1":
+        return (
           <ClassicTemplate
             resumeData={resumeData}
             sectionOrder={sectionOrder}
@@ -408,7 +460,9 @@ const Preview = () => {
             icons={icons}
             setResumeData={setResumeData}
           />
-        ) : currentTemplate === "template2" ? (
+        );
+      case "template2":
+        return (
           <TemplateTwo
             namedata={resumeData.name}
             positionData={resumeData.position}
@@ -425,14 +479,42 @@ const Preview = () => {
             skillsData={resumeData.skills}
             languagesData={resumeData.languages}
             certificationsData={resumeData.certifications}
+            awardsData={resumeData.awards}
             sectionOrder={sectionOrder}
             enabledSections={enabledSections}
             onDragEnd={onDragEnd}
             resumeData={resumeData}
             setResumeData={setResumeData}
+                  icons={icons}
+                />
+              );
+            case "template3":
+              return (
+                <TemplateThree
+                  resumeData={resumeData}
+                  sectionOrder={sectionOrder}
+                  enabledSections={enabledSections}
+                  handleDragEnd={handleDragEnd}
+                  sensors={sensors}
+                  icons={icons}
+                  setResumeData={setResumeData}
+                />
+              );
+            case "template4":
+              return (
+                <TemplateFour
+                  resumeData={resumeData}
+                  sectionOrder={sectionOrder}
+                  enabledSections={enabledSections}
+                  handleDragEnd={handleDragEnd}
+                  sensors={sensors}
+                  icons={icons}
+                  setResumeData={setResumeData}
           />
-        ) : (
-          <TemplateFour
+        );
+      case "template5":
+        return (
+          <TemplateFive
             resumeData={resumeData}
             sectionOrder={sectionOrder}
             enabledSections={enabledSections}
@@ -441,8 +523,25 @@ const Preview = () => {
             icons={icons}
             setResumeData={setResumeData}
           />
-        )}
-      </A4PageWrapper>
+        );
+      
+      default:
+        return (
+                <TemplateThree
+            resumeData={resumeData}
+            sectionOrder={sectionOrder}
+            enabledSections={enabledSections}
+            handleDragEnd={handleDragEnd}
+            sensors={sensors}
+            icons={icons}
+            setResumeData={setResumeData}
+          />
+        );
+    }
+  })()}
+      </TemplateWrapper>
+
+
     </div>
   );
 };
@@ -559,7 +658,6 @@ const ClassicTemplate = ({
     }
   };
 
-  // Define sections like Modern Template
   const sections = [
     {
       id: "summary",
@@ -587,35 +685,47 @@ const ClassicTemplate = ({
       title: "Certifications",
       content: resumeData.certifications,
     },
+    {
+      id: "awards",
+      title: "Awards and Recognition",
+      content: resumeData.awards, // Assumes awards data is in resumeData.awards
+    },
   ];
 
   const orderedSections = sectionOrder
     .map((id) => sections.find((section) => section.id === id))
-    .filter((section) => section !== undefined && enabledSections[section.id]);
+    .filter((section) => {
+      if (!section || !enabledSections[section.id]) return false;
+      // Filter out sections with empty content
+      if (Array.isArray(section.content)) {
+        return section.content.length > 0;
+      }
+      return section.content && section.content.trim().length > 0;
+    });
 
   const renderSection = (section) => {
     switch (section.id) {
       case "summary":
         return (
           <div>
-            <h2 className='section-title border-b-2 border-gray-300 mb-1 text-gray-900'>
+            <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.summary || "Professional Summary"}
             </h2>
-            <p className="content font-sans  text-black text-justify">{resumeData.summary}</p>
+            <p className="content font-sans font-light text-black text-justify">{resumeData.summary}</p>
           </div>
         );
 
       case "education":
         return resumeData.education.length > 0 ? (
           <div>
-            <h2 className='section-title border-b-2 border-gray-300 mb-1 text-gray-900'>
+            <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.education || "Education"}
             </h2>
             {resumeData.education.map((item, index) => (
               <div key={index} className="mb-1 flex justify-between items-start">
                 <div className="flex-1">
-                  <h3 className="content font-semibold text-gray-900">{item.school}</h3>
-                  <p className="content font-sans  text-black">{item.degree}</p>
+                  <h3 className="content school-name font-bold">{item.school}</h3>
+                  <p className="content degree-name">{item.degree}</p>
                 </div>
                 <div className='ml-4 text-right'>
                   <DateRange
@@ -632,7 +742,7 @@ const ClassicTemplate = ({
       case "experience":
         return resumeData.workExperience.length > 0 ? (
           <div>
-            <h2 className='section-title border-b-2 border-gray-300 mb-1 text-gray-900'>
+            <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.experience || "Professional Experience"}
             </h2>
             <DndContext
@@ -658,9 +768,9 @@ const ClassicTemplate = ({
                         />
                       </div>
                     </div>
-                    <p className="content font-sans  text-black mb-1">{item.description}</p>
+                    <p className="content font-sans font-light text-black mb-1">{item.description}</p>
                     {typeof item.keyAchievements === "string" && item.keyAchievements.trim() && (
-                      <ul className="list-disc list-inside content font-sans  text-black ml-4">
+                      <ul className="list-disc list-inside content font-sans font-light text-black ml-4">
                         {item.keyAchievements
                           .split("\n")
                           .filter(achievement => achievement.trim())
@@ -681,7 +791,7 @@ const ClassicTemplate = ({
       case "projects":
         return resumeData.projects.length > 0 ? (
           <div>
-            <h2 className='section-title border-b-2 border-gray-300 mb-1 text-gray-900'>
+            <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.projects || "Projects"}
             </h2>
             <DndContext
@@ -705,14 +815,14 @@ const ClassicTemplate = ({
                             {item.name}
                           </h3>
                           {item.link && (
-                            <Link
+                            <a
                               href={item.link}
-                              className='text-blue-600 hover:text-blue-800 transition-colors'
+                              className='text-black hover:text-gray-700 transition-colors'
                               target='_blank'
                               rel='noopener noreferrer'
                             >
                               <FaExternalLinkAlt className='w-3 h-3' />
-                            </Link>
+                            </a>
                           )}
                         </div>
                       </div>
@@ -724,7 +834,7 @@ const ClassicTemplate = ({
                         />
                       </div>
                     </div>
-                    <p className="content font-sans  text-black mb-1">{item.description}</p>
+                    <p className="content font-sans font-light text-black mb-1">{item.description}</p>
                     {typeof item.keyAchievements === "string" && item.keyAchievements.trim() && (
                       <ul className="list-disc list-inside content font-sans  text-black ml-4">
                         {item.keyAchievements
@@ -747,7 +857,7 @@ const ClassicTemplate = ({
       case "skills":
         return (
           <div>
-            <h2 className='section-title border-b-2 border-gray-300 mb-1 text-gray-900'>
+            <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.skills || "Technical Skills"}
             </h2>
             {resumeData.skills
@@ -755,7 +865,7 @@ const ClassicTemplate = ({
               .map((skill, index) => (
                 <div key={`SKILLS-${index}`} className="mb-1">
                   <h3 className="content i-bold text-gray-900 mb-1">{skill.title}</h3>
-                  <p className="content font-sans  text-black">{skill.skills.join(", ")}</p>
+                  <p className="content font-sans font-light text-black">{skill.skills.join(", ")}</p>
                 </div>
               ))}
           </div>
@@ -764,11 +874,11 @@ const ClassicTemplate = ({
       case "softSkills":
         return (
           <div>
-            <h2 className='section-title border-b-2 border-gray-300 mb-1 text-gray-900'>
+            <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.softSkills || "Soft Skills"}
             </h2>
-            <p className="content font-sans  text-black">
-              {resumeData.skills.find(skill => skill.title === "Soft Skills")?.skills?.join(", ")}
+            <p className="content font-sans font-light text-black">
+              {section.content.join(", ")}
             </p>
           </div>
         );
@@ -776,47 +886,129 @@ const ClassicTemplate = ({
       case "languages":
         return resumeData.languages.length > 0 ? (
           <div>
-            <h2 className='section-title border-b-2 border-gray-300 mb-1 text-gray-900'>
+            <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.languages || "Languages"}
             </h2>
-            <p className="content font-sans  text-black">{resumeData.languages.join(", ")}</p>
+            <p className='text-sm font-light text-black leading-tight'>
+              {resumeData.languages.map((lang) => 
+                typeof lang === 'string' ? lang : lang.name
+              ).join(", ")}
+            </p>
           </div>
         ) : null;
 
       case "certifications":
         return resumeData.certifications.length > 0 ? (
           <div>
-            <h2 className='section-title border-b-2 border-gray-300 mb-1 text-gray-900'>
+            <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.certifications || "Certifications"}
             </h2>
-            <ul className="list-disc list-inside content font-sans  text-black">
-              {resumeData.certifications.map((cert, index) => (
-                <li key={index} className='mb-1'>
-                  <div className='flex items-center gap-2'>
-                    <span>
-                      {typeof cert === 'string' ? cert : cert.name}
-                      {typeof cert === 'object' && cert.issuer && (
-                        <span className="font-sans  text-black"> - {cert.issuer}</span>
+            <ul className="list-disc list-inside content font-sans font-light text-black">
+              {resumeData.certifications.map((cert, index) => {
+                // Format date to match DateRange style (e.g., "Jun, 2018")
+                const formatCertDate = (dateString) => {
+                  if (!dateString) return '';
+                  const date = new Date(dateString);
+                  if (isNaN(date.getTime())) return dateString; // Return original if invalid
+                  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                                 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                  return `${months[date.getMonth()]}, ${date.getFullYear()}`;
+                };
+                
+                const certDate = typeof cert === 'object' && cert.date ? formatCertDate(cert.date) : '';
+                
+                return (
+                  <li key={index} className='mb-1'>
+                    <div className='flex items-start justify-between gap-2'>
+                      <div className='flex items-center gap-2 flex-1'>
+                        <span>
+                          {typeof cert === 'string' ? cert : cert.name}
+                          {typeof cert === 'object' && cert.issuer && (
+                            <span className="font-sans font-light text-black"> - {cert.issuer}</span>
+                          )}
+                        </span>
+                        {typeof cert === "object" &&
+                          cert.link &&
+                          cert.link.trim() !== "" && (
+                            <Link
+                              href={cert.link}
+                              className='text-black hover:text-gray-700 transition-colors'
+                              target='_blank'
+                              rel='noopener noreferrer'
+                            >
+                              <FaExternalLinkAlt className='w-3 h-3' />
+                            </Link>
+                          )}
+                      </div>
+                      {certDate && (
+                        <p className="sub-content text-right">
+                          {certDate}
+                        </p>
                       )}
-                    </span>
-                    {typeof cert === "object" &&
-                      cert.link &&
-                      cert.link.trim() !== "" && (
-                        <Link
-                          href={cert.link}
-                          className='text-blue-600 hover:text-blue-800 transition-colors'
-                          target='_blank'
-                          rel='noopener noreferrer'
-                        >
-                          <FaExternalLinkAlt className='w-3 h-3' />
-                        </Link>
-                      )}
-                  </div>
-                </li>
-              ))}
+                    </div>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         ) : null;
+        case "awards":
+  return resumeData.awards && resumeData.awards.length > 0 ? (
+    <div>
+      <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
+        {customSectionTitles.awards || "Awards and Recognition"}
+      </h2>
+      <ul className="content font-sans font-light text-black space-y-1">
+        {resumeData.awards.map((award, index) => {
+          // Format date to match DateRange style (e.g., "Jun, 2018")
+          const formatAwardDate = (dateString) => {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) return dateString; // Return original if invalid
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                           'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            return `${months[date.getMonth()]}, ${date.getFullYear()}`;
+          };
+          
+          const displayDate = award.year || award.date || award.startDate;
+          const formattedDate = displayDate ? formatAwardDate(displayDate) : '';
+          
+          return (
+            <li key={index}>
+              <div className='flex justify-between items-start'>
+                {/* LEFT: name, issuer, and link */}
+                <div className='flex items-center gap-1 flex-1'>
+                  <span className='font-semibold'>
+                    {award.name}
+                    {award.issuer && (
+                      <span className="font-light text-black"> - {award.issuer}</span>
+                    )}
+                  </span>
+                  {award.link && award.link.trim() !== "" && (
+                    <Link
+                      href={award.link}
+                      className='text-black hover:text-gray-700 transition-colors'
+                      target='_blank'
+                      rel='noopener noreferrer'
+                    >
+                      <FaExternalLinkAlt className='w-3 h-3' />
+                    </Link>
+                  )}
+                </div>
+
+                {/* RIGHT: date */}
+                {formattedDate && (
+                  <p className="sub-content text-right">
+                    {formattedDate}
+                  </p>
+                )}
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  ) : null;
 
       default:
         return null;
@@ -827,12 +1019,8 @@ const ClassicTemplate = ({
   if (!isClient) {
     return (
       <div className="w-full h-full bg-white p-4">
-        <div className="text-center mb-1
-        
-        
-        
-        ">
-          <h1 className="text-2xl font-bold text-gray-900">{resumeData.name}</h1>
+        <div className="text-center mb-1">
+          <h1 className="text-4xl font-bold text-gray-900">{resumeData.name}</h1>
           <p className="text-lg text-gray-700">{resumeData.position}</p>
         </div>
         <div className='animate-pulse'>
@@ -849,54 +1037,53 @@ const ClassicTemplate = ({
   return (
     <div className="w-full h-full bg-white p-0">
       {/* Professional Header */}
-      <div className="text-center mb-0 no-break">
+      <div className="text-center mb-2 no-break">
         <h1 className="name">{resumeData.name}</h1>
         <h2 className="profession">{resumeData.position}</h2>
         
-        {/* Contact Information */}
-        <div className="flex justify-center items-center gap-2 contact mb-0">
+        {/* Contact Information & Social Media */}
+        <div className="flex justify-center items-center gap-6 contact mb-0 flex-wrap">
           <div className="flex items-center gap-1">
-            <MdPhone className="text-gray-500" />
-            <span>{resumeData.contactInformation}</span>
+            <MdPhone className="text-black" />
+            <a href={`tel:${resumeData.contactInformation}`}>
+              {resumeData.contactInformation}
+            </a>
           </div>
           <div className='flex items-center gap-1'>
-            <MdEmail className='text-gray-500' />
-            <span>{resumeData.email}</span>
+            <MdEmail className='text-black' />
+            <a href={`mailto:${resumeData.email}`}>
+              {resumeData.email}
+            </a>
           </div>
           <div className='flex items-center gap-1'>
-            <MdLocationOn className='text-gray-500' />
+            <MdLocationOn className='text-black' />
             <span>{resumeData.address}</span>
-          </div>
         </div>
 
-        {/* Social Media */}
-        {resumeData.socialMedia.length > 0 && (
-          <div className='flex justify-center items-center gap-3 text-sm'>
-            {resumeData.socialMedia.map((socialMedia, index) => {
+          {/* Social Media Links */}
+          {resumeData.socialMedia.length > 0 && resumeData.socialMedia.map((socialMedia, index) => {
               const icon = icons.find(
                 (icon) => icon.name === socialMedia.socialMedia.toLowerCase()
               );
               return (
-                <Link
-                  href={`${
-                    socialMedia.socialMedia.toLowerCase() === "website"
+              <a
+                href={`${socialMedia.socialMedia.toLowerCase() === "website"
                       ? "https://"
                       : socialMedia.socialMedia.toLowerCase() === "linkedin"
                         ? "https://www."
                         : "https://www."
                   }${socialMedia.link}`}
                   key={index}
-                  className='inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 transition-colors'
+                className='inline-flex items-center gap-1 text-black'
                   target='_blank'
                   rel='noopener noreferrer'
                 >
-                  {icon && icon.icon}
-                  <span>{socialMedia.link}</span>
-                </Link>
+                {icon && React.cloneElement(icon.icon, { className: 'text-black' })}
+                <span>{socialMedia.displayText || socialMedia.link}</span>
+              </a>
               );
             })}
           </div>
-        )}
       </div>
 
       {/* Draggable Sections with Same System as Modern Template */}
@@ -948,9 +1135,6 @@ const A4PageWrapper = ({ children }) => {
     // Initial check with longer delay to ensure content is rendered
     const timeoutId = setTimeout(checkOverflow, 200);
 
-    // More frequent checks to catch content changes
-    const intervalId = setInterval(checkOverflow, 500);
-
     // Check on resize
     window.addEventListener("resize", checkOverflow);
 
@@ -972,7 +1156,6 @@ const A4PageWrapper = ({ children }) => {
 
     return () => {
       clearTimeout(timeoutId);
-      clearInterval(intervalId);
       window.removeEventListener("resize", checkOverflow);
       observer.disconnect();
     };

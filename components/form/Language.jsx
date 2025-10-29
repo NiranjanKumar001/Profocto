@@ -11,6 +11,11 @@ const Language = () => {
   const title = "Languages";
   const placeholder = "Language";
 
+  // Auto-select text when input is focused
+  const handleFocus = (e) => {
+    e.target.select();
+  };
+
   const handleSkills = (e, index, skillType) => {
     const newSkills = [...resumeData[skillType]];
     newSkills[index] = e.target.value;
@@ -46,6 +51,7 @@ const Language = () => {
               className="w-full other-input"
               value={skill}
               onChange={(e) => handleSkills(e, index, skillType)}
+              onFocus={handleFocus}
             />
           </div>
         ))}

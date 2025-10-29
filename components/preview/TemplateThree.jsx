@@ -1,286 +1,538 @@
 "use client";
+import React, { useEffect, useState } from "react";
+import { FaExternalLinkSquareAlt } from "react-icons/fa";
+import DateRange from "../utility/DateRange";
+import {
+  arrayMove,
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 
-import React, { useContext } from "react";
-import { ResumeContext } from "../../contexts/ResumeContext";
+import { DndContext, closestCenter } from "@dnd-kit/core";
+import Link from "next/link";
 import { useSectionTitles } from "../../contexts/SectionTitleContext";
-import Image from "next/image";
+import { MdEmail, MdLocationOn, MdPhone } from "react-icons/md";
+import { SortableItem, SortableSection } from "./Preview";
 
-const TemplateThree = () => {
-  const { resumeData } = useContext(ResumeContext);
+const TemplateFour = ({
+  resumeData,
+  sectionOrder,
+  enabledSections,
+  handleDragEnd,
+  sensors,
+  icons,
+  setResumeData,
+}) => {
   const { customSectionTitles } = useSectionTitles();
+  const [isClient, setIsClient] = useState(false);
 
-  const getSectionTitle = (key, defaultTitle) => {
-    return customSectionTitles[key] || defaultTitle;
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // Handle drag end for items within sections (same as Modern Template)
+  const handleItemDragEnd = (event, sectionType) => {
+    const { active, over } = event;
+
+    if (active.id !== over?.id) {
+      // Handle reordering within the same section
+      if (sectionType === "projects" && setResumeData) {
+        const oldIndex = parseInt(active.id.replace("project-", ""));
+        const newIndex = parseInt(over.id.replace("project-", ""));
+
+        if (oldIndex !== -1 && newIndex !== -1) {
+          const newProjects = arrayMove(
+            resumeData.projects,
+            oldIndex,
+            newIndex
+          );
+          setResumeData((prev) => ({ ...prev, projects: newProjects }));
+        }
+      } else if (sectionType === "experience" && setResumeData) {
+        const oldIndex = parseInt(active.id.replace("work-", ""));
+        const newIndex = parseInt(over.id.replace("work-", ""));
+
+        if (oldIndex !== -1 && newIndex !== -1) {
+          const newExperience = arrayMove(
+            resumeData.workExperience,
+            oldIndex,
+            newIndex
+          );
+          setResumeData((prev) => ({ ...prev, workExperience: newExperience }));
+        }
+      }
+    }
   };
 
-  return (
-    <div className="flex h-full bg-white text-gray-800 min-h-full">
-      {/* Left Sidebar - Blue section */}
-      <div className="w-2/5 bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 relative overflow-hidden">
-        {/* Decorative diagonal element */}
-        <div className="absolute top-0 right-0 w-32 h-64 bg-white/10 transform rotate-45 translate-x-16 -translate-y-32"></div>
-        
-        <div className="relative z-10 p-8 text-white h-full">
-          {/* Profile Image */}
-          <div className="flex justify-center mb-8 mt-4">
-            <div className="w-36 h-36 rounded-full overflow-hidden bg-white shadow-xl border-4 border-white/30">
-              {resumeData.profileImage ? (
-                <Image
-                  src={resumeData.profileImage}
-                  alt="Profile"
-                  width={144}
-                  height={144}
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    // Hide broken image and show default fallback
-                    // Profile image failed to load
-                    e.currentTarget.style.display = 'none';
-                    const fallback = e.currentTarget.parentElement?.querySelector('.profile-fallback');
-                    if (fallback) {
-                      fallback.style.display = 'flex';
-                    }
-                  }}
-                />
-              ) : null}
-              <div className={`profile-fallback w-full h-full bg-gray-200 flex items-center justify-center ${resumeData.profileImage ? 'hidden' : 'flex'}`}>
-                <svg className="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                </svg>
-              </div>
-            </div>
+  // Define sections like Modern Template
+  const sections = [
+    {
+      id: "summary",
+      title: "Professional Summary",
+      content: resumeData.summary,
+    },
+    { id: "education", title: "Education", content: resumeData.education },
+    {
+      id: "experience",
+      title: "Experience",
+      content: resumeData.workExperience,
+    },
+    { id: "projects", title: "Projects", content: resumeData.projects },
+    { id: "skills", title: "Skills", content: resumeData.skills },
+    {
+      id: "softSkills",
+      title: "Soft Skills",
+      content:
+        resumeData.skills.find((skill) => skill.title === "Soft Skills")
+          ?.skills || [],
+    },
+    { id: "languages", title: "Languages", content: resumeData.languages },
+    { id: "certifications", title: "Certifications", content: resumeData.certifications },
+    
+    { id: "awards", title: "Awards", content: resumeData.awards },
+  ];
+
+  const orderedSections = sectionOrder
+    .map((id) => sections.find((section) => section.id === id))
+    .filter((section) => {
+      if (!section || !enabledSections[section.id]) return false;
+      // Filter out sections with empty content
+      if (Array.isArray(section.content)) {
+        return section.content.length > 0;
+      }
+      return section.content && section.content.trim().length > 0;
+    });
+
+  const renderSection = (section) => {
+    switch (section.id) {
+      case "summary":
+        return (
+          <div>
+            <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
+              {customSectionTitles.summary || "Professional Summary"}
+            </h2>
+            <p className='content !font-light !text-black text-justify'>
+              {resumeData.summary}
+            </p>
           </div>
+        );
 
-          {/* Name and Title */}
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold mb-2 tracking-wide">{resumeData.name || "Lorna Alvarado"}</h1>
-            <p className="text-xl font-light text-blue-100">{resumeData.position || "Marketing Manager"}</p>
+      case "education":
+        return resumeData.education.length > 0 ? (
+          <div>
+            <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
+              {customSectionTitles.education || "Education"}
+            </h2>
+            {resumeData.education.map((item, index) => (
+              <div
+                key={index}
+                className='mb-1 flex justify-between items-start'
+              >
+                <div className='flex-1'>
+                  <h3 className='content font-semibold text-gray-900'>
+                    {item.school}
+                  </h3>
+                  <p className='content !font-light !text-black'>{item.degree}</p>
+                </div>
+                <div className='ml-4 text-right'>
+                  <DateRange
+                    startYear={item.startYear}
+                    endYear={item.endYear}
+                    id={`education-${index}`}
+                  />
+                </div>
+              </div>
+            ))}
           </div>
+        ) : null;
 
-          {/* Contact Section */}
-          <div className="mb-8">
-            <h3 className="text-lg font-semibold mb-4 flex items-center">
-              <span className="w-6 h-6 mr-3">📞</span>
-              Contact
-            </h3>
-            <div className="space-y-3 text-sm">
-              <div className="flex items-center">
-                <span className="w-5 h-5 mr-3">📞</span>
-                <span>{resumeData.contactInformation || "+123-456-7890"}</span>
-              </div>
-              <div className="flex items-center">
-                <span className="w-5 h-5 mr-3">✉️</span>
-                <span className="break-all">{resumeData.email || "hello@reallygreatsite.com"}</span>
-              </div>
-              <div className="flex items-center">
-                <span className="w-5 h-5 mr-3">📍</span>
-                <span>{resumeData.address || "123 Anywhere St., Any City, ST 12345"}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* About Me Section */}
-          {resumeData.summary && (
-            <div className="mb-8">
-              <h3 className="text-lg font-semibold mb-4 flex items-center">
-                <span className="w-6 h-6 mr-3">👤</span>
-                {getSectionTitle('summary', 'About Me')}
-              </h3>
-              <p className="text-sm leading-relaxed text-blue-50">
-                {resumeData.summary}
-              </p>
-            </div>
-          )}
-
-          {/* Skills Section */}
-          {resumeData.skills.length > 0 && (
-            <div className="mb-8">
-              <h3 className="text-lg font-semibold mb-4 flex items-center">
-                <span className="w-6 h-6 mr-3">⚙️</span>
-                {getSectionTitle('skills', 'Skills')}
-              </h3>
-              <ul className="space-y-2 text-sm">
-                {resumeData.skills.map((skill, index) => (
-                  <li key={index} className="flex items-center">
-                    <span className="w-2 h-2 bg-white rounded-full mr-3"></span>
-                    <span>{skill.title}</span>
-                  </li>
+      case "experience":
+        return resumeData.workExperience.length > 0 ? (
+          <div>
+            <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
+              {customSectionTitles.experience || "Professional Experience"}
+            </h2>
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={(event) => handleItemDragEnd(event, "experience")}
+            >
+              <SortableContext
+                items={resumeData.workExperience.map((_, idx) => `work-${idx}`)}
+                strategy={verticalListSortingStrategy}
+              >
+                {resumeData.workExperience.map((item, index) => (
+                  <SortableItem key={`work-${index}`} id={`work-${index}`}>
+                    <div className='flex justify-between items-start mb-1'>
+                      <div className='flex-1'>
+                        <h3 className='content flex items-center gap-1 i-bold text-gray-900'>
+                          {item.position} |{" "}
+                          <p className='content !font-light !text-black'>
+                            {" "}
+                            {item.company}
+                          </p>
+                        </h3>
+                      </div>
+                      <div className='text-right'>
+                        <DateRange
+                          startYear={item.startYear}
+                          endYear={item.endYear}
+                          id={`work-experience-${index}`}
+                        />
+                      </div>
+                    </div>
+                    <p className='content !font-light !text-black mb-2'>
+                      {item.description}
+                    </p>
+                    {item.keyAchievements === "string" &&
+                      item.keyAchievements.trim() && (
+                        <ul className='content !font-light !text-black ml-4 space-y-1'>
+                          {item.keyAchievements
+                            .split("\n")
+                            .filter((achievement) => achievement.trim())
+                            .map((achievement, subIndex) => (
+                              <li key={`${item.company}-${index}-${subIndex}`} className='flex items-start gap-2'>
+                                <span className='text-black font-bold mt-0.5'>▸</span>
+                                <span className='flex-1'>{achievement}</span>
+                              </li>
+                            ))}
+                        </ul>
+                      )}
+                  </SortableItem>
                 ))}
-              </ul>
-            </div>
-          )}
+              </SortableContext>
+            </DndContext>
+          </div>
+        ) : null;
+
+      case "projects":
+        return resumeData.projects.length > 0 ? (
+          <div>
+            <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
+              {customSectionTitles.projects || "Projects"}
+            </h2>
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={(event) => handleItemDragEnd(event, "projects")}
+            >
+              <SortableContext
+                items={resumeData.projects.map((_, idx) => `project-${idx}`)}
+                strategy={verticalListSortingStrategy}
+              >
+                {resumeData.projects.map((item, index) => (
+                  <SortableItem
+                    key={`project-${index}`}
+                    id={`project-${index}`}
+                  >
+                    <div className='flex justify-between items-start mb-1'>
+                      <div className='flex-1'>
+                        <div className='flex items-center gap-2'>
+                          <h3 className='content i-bold text-gray-900'>
+                            {item.name}
+                          </h3>
+                          {item.link && (
+                            <Link
+                              href={item.link}
+                              className='text-gray-700 hover:text-black transition-colors inline-flex items-center gap-1'
+                              target='_blank'
+                              rel='noopener noreferrer'
+                              title='View project'
+                            >
+                              <FaExternalLinkSquareAlt className='w-3.5 h-3.5' />
+                            </Link>
+                          )}
+                        </div>
+                      </div>
+                      <div className='text-right'>
+                        <DateRange
+                          startYear={item.startYear}
+                          endYear={item.endYear}
+                          id={`projects-${index}`}
+                        />
+                      </div>
+                    </div>
+                    <p className='content !font-light !text-black mb-2'>
+                      {item.description}
+                    </p>
+                    {typeof item.keyAchievements === "string" &&
+                      item.keyAchievements.trim() && (
+                      <ul className='content !font-light !text-black ml-4 space-y-1'>
+                        {item.keyAchievements
+                          .split("\n")
+                          .filter((achievement) => achievement.trim())
+                          .map((achievement, subIndex) => (
+                            <li key={`${item.name}-${index}-${subIndex}`} className='flex items-start gap-2'>
+                              <span className='text-black font-bold mt-0.5'>▸</span>
+                              <span className='flex-1'>{achievement}</span>
+                            </li>
+                          ))}
+                      </ul>
+                    )}
+                  </SortableItem>
+                ))}
+              </SortableContext>
+            </DndContext>
+          </div>
+        ) : null;
+
+      case "skills":
+        return (
+          <div>
+            <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
+              {customSectionTitles.skills || "Technical Skills"}
+            </h2>
+            {resumeData.skills
+              .filter((skill) => skill.title !== "Soft Skills")
+              .map((skill, index) => (
+                <div key={`SKILLS-${index}`} className='mb-3'>
+                  <h3 className='content i-bold text-gray-900 mb-1'>
+                    {skill.title}
+                  </h3>
+                  <p className='content !font-light !text-black'>
+                    {skill.skills.join(", ")}
+                  </p>
+                </div>
+              ))}
+          </div>
+        );
+
+      case "softSkills":
+        return (
+          <div>
+            <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
+              {customSectionTitles.softSkills || "Soft Skills"}
+            </h2>
+            <p className='content !font-light !text-black'>{section.content.join(", ")}</p>
+          </div>
+        );
+
+      case "languages":
+        return resumeData.languages.length > 0 ? (
+          <div>
+            <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
+              {customSectionTitles.languages || "Languages"}
+            </h2>
+            <p className='text-sm font-light text-black leading-tight'>
+              {resumeData.languages.join(", ")}
+            </p>
+          </div>
+        ) : null;
+
+      case "certifications":
+        return resumeData.certifications.length > 0 ? (
+          <div>
+            <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
+              {customSectionTitles.certifications || "Certifications"}
+            </h2>
+            <ul className='content !font-light !text-black ml-4 space-y-1'>
+              {resumeData.certifications.map((cert, index) => (
+                <li key={index} className='flex items-start gap-2'>
+                  <span className='text-black font-bold mt-0.5'>▸</span>
+                  <div className='flex-1 flex items-center gap-2'>
+                    <span>
+                      {typeof cert === "string" ? cert : cert.name}
+                      {typeof cert === "object" && cert.issuer && (
+                        <span className='text-gray-600'> - {cert.issuer}</span>
+                      )}
+                    </span>
+                    {typeof cert === "object" &&
+                      cert.link &&
+                      cert.link.trim() !== "" && (
+                        <Link
+                          href={cert.link}
+                          className='text-gray-700 hover:text-black transition-colors inline-flex items-center gap-1'
+                          target='_blank'
+                          rel='noopener noreferrer'
+                          title='View certificate'
+                        >
+                        <FaExternalLinkSquareAlt className='w-3.5 h-3.5' />
+                      </Link>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null;
+
+    case "awards":
+  return resumeData.awards && resumeData.awards.length > 0 ? (
+    <div>
+      {/* Keep section title */}
+      <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
+        {customSectionTitles.awards || "Awards"}
+      </h2>
+
+      <ul className='content !font-light !text-black space-y-2'>
+        {resumeData.awards.map((award, index) => {
+          // Format date to match DateRange style
+          const formatDate = (dateString) => {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) return dateString;
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                           'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            return `${months[date.getMonth()]}, ${date.getFullYear()}`;
+          };
+          
+          return (
+            <li
+              key={index}
+              className='flex flex-row justify-between items-start gap-2 w-full'
+            >
+              <div className='flex flex-col flex-1'>
+                {/* Award Name as main heading */}
+                <span className='font-semibold text-gray-900'>
+                  {award.name || "Award Name"}
+                </span>
+
+                {/* Issuer */}
+                {award.issuer && (
+                  <span className='text-gray-600'>
+                    Issued by: {award.issuer}
+                  </span>
+                )}
+
+                {/* Optional Description */}
+                {award.description && (
+                  <span className='text-gray-800'>
+                    {award.description}
+                  </span>
+                )}
+              </div>
+
+              {/* Date or DateRange on Right Side */}
+              <div className='text-right whitespace-nowrap'>
+                {award.date ? (
+                  <p className="sub-content text-gray-500">
+                    {formatDate(award.date)}
+                  </p>
+                ) : (
+                  <DateRange
+                    startYear={award.startYear}
+                    endYear={award.endYear}
+                    id={`award-${index}`}
+                  />
+                )}
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  ) : null;
+
+
+
+
+      default:
+        return null;
+    }
+  };
+
+  // Prevent hydration mismatch
+  if (!isClient) {
+    return (
+      <div className='w-full h-full bg-white p-4'>
+        <div className='text-center mb-4'>
+          <h1 className='text-2xl font-bold text-gray-900'>
+            {resumeData.name}
+          </h1>
+          <p className='text-lg !text-gray-800'>{resumeData.position}</p>
+        </div>
+        <div className='animate-pulse'>
+          <div className='space-y-4'>
+            {orderedSections.map((section) => (
+              <div key={section.id} className='h-16 bg-gray-200 rounded'></div>
+            ))}
+          </div>
         </div>
       </div>
+    );
+  }
 
-      {/* Right Content Area */}
-      <div className="w-3/5 p-8 bg-gray-50">
-        {/* Education Section */}
-        {resumeData.education.length > 0 && (
-          <div className="mb-8">
-            <h3 className="text-xl font-bold mb-6 text-gray-800 flex items-center border-b-2 border-gray-300 pb-3">
-              <span className="w-8 h-8 mr-3 text-gray-600">🎓</span>
-              {getSectionTitle('education', 'Education')}
-            </h3>
-            <div className="space-y-6">
-              {resumeData.education.map((edu, index) => (
-                <div key={index} className="relative pl-8">
-                  {/* Timeline dot */}
-                  <div className="absolute left-0 top-1 w-3 h-3 bg-blue-500 rounded-full"></div>
-                  {/* Timeline line */}
-                  {index < resumeData.education.length - 1 && (
-                    <div className="absolute left-1.5 top-4 w-0.5 h-16 bg-gray-300"></div>
-                  )}
-                  
-                  <div className="flex justify-between items-start mb-2">
-                    <div className="flex-1">
-                      <div className="flex items-center mb-1">
-                        <span className="w-3 h-3 bg-blue-500 rounded-full mr-3"></span>
-                        <h4 className="font-semibold text-gray-800 text-base">{edu.degree}</h4>
-                      </div>
-                      <p className="text-blue-600 font-medium italic ml-6">{edu.school}</p>
-                    </div>
-                    <span className="text-sm text-gray-600 font-medium whitespace-nowrap ml-4">
-                      {edu.startYear} - {edu.endYear}
-                    </span>
-                  </div>
-                  {edu.description && (
-                    <p className="text-sm text-gray-600 leading-relaxed ml-6 mt-2">{edu.description}</p>
-                  )}
-                </div>
-              ))}
-            </div>
+  return (
+    <div className='w-full h-full bg-white '>
+      {/* Professional Header */}
+      <div className='text-center mb-2 no-break'>
+        <h1 className='name'>{resumeData.name}</h1>
+        <h2 className='profession'>{resumeData.position}</h2>
+
+        {/* Contact Information */}
+        <div className='flex justify-center items-center gap-4 contact mb-2'>
+          <div className='flex items-center gap-1'>
+            <MdPhone className='text-black' />
+            <span>{resumeData.contactInformation}</span>
           </div>
-        )}
-
-        {/* Experience Section */}
-        {resumeData.workExperience.length > 0 && (
-          <div className="mb-8">
-            <h3 className="text-xl font-bold mb-6 text-gray-800 flex items-center border-b-2 border-gray-300 pb-3">
-              <span className="w-8 h-8 mr-3 text-gray-600">💼</span>
-              {getSectionTitle('experience', 'Experience')}
-            </h3>
-            <div className="space-y-6">
-              {resumeData.workExperience.map((exp, index) => (
-                <div key={index} className="relative pl-8">
-                  {/* Timeline dot */}
-                  <div className="absolute left-0 top-1 w-3 h-3 bg-blue-500 rounded-full"></div>
-                  {/* Timeline line */}
-                  {index < resumeData.workExperience.length - 1 && (
-                    <div className="absolute left-1.5 top-4 w-0.5 h-20 bg-gray-300"></div>
-                  )}
-                  
-                  <div className="flex justify-between items-start mb-2">
-                    <div className="flex-1">
-                      <div className="flex items-center mb-1">
-                        <span className="w-3 h-3 bg-blue-500 rounded-full mr-3"></span>
-                        <h4 className="font-semibold text-gray-800 text-base">{exp.position}</h4>
-                      </div>
-                      <p className="text-blue-600 font-medium italic ml-6">{exp.company}</p>
-                    </div>
-                    <span className="text-sm text-gray-600 font-medium whitespace-nowrap ml-4">
-                      {exp.startYear} - {exp.endYear}
-                    </span>
-                  </div>
-                  {exp.description && (
-                    <p className="text-sm text-gray-600 leading-relaxed ml-6 mt-2">{exp.description}</p>
-                  )}
-                  {exp.keyAchievements && (
-                    <div className="ml-6 mt-3">
-                      <ul className="text-sm text-gray-600 space-y-1">
-                        {exp.keyAchievements.split('\n').filter(achievement => achievement.trim()).map((achievement, i) => (
-                          <li key={i} className="flex items-start">
-                            <span className="w-1.5 h-1.5 bg-blue-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                            <span>{achievement.trim()}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
+          <div className='flex items-center gap-1'>
+            <MdEmail className='text-black' />
+            <span>{resumeData.email}</span>
           </div>
-        )}
-
-        {/* Projects Section */}
-        {resumeData.projects.length > 0 && (
-          <div className="mb-8">
-            <h3 className="text-xl font-bold mb-6 text-gray-800 flex items-center border-b-2 border-gray-300 pb-3">
-              <span className="w-8 h-8 mr-3 text-gray-600">🚀</span>
-              {getSectionTitle('projects', 'Projects')}
-            </h3>
-            <div className="space-y-6">
-              {resumeData.projects.map((project, index) => (
-                <div key={index} className="relative pl-8">
-                  <div className="absolute left-0 top-1 w-3 h-3 bg-blue-500 rounded-full"></div>
-                  {index < resumeData.projects.length - 1 && (
-                    <div className="absolute left-1.5 top-4 w-0.5 h-16 bg-gray-300"></div>
-                  )}
-                  
-                  <div className="flex justify-between items-start mb-2">
-                    <div className="flex-1">
-                      <div className="flex items-center mb-1">
-                        <span className="w-3 h-3 bg-blue-500 rounded-full mr-3"></span>
-                        <h4 className="font-semibold text-gray-800 text-base">{project.title}</h4>
-                      </div>
-                    </div>
-                    <span className="text-sm text-gray-600 font-medium whitespace-nowrap ml-4">
-                      {project.startYear} - {project.endYear}
-                    </span>
-                  </div>
-                  {project.description && (
-                    <p className="text-sm text-gray-600 leading-relaxed ml-6 mt-2">{project.description}</p>
-                  )}
-                </div>
-              ))}
-            </div>
+          <div className='flex items-center gap-1'>
+            <MdLocationOn className='text-black' />
+            <span>{resumeData.address}</span>
           </div>
-        )}
+        </div>
 
-        {/* Languages Section */}
-        {resumeData.languages.length > 0 && (
-          <div className="mb-8">
-            <h3 className="text-xl font-bold mb-6 text-gray-800 flex items-center border-b-2 border-gray-300 pb-3">
-              <span className="w-8 h-8 mr-3 text-gray-600">🌐</span>
-              {getSectionTitle('languages', 'Languages')}
-            </h3>
-            <div className="flex flex-wrap gap-4">
-              {resumeData.languages.map((lang, index) => (
-                <span key={index} className="text-gray-700 text-sm font-medium">
-                  {lang.language}
-                  {index < resumeData.languages.length - 1 && <span className="text-gray-400 ml-2">•</span>}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Certifications Section */}
-        {resumeData.certifications.length > 0 && (
-          <div className="mb-8">
-            <h3 className="text-xl font-bold mb-6 text-gray-800 flex items-center border-b-2 border-gray-300 pb-3">
-              <span className="w-8 h-8 mr-3 text-gray-600">🏆</span>
-              {getSectionTitle('certifications', 'Certifications')}
-            </h3>
-            <div className="space-y-4">
-              {resumeData.certifications.map((cert, index) => (
-                <div key={index} className="relative pl-8">
-                  <div className="absolute left-0 top-1 w-3 h-3 bg-blue-500 rounded-full"></div>
-                  <div className="flex items-center mb-1">
-                    <span className="w-3 h-3 bg-blue-500 rounded-full mr-3"></span>
-                    <h4 className="font-semibold text-gray-800 text-base">{cert.title}</h4>
-                  </div>
-                  <p className="text-blue-600 font-medium italic ml-6">{cert.organization}</p>
-                  {cert.description && (
-                    <p className="text-sm text-gray-600 ml-6 mt-1">{cert.description}</p>
+        {/* Social Media */}
+        {resumeData.socialMedia.length > 0 &&
+        resumeData.socialMedia.length < 6 ? (
+          <div className='flex justify-center items-center gap-3 text-sm'>
+            {resumeData.socialMedia.map((socialMedia, index) => {
+              const icon = icons.find(
+                (icon) => icon.name === socialMedia.socialMedia.toLowerCase()
+              );
+              return (
+                <a
+                  href={`${
+                    socialMedia.socialMedia.toLowerCase() === "website"
+                      ? "https://"
+                      : socialMedia.socialMedia.toLowerCase() === "linkedin"
+                      ? "https://www."
+                      : "https://www."
+                  }${socialMedia.link}`}
+                  key={index}
+                  className='inline-flex items-center gap-1 text-black transition-colors'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
+                  {icon && React.cloneElement(icon.icon, { className: 'text-black' })}
+                  <span>{socialMedia.displayText || socialMedia.link}</span>
+                  {index !== resumeData.socialMedia.length - 1 && (
+                    <span>|</span>
                   )}
-                </div>
-              ))}
-            </div>
+                </a>
+              );
+            })}
+          </div>
+        ) : (
+          <div className='text-red-500'>
+            {" "}
+            Social Media links are limited to 5 entries
           </div>
         )}
       </div>
+
+      {/* Draggable Sections with Same System as Modern Template */}
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+      >
+        <SortableContext
+          items={orderedSections.map((section) => section.id)}
+          strategy={verticalListSortingStrategy}
+        >
+          {orderedSections.map((section) => (
+            <SortableSection key={section.id} id={section.id}>
+              {renderSection(section)}
+            </SortableSection>
+          ))}
+        </SortableContext>
+      </DndContext>
     </div>
   );
 };
 
-export default TemplateThree;
+export default TemplateFour;

@@ -32,4 +32,10 @@ export default defineSchema({
   })
     .index("by_session_token", ["sessionToken"])
     .index("by_user_id", ["userId"]),
+
+  resume: defineTable({
+    resume_data: v.string(),
+    owner:  v.id("users"),
+    // _id and _creationtime added automatically
+  }).index('by_owner_id',["owner"])
 });

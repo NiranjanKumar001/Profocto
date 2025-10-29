@@ -175,7 +175,7 @@ export const deleteSession = mutation({
       .query("sessions")
       .withIndex("by_session_token", (q) => q.eq("sessionToken", args.sessionToken))
       .first();
-    
+      
     if (session) {
       await ctx.db.delete(session._id);
     }

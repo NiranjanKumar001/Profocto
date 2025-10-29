@@ -10,6 +10,11 @@ const Education = () => {
     const { resumeData, setResumeData} = useContext(ResumeContext);
     const todayDate = useTodayDate();
 
+    // Auto-select text when input is focused
+    const handleFocus = (e) => {
+      e.target.select();
+    };
+
     const handleEducation = (e, index) => {
       const newEducation = [...resumeData.education];
       newEducation[index][e.target.name] = e.target.value;
@@ -54,6 +59,7 @@ const Education = () => {
                   className="other-input w-full"
                   value={education.school}
                   onChange={(e) => handleEducation(e, index)}
+                  onFocus={handleFocus}
                 />
               </div>
               <div>
@@ -65,6 +71,7 @@ const Education = () => {
                   className="other-input w-full"
                   value={education.degree}
                   onChange={(e) => handleEducation(e, index)}
+                  onFocus={handleFocus}
                 />
               </div>
             </div>
@@ -77,7 +84,7 @@ const Education = () => {
                   name="startYear"
                   value={education.startYear}
                   onChange={(e) => handleEducation(e, index)}
-                  className="other-input w-full"
+                  className="other-input w-full text-gray-200"
                   max={todayDate}
                   min={MIN_DATE}
                 />
@@ -89,7 +96,7 @@ const Education = () => {
                   name="endYear"
                   value={education.endYear}
                   onChange={(e) => handleEducation(e, index)}
-                  className="other-input w-full"
+                  className="other-input w-full text-gray-200"
                   max={todayDate}
                   min={MIN_DATE}
                 />

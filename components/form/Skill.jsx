@@ -8,6 +8,11 @@ import EditableFormTitle from './EditableFormTitle';
 const Skill = ({ title }) => {
   const { resumeData, setResumeData } = useContext(ResumeContext);
 
+  // Auto-select text when input is focused
+  const handleFocus = (e) => {
+    e.target.select();
+  };
+
   // skills
   const handleSkill = (e, index, title) => {
     const newSkills = [
@@ -96,6 +101,7 @@ const Skill = ({ title }) => {
               className="w-full other-input"
               value={skill}
               onChange={(e) => handleSkill(e, index, title)}
+              onFocus={handleFocus}
             />
           </div>
         ))}
