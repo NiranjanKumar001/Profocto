@@ -68,7 +68,6 @@ const TemplateFive = ({
     }
   };
 
-  // Define sections like Modern Template
   const sections = [
     {
       id: "summary",

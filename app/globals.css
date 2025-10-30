@@ -742,8 +742,14 @@
         background: white !important;
         overflow: visible !important;
         height: auto !important;
-        width: 210mm !important;
-        min-height: 297mm !important;
+    }
+    
+    /* Desktop only: Set A4 width */
+    @media (min-width: 769px) {
+        html, body {
+            width: 210mm !important;
+            min-height: 297mm !important;
+        }
     }
     
     /* Force main container to use full width */
