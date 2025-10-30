@@ -791,18 +791,21 @@
         box-sizing: border-box !important;
     }
 
-    /* Mobile Chrome specific: Reduce padding to compensate for browser margins */
+    /* Mobile Chrome specific: Try to counteract browser margins */
     @media (max-width: 768px) {
         html, body {
             width: 100% !important;
+            margin: -10mm !important;
+            padding: 0 !important;
         }
         
         .a4-preview {
             width: 100vw !important;
             max-width: 100vw !important;
+            margin: 10mm !important;
         }
         
-        /* Remove all padding on mobile - browser will add its own margins anyway */
+        /* Remove all padding on mobile - let browser handle margins */
         .preview-content {
             padding: 0 !important;
             margin: 0 !important;
