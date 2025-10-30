@@ -791,18 +791,18 @@
         box-sizing: border-box !important;
     }
 
-    /* Mobile Chrome specific: Try to counteract browser margins */
+    /* Mobile Chrome specific: Zero padding/margin for testing */
     @media (max-width: 768px) {
         html, body {
             width: 100% !important;
-            margin: -10mm !important;
+            margin: 0 !important;
             padding: 0 !important;
         }
         
         .a4-preview {
             width: 100vw !important;
             max-width: 100vw !important;
-            margin: 10mm !important;
+            margin: 0 !important;
         }
         
         /* Remove all padding on mobile - let browser handle margins */
