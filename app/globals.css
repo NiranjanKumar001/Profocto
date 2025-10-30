@@ -783,12 +783,29 @@
         overflow: visible !important;
     }
     
-    /* Add minimal padding to content itself for print */
+    /* Desktop: Match preview padding exactly */
     .preview-content {
-        padding: 10px 12px !important;
+        padding: 18.9px 22.7px !important;
         margin: 0 !important;
         width: 100% !important;
         box-sizing: border-box !important;
+    }
+
+    /* Mobile Chrome specific: Reduce padding to compensate for browser margins */
+    @media (max-width: 768px) {
+        html, body {
+            width: 100% !important;
+        }
+        
+        .a4-preview {
+            width: 100vw !important;
+            max-width: 100vw !important;
+        }
+        
+        .preview-content {
+            padding: 2mm 2mm !important;
+            margin: 0 !important;
+        }
     }
 
     /* Hide any unnecessary elements during print */
