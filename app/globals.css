@@ -802,8 +802,9 @@
             max-width: 100vw !important;
         }
         
+        /* Remove all padding on mobile - browser will add its own margins anyway */
         .preview-content {
-            padding: 2mm 2mm !important;
+            padding: 0 !important;
             margin: 0 !important;
         }
     }
