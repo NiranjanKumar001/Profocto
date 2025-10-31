@@ -141,11 +141,10 @@ const Preview = () => {
     });
     return initial;
   });
-  const [showSectionToggle, setShowSectionToggle] = useState(false);
-  const dropdownRef = useRef(null);
-  const toggleRef = useRef(null);
-
-  // Close dropdown when clicking outside
+  const [showSectionToggle, setShowSectionToggle] = useState(false);
+  const [isMobileView, setIsMobileView] = useState(false);
+  const dropdownRef = useRef(null);
+  const toggleRef = useRef(null);  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -653,6 +652,14 @@ const ClassicTemplate = ({
 
   useEffect(() => {
     setIsClient(true);
+    
+    // Check if mobile view
+    const checkMobile = () => {
+      setIsMobileView(window.innerWidth <= 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   // Handle drag end for items within sections (same as Modern Template)
@@ -777,7 +784,7 @@ const ClassicTemplate = ({
               {customSectionTitles.experience || "Professional Experience"}
             </h2>
             {/* Desktop: Enable nested drag and drop for individual items */}
-            {typeof window !== 'undefined' && window.innerWidth > 768 ? (
+            {!isMobileView ? (
               <DndContext
                 sensors={sensors}
                 collisionDetection={closestCenter}
@@ -860,7 +867,7 @@ const ClassicTemplate = ({
               {customSectionTitles.projects || "Projects"}
             </h2>
             {/* Desktop: Enable nested drag and drop for individual items */}
-            {typeof window !== 'undefined' && window.innerWidth > 768 ? (
+            {!isMobileView ? (
               <DndContext
                 sensors={sensors}
                 collisionDetection={closestCenter}
