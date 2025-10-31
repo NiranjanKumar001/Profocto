@@ -649,6 +649,7 @@ const ClassicTemplate = ({
 }) => {
   const { customSectionTitles } = useSectionTitles();
   const [isClient, setIsClient] = useState(false);
+  const [isMobileView, setIsMobileView] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
