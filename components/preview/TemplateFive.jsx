@@ -29,41 +29,62 @@ const TemplateFive = ({
 }) => {
   const { customSectionTitles } = useSectionTitles();
   const [isClient, setIsClient] = useState(false);
+  const [isMobileView, setIsMobileView] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-  // Handle drag end for items within sections (same as Modern Template)
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobileView(window.innerWidth <= 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Handle drag end for items within sections
   const handleItemDragEnd = (event, sectionType) => {
     const { active, over } = event;
 
-    if (active.id !== over?.id) {
-      // Handle reordering within the same section
-      if (sectionType === "projects" && setResumeData) {
-        const oldIndex = parseInt(active.id.replace("project-", ""));
-        const newIndex = parseInt(over.id.replace("project-", ""));
-
+    if (active.id !== over?.id && setResumeData) {
+      const moveData = (prefix, dataKey) => {
+        const oldIndex = parseInt(active.id.replace(prefix, ""));
+        const newIndex = parseInt(over.id.replace(prefix, ""));
         if (oldIndex !== -1 && newIndex !== -1) {
-          const newProjects = arrayMove(
-            resumeData.projects,
-            oldIndex,
-            newIndex
-          );
-          setResumeData((prev) => ({ ...prev, projects: newProjects }));
+          const newData = arrayMove(resumeData[dataKey], oldIndex, newIndex);
+          setResumeData((prev) => ({ ...prev, [dataKey]: newData }));
         }
-      } else if (sectionType === "experience" && setResumeData) {
-        const oldIndex = parseInt(active.id.replace("work-", ""));
-        const newIndex = parseInt(over.id.replace("work-", ""));
+      };
 
-        if (oldIndex !== -1 && newIndex !== -1) {
-          const newExperience = arrayMove(
-            resumeData.workExperience,
-            oldIndex,
-            newIndex
-          );
-          setResumeData((prev) => ({ ...prev, workExperience: newExperience }));
-        }
+      switch (sectionType) {
+        case "projects":
+          moveData("project-", "projects");
+          break;
+        case "experience":
+          moveData("work-", "workExperience");
+          break;
+        case "education":
+          moveData("edu-", "education");
+          break;
+        case "skills":
+          const filteredSkills = resumeData.skills.filter(group => group.title !== "Soft Skills");
+          const oldIndex = parseInt(active.id.replace("skill-", ""));
+          const newIndex = parseInt(over.id.replace("skill-", ""));
+          if (oldIndex !== -1 && newIndex !== -1) {
+            const newSkills = arrayMove(filteredSkills, oldIndex, newIndex);
+            const softSkills = resumeData.skills.find(group => group.title === "Soft Skills");
+            const finalSkills = softSkills ? [...newSkills, softSkills] : newSkills;
+            setResumeData((prev) => ({ ...prev, skills: finalSkills }));
+          }
+          break;
+        case "certifications":
+          moveData("cert-", "certifications");
+          break;
+        case "awards":
+          moveData("award-", "awards");
+          break;
       }
     }
   };
@@ -133,25 +154,57 @@ const TemplateFive = ({
             <h2 className='text-sm font-bold uppercase mb-2 pb-0.5 border-b border-gray-400'>
               {customSectionTitles.education || "Education"}
             </h2>
-            {resumeData.education.map((item, index) => (
-              <div
-                key={index}
-                className='mb-3'
+            {!isMobileView ? (
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={(event) => handleItemDragEnd(event, "education")}
               >
-                <div className='flex justify-between items-baseline mb-1'>
-                  <h3 className='text-xs font-semibold text-black'>
-                    {item.degree}
-                  </h3>
-                  <DateRange
-                    startYear={item.startYear}
-                    endYear={item.endYear}
-                    id={`education-${index}`}
-                    className='text-xs text-gray-600'
-                  />
+                <SortableContext
+                  items={resumeData.education.map((_, idx) => `edu-${idx}`)}
+                  strategy={verticalListSortingStrategy}
+                >
+                  {resumeData.education.map((item, index) => (
+                    <SortableItem key={`edu-${index}`} id={`edu-${index}`}>
+                      <div className='mb-3'>
+                        <div className='flex justify-between items-baseline mb-1'>
+                          <h3 className='text-xs font-semibold text-black'>
+                            {item.degree}
+                          </h3>
+                          <DateRange
+                            startYear={item.startYear}
+                            endYear={item.endYear}
+                            id={`education-${index}`}
+                            className='text-xs text-gray-600'
+                          />
+                        </div>
+                        <p className='text-xs font-light text-black'>{item.school}</p>
+                      </div>
+                    </SortableItem>
+                  ))}
+                </SortableContext>
+              </DndContext>
+            ) : (
+              resumeData.education.map((item, index) => (
+                <div
+                  key={index}
+                  className='mb-3'
+                >
+                  <div className='flex justify-between items-baseline mb-1'>
+                    <h3 className='text-xs font-semibold text-black'>
+                      {item.degree}
+                    </h3>
+                    <DateRange
+                      startYear={item.startYear}
+                      endYear={item.endYear}
+                      id={`education-${index}`}
+                      className='text-xs text-gray-600'
+                    />
+                  </div>
+                  <p className='text-xs font-light text-black'>{item.school}</p>
                 </div>
-                <p className='text-xs font-light text-black'>{item.school}</p>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         ) : null;
 
@@ -161,16 +214,17 @@ const TemplateFive = ({
             <h2 className='text-sm font-bold uppercase mb-2 pb-0.5 border-b border-gray-400'>
               {customSectionTitles.experience || "Professional Experience"}
             </h2>
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragEnd={(event) => handleItemDragEnd(event, "experience")}
-            >
-              <SortableContext
-                items={resumeData.workExperience.map((_, idx) => `work-${idx}`)}
-                strategy={verticalListSortingStrategy}
+            {!isMobileView ? (
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={(event) => handleItemDragEnd(event, "experience")}
               >
-                {resumeData.workExperience.map((item, index) => (
+                <SortableContext
+                  items={resumeData.workExperience.map((_, idx) => `work-${idx}`)}
+                  strategy={verticalListSortingStrategy}
+                >
+                  {resumeData.workExperience.map((item, index) => (
                   <SortableItem key={`work-${index}`} id={`work-${index}`}>
                     <div className='mb-3'>
                       <div className='flex justify-between items-baseline mb-1'>
@@ -208,6 +262,42 @@ const TemplateFive = ({
                 ))}
               </SortableContext>
             </DndContext>
+            ) : (
+              resumeData.workExperience.map((item, index) => (
+                <div key={index} className='mb-3'>
+                  <div className='flex justify-between items-baseline mb-1'>
+                    <h3 className='text-xs font-bold'>
+                      {item.position}
+                    </h3>
+                    <DateRange
+                      startYear={item.startYear}
+                      endYear={item.endYear}
+                      id={`work-experience-mobile-${index}`}
+                      className='text-xs text-gray-600'
+                    />
+                  </div>
+                  <p className='text-xs text-gray-700 mb-1'>{item.company}</p>
+                  {item.description && (
+                    <p className='text-xs font-sans leading-relaxed mb-1.5 text-gray-800'>
+                      {item.description}
+                    </p>
+                  )}
+                  {typeof item.keyAchievements === "string" &&
+                    item.keyAchievements.trim() && (
+                      <ul className='list-disc list-inside text-xs font-sans leading-relaxed space-y-0.5 text-gray-800'>
+                        {item.keyAchievements
+                          .split("\n")
+                          .filter((achievement) => achievement.trim())
+                          .map((achievement, subIndex) => (
+                            <li key={`${item.company}-mobile-${index}-${subIndex}`}>
+                              {achievement}
+                            </li>
+                          ))}
+                      </ul>
+                    )}
+                </div>
+              ))
+            )}
           </div>
         ) : null;
 
@@ -217,15 +307,16 @@ const TemplateFive = ({
             <h2 className='text-sm font-bold uppercase mb-2 pb-0.5 border-b border-gray-400'>
               {customSectionTitles.projects || "Projects"}
             </h2>
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragEnd={(event) => handleItemDragEnd(event, "projects")}
-            >
-              <SortableContext
-                items={resumeData.projects.map((_, idx) => `project-${idx}`)}
-                strategy={verticalListSortingStrategy}
+            {!isMobileView ? (
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={(event) => handleItemDragEnd(event, "projects")}
               >
+                <SortableContext
+                  items={resumeData.projects.map((_, idx) => `project-${idx}`)}
+                  strategy={verticalListSortingStrategy}
+                >
                 {resumeData.projects.map((item, index) => (
                   <SortableItem
                     key={`project-${index}`}
@@ -278,6 +369,53 @@ const TemplateFive = ({
                 ))}
               </SortableContext>
             </DndContext>
+            ) : (
+              resumeData.projects.map((item, index) => (
+                <div key={index} className='mb-3'>
+                  <div className='flex justify-between items-baseline mb-1'>
+                    <div className='flex items-center gap-2'>
+                      <h3 className='text-xs font-bold'>
+                        {item.name}
+                      </h3>
+                      {item.link && (
+                        <Link
+                          href={item.link}
+                          className='text-black hover:text-gray-700 transition-colors'
+                          target='_blank'
+                          rel='noopener noreferrer'
+                        >
+                          <FaExternalLinkAlt className='w-3 h-3 text-black' />
+                        </Link>
+                      )}
+                    </div>
+                    <DateRange
+                      startYear={item.startYear}
+                      endYear={item.endYear}
+                      id={`projects-mobile-${index}`}
+                      className='text-xs text-gray-600'
+                    />
+                  </div>
+                  {item.description && (
+                    <p className='text-xs font-sans leading-relaxed mb-1.5 text-gray-800'>
+                      {item.description}
+                    </p>
+                  )}
+                  {typeof item.keyAchievements === "string" &&
+                    item.keyAchievements.trim() && (
+                      <ul className='list-disc list-inside text-xs font-sans leading-relaxed space-y-0.5 text-gray-800'>
+                        {item.keyAchievements
+                          .split("\n")
+                          .filter((achievement) => achievement.trim())
+                          .map((achievement, subIndex) => (
+                            <li key={`${item.name}-mobile-${index}-${subIndex}`}>
+                              {achievement}
+                            </li>
+                          ))}
+                      </ul>
+                    )}
+                </div>
+              ))
+            )}
           </div>
         ) : null;
 
@@ -288,18 +426,46 @@ const TemplateFive = ({
               {customSectionTitles.skills || "Skills"}
             </h2>
             <div className='space-y-2'>
-              {resumeData.skills
-                .filter((skill) => skill.title !== "Soft Skills")
-                .map((skill, index) => (
-                  <div key={`SKILLS-${index}`}>
-                    <h3 className='text-xs font-bold mb-1 text-gray-900'>
-                      {skill.title}
-                    </h3>
-                    <p className='text-xs font-sans leading-relaxed text-gray-800'>
-                      {skill.skills.join(" • ")}
-                    </p>
-                  </div>
-                ))}
+              {!isMobileView ? (
+                <DndContext
+                  sensors={sensors}
+                  collisionDetection={closestCenter}
+                  onDragEnd={(event) => handleItemDragEnd(event, "skills")}
+                >
+                  <SortableContext
+                    items={resumeData.skills.filter((skill) => skill.title !== "Soft Skills").map((_, idx) => `skill-${idx}`)}
+                    strategy={verticalListSortingStrategy}
+                  >
+                    {resumeData.skills
+                      .filter((skill) => skill.title !== "Soft Skills")
+                      .map((skill, index) => (
+                        <SortableItem key={`skill-${index}`} id={`skill-${index}`}>
+                          <div>
+                            <h3 className='text-xs font-bold mb-1 text-gray-900'>
+                              {skill.title}
+                            </h3>
+                            <p className='text-xs font-sans leading-relaxed text-gray-800'>
+                              {skill.skills.join(" • ")}
+                            </p>
+                          </div>
+                        </SortableItem>
+                      ))}
+                  </SortableContext>
+                </DndContext>
+              ) : (
+                resumeData.skills
+                  .filter((skill) => skill.title !== "Soft Skills")
+                  .map((skill, index) => (
+                    <div key={`SKILLS-${index}`}>
+                      <h3 className='text-xs font-bold mb-1 text-gray-900'>
+                        {skill.title}
+                      </h3>
+                      <p className='text-xs font-sans leading-relaxed text-gray-800'>
+                        {skill.skills.join(" • ")}
+                      </p>
+                    </div>
+                  ))
+              )}
             </div>
           </div>
         );
@@ -341,7 +507,124 @@ const TemplateFive = ({
             <h2 className='text-sm font-bold uppercase mb-2 pb-0.5 border-b border-gray-400'>
               {customSectionTitles.certifications || "Certifications"}
             </h2>
-            {resumeData.certifications.map((cert, index) => {
+            {!isMobileView ? (
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={(event) => handleItemDragEnd(event, "certifications")}
+              >
+                <SortableContext
+                  items={resumeData.certifications.map((_, idx) => `cert-${idx}`)}
+                  strategy={verticalListSortingStrategy}
+                >
+                  {resumeData.certifications.map((cert, index) => {
+                    // Format date to match DateRange style
+                    const formatDate = (dateString) => {
+                      if (!dateString) return '';
+                      const date = new Date(dateString);
+                      if (isNaN(date.getTime())) return dateString;
+                      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                                     'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                      return `${months[date.getMonth()]}, ${date.getFullYear()}`;
+                    };
+                    
+                    return (
+                      <SortableItem key={`cert-${index}`} id={`cert-${index}`}>
+                        <div className='mb-2'>
+                          <div className='flex justify-between items-baseline mb-0.5'>
+                            <div className='flex items-center gap-2'>
+                              <h3 className='text-xs font-bold text-gray-900'>
+                                {typeof cert === "string" ? cert : cert.name}
+                              </h3>
+                              {typeof cert === "object" &&
+                                cert.link &&
+                                cert.link.trim() !== "" && (
+                                  <Link
+                                    href={cert.link}
+                                    className='text-black hover:text-gray-700 transition-colors'
+                                    target='_blank'
+                                    rel='noopener noreferrer'
+                                  >
+                                    <FaExternalLinkAlt className='w-3 h-3 text-black' />
+                                  </Link>
+                                )}
+                            </div>
+                            {typeof cert === "object" && cert.date && (
+                              <span className='text-xs text-gray-600'>{formatDate(cert.date)}</span>
+                            )}
+                          </div>
+                          {typeof cert === "object" && cert.issuer && (
+                            <p className='text-xs text-gray-700'>{cert.issuer}</p>
+                          )}
+                        </div>
+                      </SortableItem>
+                    );
+                  })}
+                </SortableContext>
+              </DndContext>
+            ) : (
+              resumeData.certifications.map((cert, index) => {
+                // Format date to match DateRange style
+                const formatDate = (dateString) => {
+                  if (!dateString) return '';
+                  const date = new Date(dateString);
+                  if (isNaN(date.getTime())) return dateString;
+                  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                                 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                  return `${months[date.getMonth()]}, ${date.getFullYear()}`;
+                };
+                
+                return (
+                  <div key={index} className='mb-2'>
+                    <div className='flex justify-between items-baseline mb-0.5'>
+                      <div className='flex items-center gap-2'>
+                        <h3 className='text-xs font-bold text-gray-900'>
+                          {typeof cert === "string" ? cert : cert.name}
+                        </h3>
+                        {typeof cert === "object" &&
+                          cert.link &&
+                          cert.link.trim() !== "" && (
+                            <Link
+                              href={cert.link}
+                              className='text-black hover:text-gray-700 transition-colors'
+                              target='_blank'
+                              rel='noopener noreferrer'
+                            >
+                              <FaExternalLinkAlt className='w-3 h-3 text-black' />
+                            </Link>
+                          )}
+                      </div>
+                      {typeof cert === "object" && cert.date && (
+                        <span className='text-xs text-gray-600'>{formatDate(cert.date)}</span>
+                      )}
+                    </div>
+                    {typeof cert === "object" && cert.issuer && (
+                      <p className='text-xs text-gray-700'>{cert.issuer}</p>
+                    )}
+                  </div>
+                );
+              })
+            )}
+          </div>
+        ) : null;
+
+      case "awards":
+  return resumeData.awards && resumeData.awards.length > 0 ? (
+    <div className='mb-4'>
+      <h2 className='text-sm font-bold uppercase mb-2 pb-0.5 border-b border-gray-400'>
+        {customSectionTitles.awards || "Awards"}
+      </h2>
+      {!isMobileView ? (
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={(event) => handleItemDragEnd(event, "awards")}
+        >
+          <SortableContext
+            items={resumeData.awards.map((_, idx) => `award-${idx}`)}
+            strategy={verticalListSortingStrategy}
+          >
+            {resumeData.awards.map((award, index) => {
               // Format date to match DateRange style
               const formatDate = (dateString) => {
                 if (!dateString) return '';
@@ -353,93 +636,98 @@ const TemplateFive = ({
               };
               
               return (
-                <div key={index} className='mb-2'>
-                  <div className='flex justify-between items-baseline mb-0.5'>
-                    <div className='flex items-center gap-2'>
+                <SortableItem key={`award-${index}`} id={`award-${index}`}>
+                  <div className='mb-2'>
+                    <div className='flex justify-between items-baseline mb-0.5'>
+                      {/* Award Name (now main heading) */}
                       <h3 className='text-xs font-bold text-gray-900'>
-                        {typeof cert === "string" ? cert : cert.name}
+                        {award.name || "Award Name"}
                       </h3>
-                      {typeof cert === "object" &&
-                        cert.link &&
-                        cert.link.trim() !== "" && (
-                          <Link
-                            href={cert.link}
-                            className='text-black hover:text-gray-700 transition-colors'
-                            target='_blank'
-                            rel='noopener noreferrer'
-                          >
-                            <FaExternalLinkAlt className='w-3 h-3 text-black' />
-                          </Link>
+
+                      {/* Date or Year on the Right */}
+                      <div className='text-xs text-gray-600'>
+                        {award.date ? (
+                          <span>{formatDate(award.date)}</span>
+                        ) : (
+                          <DateRange
+                            startYear={award.startYear}
+                            endYear={award.endYear}
+                            id={`award-${index}`}
+                          />
                         )}
+                      </div>
                     </div>
-                    {typeof cert === "object" && cert.date && (
-                      <span className='text-xs text-gray-600'>{formatDate(cert.date)}</span>
+
+                    {/* Issuer */}
+                    {award.issuer && (
+                      <p className='text-xs text-gray-700'>
+                        Issued by: {award.issuer}
+                      </p>
+                    )}
+
+                    {/* Description (optional) */}
+                    {award.description && (
+                      <p className='text-xs text-gray-800 font-sans leading-relaxed'>
+                        {award.description}
+                      </p>
                     )}
                   </div>
-                  {typeof cert === "object" && cert.issuer && (
-                    <p className='text-xs text-gray-700'>{cert.issuer}</p>
-                  )}
-                </div>
+                </SortableItem>
               );
             })}
-          </div>
-        ) : null;
+          </SortableContext>
+        </DndContext>
+      ) : (
+        resumeData.awards.map((award, index) => {
+          // Format date to match DateRange style
+          const formatDate = (dateString) => {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) return dateString;
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                           'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            return `${months[date.getMonth()]}, ${date.getFullYear()}`;
+          };
+          
+          return (
+            <div key={index} className='mb-2'>
+              <div className='flex justify-between items-baseline mb-0.5'>
+                {/* Award Name (now main heading) */}
+                <h3 className='text-xs font-bold text-gray-900'>
+                  {award.name || "Award Name"}
+                </h3>
 
-      case "awards":
-  return resumeData.awards && resumeData.awards.length > 0 ? (
-    <div className='mb-4'>
-      <h2 className='text-sm font-bold uppercase mb-2 pb-0.5 border-b border-gray-400'>
-        {customSectionTitles.awards || "Awards"}
-      </h2>
-      {resumeData.awards.map((award, index) => {
-        // Format date to match DateRange style
-        const formatDate = (dateString) => {
-          if (!dateString) return '';
-          const date = new Date(dateString);
-          if (isNaN(date.getTime())) return dateString;
-          const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
-                         'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-          return `${months[date.getMonth()]}, ${date.getFullYear()}`;
-        };
-        
-        return (
-          <div key={index} className='mb-2'>
-            <div className='flex justify-between items-baseline mb-0.5'>
-              {/* Award Name (now main heading) */}
-              <h3 className='text-xs font-bold text-gray-900'>
-                {award.name || "Award Name"}
-              </h3>
-
-              {/* Date or Year on the Right */}
-              <div className='text-xs text-gray-600'>
-                {award.date ? (
-                  <span>{formatDate(award.date)}</span>
-                ) : (
-                  <DateRange
-                    startYear={award.startYear}
-                    endYear={award.endYear}
-                    id={`award-${index}`}
-                  />
-                )}
+                {/* Date or Year on the Right */}
+                <div className='text-xs text-gray-600'>
+                  {award.date ? (
+                    <span>{formatDate(award.date)}</span>
+                  ) : (
+                    <DateRange
+                      startYear={award.startYear}
+                      endYear={award.endYear}
+                      id={`award-mobile-${index}`}
+                    />
+                  )}
+                </div>
               </div>
+
+              {/* Issuer */}
+              {award.issuer && (
+                <p className='text-xs text-gray-700'>
+                  Issued by: {award.issuer}
+                </p>
+              )}
+
+              {/* Description (optional) */}
+              {award.description && (
+                <p className='text-xs text-gray-800 font-sans leading-relaxed'>
+                  {award.description}
+                </p>
+              )}
             </div>
-
-            {/* Issuer */}
-            {award.issuer && (
-              <p className='text-xs text-gray-700'>
-                Issued by: {award.issuer}
-              </p>
-            )}
-
-            {/* Description (optional) */}
-            {award.description && (
-              <p className='text-xs text-gray-800 font-sans leading-relaxed'>
-                {award.description}
-              </p>
-            )}
-          </div>
-        );
-      })}
+          );
+        })
+      )}
     </div>
   ) : null;
 
