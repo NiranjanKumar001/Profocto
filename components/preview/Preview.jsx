@@ -581,7 +581,7 @@ export const SortableSection = ({ id, children }) => {
         <div 
           {...attributes}
           {...listeners}
-          className="absolute -left-8 top-0 bottom-0 w-6 cursor-grab hover:bg-pink-100 opacity-0 group-hover:opacity-100 transition-opacity hidden lg:flex items-center justify-center rounded-l"
+          className="exclude-print absolute -left-8 top-0 bottom-0 w-6 cursor-grab hover:bg-pink-100 opacity-0 group-hover:opacity-100 transition-opacity hidden lg:flex items-center justify-center rounded-l"
         >
           <div className="text-gray-400 text-xs">⋮⋮</div>
         </div>
@@ -592,15 +592,15 @@ export const SortableSection = ({ id, children }) => {
         <div 
           {...attributes}
           {...listeners}
-          className="absolute left-0 top-0 bottom-0 w-10 flex items-center justify-center cursor-grab active:cursor-grabbing bg-gradient-to-r from-pink-50 to-transparent z-10"
+          className="exclude-print absolute left-0 top-0 bottom-0 w-10 flex items-center justify-center cursor-grab active:cursor-grabbing bg-gradient-to-r from-pink-50 to-transparent z-10"
           data-drag-handle
         >
           <div className="text-gray-400 text-lg">⋮⋮</div>
         </div>
       )}
       
-      {/* Content with padding on mobile to avoid drag handle */}
-      <div className={isMobile ? "pl-10" : ""}>
+      {/* Content with padding on mobile to avoid drag handle (removed in print) */}
+      <div className={isMobile ? "pl-10 print:pl-0" : ""}>
         {children}
       </div>
     </div>
