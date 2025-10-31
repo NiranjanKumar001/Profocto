@@ -422,14 +422,40 @@ const TemplateFour = ({
         ) : null;
 
       case "skills":
-        return (
+        const technicalSkills = resumeData.skills.filter((skill) => skill.title !== "Soft Skills");
+        return technicalSkills.length > 0 ? (
           <div>
             <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.skills || "Technical Skills"}
             </h2>
-            {resumeData.skills
-              .filter((skill) => skill.title !== "Soft Skills")
-              .map((skill, index) => (
+            {/* Desktop: Enable nested drag and drop */}
+            {!isMobileView ? (
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={(event) => handleItemDragEnd(event, "skills")}
+              >
+                <SortableContext
+                  items={technicalSkills.map((_, idx) => `skill-${idx}`)}
+                  strategy={verticalListSortingStrategy}
+                >
+                  {technicalSkills.map((skill, index) => (
+                    <SortableItem key={`skill-${index}`} id={`skill-${index}`}>
+                      <div className='mb-3'>
+                        <h3 className='content i-bold text-gray-900 mb-1'>
+                          {skill.title}
+                        </h3>
+                        <p className='content !font-light !text-black'>
+                          {skill.skills.join(", ")}
+                        </p>
+                      </div>
+                    </SortableItem>
+                  ))}
+                </SortableContext>
+              </DndContext>
+            ) : (
+              /* Mobile: Disable nested drag, show items normally */
+              technicalSkills.map((skill, index) => (
                 <div key={`SKILLS-${index}`} className='mb-3'>
                   <h3 className='content i-bold text-gray-900 mb-1'>
                     {skill.title}
@@ -438,9 +464,10 @@ const TemplateFour = ({
                     {skill.skills.join(", ")}
                   </p>
                 </div>
-              ))}
+              ))
+            )}
           </div>
-        );
+        ) : null;
 
       case "softSkills":
         return (
@@ -470,103 +497,202 @@ const TemplateFour = ({
             <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.certifications || "Certifications"}
             </h2>
-            <ul className='content !font-light !text-black ml-4 space-y-1'>
-              {resumeData.certifications.map((cert, index) => (
-                <li key={index} className='flex items-start gap-2'>
-                  <span className='text-black font-bold mt-0.5'>▸</span>
-                  <div className='flex-1 flex items-center gap-2'>
-                    <span>
-                      {typeof cert === "string" ? cert : cert.name}
-                      {typeof cert === "object" && cert.issuer && (
-                        <span className='text-gray-600'> - {cert.issuer}</span>
+            {/* Desktop: Enable nested drag and drop */}
+            {!isMobileView ? (
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={(event) => handleItemDragEnd(event, "certifications")}
+              >
+                <SortableContext
+                  items={resumeData.certifications.map((_, idx) => `cert-${idx}`)}
+                  strategy={verticalListSortingStrategy}
+                >
+                  <ul className='content !font-light !text-black ml-4 space-y-1'>
+                    {resumeData.certifications.map((cert, index) => (
+                      <SortableItem key={`cert-${index}`} id={`cert-${index}`}>
+                        <li className='flex items-start gap-2'>
+                          <span className='text-black font-bold mt-0.5'>▸</span>
+                          <div className='flex-1 flex items-center gap-2'>
+                            <span>
+                              {typeof cert === "string" ? cert : cert.name}
+                              {typeof cert === "object" && cert.issuer && (
+                                <span className='text-gray-600'> - {cert.issuer}</span>
+                              )}
+                            </span>
+                            {typeof cert === "object" &&
+                              cert.link &&
+                              cert.link.trim() !== "" && (
+                                <Link
+                                  href={cert.link}
+                                  className='text-gray-700 hover:text-black transition-colors inline-flex items-center gap-1'
+                                  target='_blank'
+                                  rel='noopener noreferrer'
+                                  title='View certificate'
+                                >
+                                <FaExternalLinkSquareAlt className='w-3.5 h-3.5' />
+                              </Link>
+                            )}
+                          </div>
+                        </li>
+                      </SortableItem>
+                    ))}
+                  </ul>
+                </SortableContext>
+              </DndContext>
+            ) : (
+              /* Mobile: Disable nested drag, show items normally */
+              <ul className='content !font-light !text-black ml-4 space-y-1'>
+                {resumeData.certifications.map((cert, index) => (
+                  <li key={index} className='flex items-start gap-2'>
+                    <span className='text-black font-bold mt-0.5'>▸</span>
+                    <div className='flex-1 flex items-center gap-2'>
+                      <span>
+                        {typeof cert === "string" ? cert : cert.name}
+                        {typeof cert === "object" && cert.issuer && (
+                          <span className='text-gray-600'> - {cert.issuer}</span>
+                        )}
+                      </span>
+                      {typeof cert === "object" &&
+                        cert.link &&
+                        cert.link.trim() !== "" && (
+                          <Link
+                            href={cert.link}
+                            className='text-gray-700 hover:text-black transition-colors inline-flex items-center gap-1'
+                            target='_blank'
+                            rel='noopener noreferrer'
+                            title='View certificate'
+                          >
+                          <FaExternalLinkSquareAlt className='w-3.5 h-3.5' />
+                        </Link>
                       )}
-                    </span>
-                    {typeof cert === "object" &&
-                      cert.link &&
-                      cert.link.trim() !== "" && (
-                        <Link
-                          href={cert.link}
-                          className='text-gray-700 hover:text-black transition-colors inline-flex items-center gap-1'
-                          target='_blank'
-                          rel='noopener noreferrer'
-                          title='View certificate'
-                        >
-                        <FaExternalLinkSquareAlt className='w-3.5 h-3.5' />
-                      </Link>
-                    )}
-                  </div>
-                </li>
-              ))}
-            </ul>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         ) : null;
 
     case "awards":
-  return resumeData.awards && resumeData.awards.length > 0 ? (
-    <div>
-      {/* Keep section title */}
-      <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
-        {customSectionTitles.awards || "Awards"}
-      </h2>
-
-      <ul className='content !font-light !text-black space-y-2'>
-        {resumeData.awards.map((award, index) => {
-          // Format date to match DateRange style
-          const formatDate = (dateString) => {
-            if (!dateString) return '';
-            const date = new Date(dateString);
-            if (isNaN(date.getTime())) return dateString;
-            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
-                           'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-            return `${months[date.getMonth()]}, ${date.getFullYear()}`;
-          };
-          
-          return (
-            <li
-              key={index}
-              className='flex flex-row justify-between items-start gap-2 w-full'
+      return resumeData.awards && resumeData.awards.length > 0 ? (
+        <div>
+          <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
+            {customSectionTitles.awards || "Awards"}
+          </h2>
+          {/* Desktop: Enable nested drag and drop */}
+          {!isMobileView ? (
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={(event) => handleItemDragEnd(event, "awards")}
             >
-              <div className='flex flex-col flex-1'>
-                {/* Award Name as main heading */}
-                <span className='font-semibold text-gray-900'>
-                  {award.name || "Award Name"}
-                </span>
-
-                {/* Issuer */}
-                {award.issuer && (
-                  <span className='text-gray-600'>
-                    Issued by: {award.issuer}
-                  </span>
-                )}
-
-                {/* Optional Description */}
-                {award.description && (
-                  <span className='text-gray-800'>
-                    {award.description}
-                  </span>
-                )}
-              </div>
-
-              {/* Date or DateRange on Right Side */}
-              <div className='text-right whitespace-nowrap'>
-                {award.date ? (
-                  <p className="sub-content text-gray-500">
-                    {formatDate(award.date)}
-                  </p>
-                ) : (
-                  <DateRange
-                    startYear={award.startYear}
-                    endYear={award.endYear}
-                    id={`award-${index}`}
-                  />
-                )}
-              </div>
-            </li>
-          );
-        })}
-      </ul>
-    </div>
-  ) : null;
+              <SortableContext
+                items={resumeData.awards.map((_, idx) => `award-${idx}`)}
+                strategy={verticalListSortingStrategy}
+              >
+                <ul className='content !font-light !text-black space-y-2'>
+                  {resumeData.awards.map((award, index) => {
+                    const formatDate = (dateString) => {
+                      if (!dateString) return '';
+                      const date = new Date(dateString);
+                      if (isNaN(date.getTime())) return dateString;
+                      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                                     'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                      return `${months[date.getMonth()]}, ${date.getFullYear()}`;
+                    };
+                    
+                    return (
+                      <SortableItem key={`award-${index}`} id={`award-${index}`}>
+                        <li className='flex flex-row justify-between items-start gap-2 w-full'>
+                          <div className='flex flex-col flex-1'>
+                            <span className='font-semibold text-gray-900'>
+                              {award.name || "Award Name"}
+                            </span>
+                            {award.issuer && (
+                              <span className='text-gray-600'>
+                                Issued by: {award.issuer}
+                              </span>
+                            )}
+                            {award.description && (
+                              <span className='text-gray-800'>
+                                {award.description}
+                              </span>
+                            )}
+                          </div>
+                          <div className='text-right whitespace-nowrap'>
+                            {award.date ? (
+                              <p className="sub-content text-gray-500">
+                                {formatDate(award.date)}
+                              </p>
+                            ) : (
+                              <DateRange
+                                startYear={award.startYear}
+                                endYear={award.endYear}
+                                id={`award-${index}`}
+                              />
+                            )}
+                          </div>
+                        </li>
+                      </SortableItem>
+                    );
+                  })}
+                </ul>
+              </SortableContext>
+            </DndContext>
+          ) : (
+            /* Mobile: Disable nested drag, show items normally */
+            <ul className='content !font-light !text-black space-y-2'>
+              {resumeData.awards.map((award, index) => {
+                const formatDate = (dateString) => {
+                  if (!dateString) return '';
+                  const date = new Date(dateString);
+                  if (isNaN(date.getTime())) return dateString;
+                  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                                 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                  return `${months[date.getMonth()]}, ${date.getFullYear()}`;
+                };
+                
+                return (
+                  <li
+                    key={index}
+                    className='flex flex-row justify-between items-start gap-2 w-full'
+                  >
+                    <div className='flex flex-col flex-1'>
+                      <span className='font-semibold text-gray-900'>
+                        {award.name || "Award Name"}
+                      </span>
+                      {award.issuer && (
+                        <span className='text-gray-600'>
+                          Issued by: {award.issuer}
+                        </span>
+                      )}
+                      {award.description && (
+                        <span className='text-gray-800'>
+                          {award.description}
+                        </span>
+                      )}
+                    </div>
+                    <div className='text-right whitespace-nowrap'>
+                      {award.date ? (
+                        <p className="sub-content text-gray-500">
+                          {formatDate(award.date)}
+                        </p>
+                      ) : (
+                        <DateRange
+                          startYear={award.startYear}
+                          endYear={award.endYear}
+                          id={`award-${index}`}
+                        />
+                      )}
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </div>
+      ) : null;
 
 
 
