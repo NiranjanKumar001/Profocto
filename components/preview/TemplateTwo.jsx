@@ -42,7 +42,13 @@ const SortableItem = ({ id, children }) => {
   };
 
   return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners} className={`cursor-move ${isDragging ? "shadow-lg" : ""}`}>
+    <div 
+      ref={setNodeRef} 
+      style={style} 
+      {...attributes} 
+      {...listeners} 
+      className={`mb-1 cursor-move ${isDragging ? "bg-gray-50 shadow-lg rounded p-2" : ""}`}
+    >
       {children}
     </div>
   );
@@ -69,29 +75,35 @@ const SortableSection = ({ id, children }) => {
   };
 
   return (
-    <div ref={setNodeRef} style={style} className={`relative group ${isDragging ? "shadow-lg rounded" : ""}`}>
-      {/* Desktop drag handle - appears on hover */}
-      <div
-        {...attributes}
-        {...listeners}
-        className="absolute -left-8 top-0 bottom-0 w-6 hidden md:flex items-center justify-center cursor-move opacity-0 group-hover:opacity-100 transition-opacity exclude-print"
-        aria-label="Drag to reorder section"
-      >
-        <span className="text-gray-400 hover:text-gray-600 text-lg">⋮⋮</span>
-      </div>
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={`mb-1.5 relative group ${isDragging ? "bg-gray-50 shadow-lg rounded" : ""}`}
+    >
+      {/* Desktop: Drag handle appears on hover, entire section draggable */}
+      {!isMobile && (
+        <div 
+          {...attributes}
+          {...listeners}
+          className="exclude-print absolute -left-8 top-0 bottom-0 w-6 cursor-grab hover:bg-pink-100 opacity-0 group-hover:opacity-100 transition-opacity hidden lg:flex items-center justify-center rounded-l"
+        >
+          <div className="text-gray-400 text-xs">⋮⋮</div>
+        </div>
+      )}
       
-      {/* Mobile drag handle - always visible */}
-      <div
-        {...attributes}
-        {...listeners}
-        className="absolute left-0 top-0 bottom-0 w-10 flex md:hidden items-center justify-center cursor-move exclude-print"
-        data-drag-handle
-        aria-label="Drag to reorder section"
-      >
-        <span className="text-gray-400 text-lg">⋮⋮</span>
-      </div>
+      {/* Mobile: Visible drag handle on the left */}
+      {isMobile && (
+        <div 
+          {...attributes}
+          {...listeners}
+          className="exclude-print absolute left-0 top-0 bottom-0 w-10 flex items-center justify-center cursor-grab active:cursor-grabbing bg-gradient-to-r from-pink-50 to-transparent z-10"
+          data-drag-handle
+        >
+          <div className="text-gray-400 text-lg">⋮⋮</div>
+        </div>
+      )}
       
-      {/* Content wrapper with padding for mobile handles */}
+      {/* Content with padding on mobile to avoid drag handle (removed in print) */}
       <div className={isMobile ? "pl-10 print:pl-0" : ""}>
         {children}
       </div>
