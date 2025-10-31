@@ -25,42 +25,55 @@ const TemplateFour = ({
 }) => {
   const { customSectionTitles } = useSectionTitles();
   const [isClient, setIsClient] = useState(false);
+  const [isMobileView, setIsMobileView] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
+    
+    // Check if mobile view
+    const checkMobile = () => {
+      setIsMobileView(window.innerWidth <= 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Handle drag end for items within sections (same as Modern Template)
+  // Handle drag end for items within sections
   const handleItemDragEnd = (event, sectionType) => {
     const { active, over } = event;
+    if (active.id === over?.id) return;
 
-    if (active.id !== over?.id) {
-      // Handle reordering within the same section
-      if (sectionType === "projects" && setResumeData) {
-        const oldIndex = parseInt(active.id.replace("project-", ""));
-        const newIndex = parseInt(over.id.replace("project-", ""));
-
-        if (oldIndex !== -1 && newIndex !== -1) {
-          const newProjects = arrayMove(
-            resumeData.projects,
-            oldIndex,
-            newIndex
-          );
-          setResumeData((prev) => ({ ...prev, projects: newProjects }));
-        }
-      } else if (sectionType === "experience" && setResumeData) {
-        const oldIndex = parseInt(active.id.replace("work-", ""));
-        const newIndex = parseInt(over.id.replace("work-", ""));
-
-        if (oldIndex !== -1 && newIndex !== -1) {
-          const newExperience = arrayMove(
-            resumeData.workExperience,
-            oldIndex,
-            newIndex
-          );
-          setResumeData((prev) => ({ ...prev, workExperience: newExperience }));
-        }
+    const moveData = (data, key, prefix) => {
+      const oldIndex = parseInt(active.id.replace(`${prefix}-`, ""));
+      const newIndex = parseInt(over.id.replace(`${prefix}-`, ""));
+      if (oldIndex !== -1 && newIndex !== -1) {
+        const newData = arrayMove(data, oldIndex, newIndex);
+        setResumeData((prev) => ({ ...prev, [key]: newData }));
       }
+    };
+
+    switch (sectionType) {
+      case "projects":
+        moveData(resumeData.projects, "projects", "project");
+        break;
+      case "experience":
+        moveData(resumeData.workExperience, "workExperience", "work");
+        break;
+      case "education":
+        moveData(resumeData.education, "education", "edu");
+        break;
+      case "skills":
+        moveData(resumeData.skills, "skills", "skill");
+        break;
+      case "certifications":
+        moveData(resumeData.certifications, "certifications", "cert");
+        break;
+      case "awards":
+        moveData(resumeData.awards, "awards", "award");
+        break;
+      default:
+        break;
     }
   };
 
@@ -123,26 +136,61 @@ const TemplateFour = ({
             <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.education || "Education"}
             </h2>
-            {resumeData.education.map((item, index) => (
-              <div
-                key={index}
-                className='mb-1 flex justify-between items-start'
+            {/* Desktop: Enable nested drag and drop */}
+            {!isMobileView ? (
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={(event) => handleItemDragEnd(event, "education")}
               >
-                <div className='flex-1'>
-                  <h3 className='content font-semibold text-gray-900'>
-                    {item.school}
-                  </h3>
-                  <p className='content !font-light !text-black'>{item.degree}</p>
+                <SortableContext
+                  items={resumeData.education.map((_, idx) => `edu-${idx}`)}
+                  strategy={verticalListSortingStrategy}
+                >
+                  {resumeData.education.map((item, index) => (
+                    <SortableItem key={`edu-${index}`} id={`edu-${index}`}>
+                      <div className='flex justify-between items-start'>
+                        <div className='flex-1'>
+                          <h3 className='content font-semibold text-gray-900'>
+                            {item.school}
+                          </h3>
+                          <p className='content !font-light !text-black'>{item.degree}</p>
+                        </div>
+                        <div className='ml-4 text-right'>
+                          <DateRange
+                            startYear={item.startYear}
+                            endYear={item.endYear}
+                            id={`education-${index}`}
+                          />
+                        </div>
+                      </div>
+                    </SortableItem>
+                  ))}
+                </SortableContext>
+              </DndContext>
+            ) : (
+              /* Mobile: Disable nested drag, show items normally */
+              resumeData.education.map((item, index) => (
+                <div
+                  key={index}
+                  className='mb-1 flex justify-between items-start'
+                >
+                  <div className='flex-1'>
+                    <h3 className='content font-semibold text-gray-900'>
+                      {item.school}
+                    </h3>
+                    <p className='content !font-light !text-black'>{item.degree}</p>
+                  </div>
+                  <div className='ml-4 text-right'>
+                    <DateRange
+                      startYear={item.startYear}
+                      endYear={item.endYear}
+                      id={`education-${index}`}
+                    />
+                  </div>
                 </div>
-                <div className='ml-4 text-right'>
-                  <DateRange
-                    startYear={item.startYear}
-                    endYear={item.endYear}
-                    id={`education-${index}`}
-                  />
-                </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         ) : null;
 
@@ -152,16 +200,18 @@ const TemplateFour = ({
             <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.experience || "Professional Experience"}
             </h2>
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragEnd={(event) => handleItemDragEnd(event, "experience")}
-            >
-              <SortableContext
-                items={resumeData.workExperience.map((_, idx) => `work-${idx}`)}
-                strategy={verticalListSortingStrategy}
+            {/* Desktop: Enable nested drag and drop */}
+            {!isMobileView ? (
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={(event) => handleItemDragEnd(event, "experience")}
               >
-                {resumeData.workExperience.map((item, index) => (
+                <SortableContext
+                  items={resumeData.workExperience.map((_, idx) => `work-${idx}`)}
+                  strategy={verticalListSortingStrategy}
+                >
+                  {resumeData.workExperience.map((item, index) => (
                   <SortableItem key={`work-${index}`} id={`work-${index}`}>
                     <div className='flex justify-between items-start mb-1'>
                       <div className='flex-1'>
@@ -202,6 +252,48 @@ const TemplateFour = ({
                 ))}
               </SortableContext>
             </DndContext>
+            ) : (
+              /* Mobile: Disable nested drag, show items normally */
+              resumeData.workExperience.map((item, index) => (
+                <div key={`work-${index}`} className='mb-1.5'>
+                  <div className='flex justify-between items-start mb-1'>
+                    <div className='flex-1'>
+                      <h3 className='content flex items-center gap-1 i-bold text-gray-900'>
+                        {item.position} |{" "}
+                        <p className='content !font-light !text-black'>
+                          {" "}
+                          {item.company}
+                        </p>
+                      </h3>
+                    </div>
+                    <div className='text-right'>
+                      <DateRange
+                        startYear={item.startYear}
+                        endYear={item.endYear}
+                        id={`work-experience-${index}`}
+                      />
+                    </div>
+                  </div>
+                  <p className='content !font-light !text-black mb-2'>
+                    {item.description}
+                  </p>
+                  {item.keyAchievements === "string" &&
+                    item.keyAchievements.trim() && (
+                      <ul className='content !font-light !text-black ml-4 space-y-1'>
+                        {item.keyAchievements
+                          .split("\n")
+                          .filter((achievement) => achievement.trim())
+                          .map((achievement, subIndex) => (
+                            <li key={`${item.company}-${index}-${subIndex}`} className='flex items-start gap-2'>
+                              <span className='text-black font-bold mt-0.5'>▸</span>
+                              <span className='flex-1'>{achievement}</span>
+                            </li>
+                          ))}
+                      </ul>
+                    )}
+                </div>
+              ))
+            )}
           </div>
         ) : null;
 
@@ -211,16 +303,18 @@ const TemplateFour = ({
             <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.projects || "Projects"}
             </h2>
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragEnd={(event) => handleItemDragEnd(event, "projects")}
-            >
-              <SortableContext
-                items={resumeData.projects.map((_, idx) => `project-${idx}`)}
-                strategy={verticalListSortingStrategy}
+            {/* Desktop: Enable nested drag and drop */}
+            {!isMobileView ? (
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={(event) => handleItemDragEnd(event, "projects")}
               >
-                {resumeData.projects.map((item, index) => (
+                <SortableContext
+                  items={resumeData.projects.map((_, idx) => `project-${idx}`)}
+                  strategy={verticalListSortingStrategy}
+                >
+                  {resumeData.projects.map((item, index) => (
                   <SortableItem
                     key={`project-${index}`}
                     id={`project-${index}`}
@@ -273,6 +367,57 @@ const TemplateFour = ({
                 ))}
               </SortableContext>
             </DndContext>
+            ) : (
+              /* Mobile: Disable nested drag, show items normally */
+              resumeData.projects.map((item, index) => (
+                <div key={`project-${index}`} className='mb-1.5'>
+                  <div className='flex justify-between items-start mb-1'>
+                    <div className='flex-1'>
+                      <div className='flex items-center gap-2'>
+                        <h3 className='content i-bold text-gray-900'>
+                          {item.name}
+                        </h3>
+                        {item.link && (
+                          <Link
+                            href={item.link}
+                            className='text-gray-700 hover:text-black transition-colors inline-flex items-center gap-1'
+                            target='_blank'
+                            rel='noopener noreferrer'
+                            title='View project'
+                          >
+                            <FaExternalLinkSquareAlt className='w-3.5 h-3.5' />
+                          </Link>
+                        )}
+                      </div>
+                    </div>
+                    <div className='text-right'>
+                      <DateRange
+                        startYear={item.startYear}
+                        endYear={item.endYear}
+                        id={`projects-${index}`}
+                      />
+                    </div>
+                  </div>
+                  <p className='content !font-light !text-black mb-2'>
+                    {item.description}
+                  </p>
+                  {typeof item.keyAchievements === "string" &&
+                    item.keyAchievements.trim() && (
+                    <ul className='content !font-light !text-black ml-4 space-y-1'>
+                      {item.keyAchievements
+                        .split("\n")
+                        .filter((achievement) => achievement.trim())
+                        .map((achievement, subIndex) => (
+                          <li key={`${item.name}-${index}-${subIndex}`} className='flex items-start gap-2'>
+                            <span className='text-black font-bold mt-0.5'>▸</span>
+                            <span className='flex-1'>{achievement}</span>
+                          </li>
+                        ))}
+                    </ul>
+                  )}
+                </div>
+              ))
+            )}
           </div>
         ) : null;
 
