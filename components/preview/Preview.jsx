@@ -561,15 +561,48 @@ export const SortableSection = ({ id, children }) => {
     opacity: isDragging ? 0.5 : 1,
   };
 
+  const [isMobile, setIsMobile] = React.useState(false);
+
+  React.useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   return (
     <div
       ref={setNodeRef}
       style={style}
-      {...attributes}
-      {...listeners}
-      className={`mb-1.5 cursor-move ${isDragging ? "bg-gray-50 shadow-lg rounded" : ""}`}
+      className={`mb-1.5 relative group ${isDragging ? "bg-gray-50 shadow-lg rounded" : ""}`}
     >
-      {children}
+      {/* Desktop: Drag handle appears on hover, entire section draggable */}
+      {!isMobile && (
+        <div 
+          {...attributes}
+          {...listeners}
+          className="absolute -left-8 top-0 bottom-0 w-6 cursor-grab hover:bg-pink-100 opacity-0 group-hover:opacity-100 transition-opacity hidden lg:flex items-center justify-center rounded-l"
+        >
+          <div className="text-gray-400 text-xs">⋮⋮</div>
+        </div>
+      )}
+      
+      {/* Mobile: Visible drag handle on the left */}
+      {isMobile && (
+        <div 
+          {...attributes}
+          {...listeners}
+          className="absolute left-0 top-0 bottom-0 w-10 flex items-center justify-center cursor-grab active:cursor-grabbing bg-gradient-to-r from-pink-50 to-transparent z-10"
+          data-drag-handle
+        >
+          <div className="text-gray-400 text-lg">⋮⋮</div>
+        </div>
+      )}
+      
+      {/* Content with padding on mobile to avoid drag handle */}
+      <div className={isMobile ? "pl-10" : ""}>
+        {children}
+      </div>
     </div>
   );
 };
@@ -743,46 +776,80 @@ const ClassicTemplate = ({
             <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.experience || "Professional Experience"}
             </h2>
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragEnd={(event) => handleItemDragEnd(event, "experience")}
-            >
-              <SortableContext
-                items={resumeData.workExperience.map((_, idx) => `work-${idx}`)}
-                strategy={verticalListSortingStrategy}
+            {/* Desktop: Enable nested drag and drop for individual items */}
+            {typeof window !== 'undefined' && window.innerWidth > 768 ? (
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={(event) => handleItemDragEnd(event, "experience")}
               >
-                {resumeData.workExperience.map((item, index) => (
-                  <SortableItem key={`work-${index}`} id={`work-${index}`}>
-                    <div className="flex justify-between items-start mb-[0.5]">
-                      <div className="flex-1">
-                        <h3 className="content i-bold text-gray-900">{item.position} - {item.company}</h3>
+                <SortableContext
+                  items={resumeData.workExperience.map((_, idx) => `work-${idx}`)}
+                  strategy={verticalListSortingStrategy}
+                >
+                  {resumeData.workExperience.map((item, index) => (
+                    <SortableItem key={`work-${index}`} id={`work-${index}`}>
+                      <div className="flex justify-between items-start mb-[0.5]">
+                        <div className="flex-1">
+                          <h3 className="content i-bold text-gray-900">{item.position} - {item.company}</h3>
+                        </div>
+                        <div className='text-right'>
+                          <DateRange
+                            startYear={item.startYear}
+                            endYear={item.endYear}
+                            id={`work-experience-${index}`}
+                          />
+                        </div>
                       </div>
-                      <div className='text-right'>
-                        <DateRange
-                          startYear={item.startYear}
-                          endYear={item.endYear}
-                          id={`work-experience-${index}`}
-                        />
-                      </div>
+                      <p className="content font-sans font-light text-black mb-1">{item.description}</p>
+                      {typeof item.keyAchievements === "string" && item.keyAchievements.trim() && (
+                        <ul className="list-disc list-inside content font-sans font-light text-black ml-4">
+                          {item.keyAchievements
+                            .split("\n")
+                            .filter(achievement => achievement.trim())
+                            .map((achievement, subIndex) => (
+                              <li key={`${item.company}-${index}-${subIndex}`}>
+                                {achievement}
+                              </li>
+                            ))}
+                        </ul>
+                      )}
+                    </SortableItem>
+                  ))}
+                </SortableContext>
+              </DndContext>
+            ) : (
+              /* Mobile: Disable nested drag, show items normally */
+              resumeData.workExperience.map((item, index) => (
+                <div key={`work-${index}`} className="mb-1.5">
+                  <div className="flex justify-between items-start mb-[0.5]">
+                    <div className="flex-1">
+                      <h3 className="content i-bold text-gray-900">{item.position} - {item.company}</h3>
                     </div>
-                    <p className="content font-sans font-light text-black mb-1">{item.description}</p>
-                    {typeof item.keyAchievements === "string" && item.keyAchievements.trim() && (
-                      <ul className="list-disc list-inside content font-sans font-light text-black ml-4">
-                        {item.keyAchievements
-                          .split("\n")
-                          .filter(achievement => achievement.trim())
-                          .map((achievement, subIndex) => (
-                            <li key={`${item.company}-${index}-${subIndex}`}>
-                              {achievement}
-                            </li>
-                          ))}
-                      </ul>
-                    )}
-                  </SortableItem>
-                ))}
-              </SortableContext>
-            </DndContext>
+                    <div className='text-right'>
+                      <DateRange
+                        startYear={item.startYear}
+                        endYear={item.endYear}
+                        id={`work-experience-${index}`}
+                      />
+                    </div>
+                  </div>
+                  <p className="content font-sans font-light text-black mb-1">{item.description}</p>
+                  {typeof item.keyAchievements === "string" && item.keyAchievements.trim() && (
+                    <ul className="list-disc list-inside content font-sans font-light text-black ml-4">
+                      {item.keyAchievements
+                        .split("\n")
+                        .filter(achievement => achievement.trim())
+                        .map((achievement, subIndex) => (
+                          <li key={`${item.company}-${index}-${subIndex}`}>
+                            {achievement}
+                          </li>
+                        ))}
+                    </ul>
+                  )}
+                </div>
+              ))
+            )}
           </div>
         ) : null;
 
@@ -792,63 +859,111 @@ const ClassicTemplate = ({
             <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.projects || "Projects"}
             </h2>
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragEnd={(event) => handleItemDragEnd(event, "projects")}
-            >
-              <SortableContext
-                items={resumeData.projects.map((_, idx) => `project-${idx}`)}
-                strategy={verticalListSortingStrategy}
+            {/* Desktop: Enable nested drag and drop for individual items */}
+            {typeof window !== 'undefined' && window.innerWidth > 768 ? (
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={(event) => handleItemDragEnd(event, "projects")}
               >
-                {resumeData.projects.map((item, index) => (
-                  <SortableItem
-                    key={`project-${index}`}
-                    id={`project-${index}`}
-                  >
-                    <div className='flex justify-between items-start mb-1'>
-                      <div className='flex-1'>
-                        <div className='flex items-center gap-2'>
-                          <h3 className='content i-bold text-gray-900'>
-                            {item.name}
-                          </h3>
-                          {item.link && (
-                            <a
-                              href={item.link}
-                              className='text-black hover:text-gray-700 transition-colors'
-                              target='_blank'
-                              rel='noopener noreferrer'
-                            >
-                              <FaExternalLinkAlt className='w-3 h-3' />
-                            </a>
-                          )}
+                <SortableContext
+                  items={resumeData.projects.map((_, idx) => `project-${idx}`)}
+                  strategy={verticalListSortingStrategy}
+                >
+                  {resumeData.projects.map((item, index) => (
+                    <SortableItem
+                      key={`project-${index}`}
+                      id={`project-${index}`}
+                    >
+                      <div className='flex justify-between items-start mb-1'>
+                        <div className='flex-1'>
+                          <div className='flex items-center gap-2'>
+                            <h3 className='content i-bold text-gray-900'>
+                              {item.name}
+                            </h3>
+                            {item.link && (
+                              <a
+                                href={item.link}
+                                className='text-black hover:text-gray-700 transition-colors'
+                                target='_blank'
+                                rel='noopener noreferrer'
+                              >
+                                <FaExternalLinkAlt className='w-3 h-3' />
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                        <div className='text-right'>
+                          <DateRange
+                            startYear={item.startYear}
+                            endYear={item.endYear}
+                            id={`projects-${index}`}
+                          />
                         </div>
                       </div>
-                      <div className='text-right'>
-                        <DateRange
-                          startYear={item.startYear}
-                          endYear={item.endYear}
-                          id={`projects-${index}`}
-                        />
+                      <p className="content font-sans font-light text-black mb-1">{item.description}</p>
+                      {typeof item.keyAchievements === "string" && item.keyAchievements.trim() && (
+                        <ul className="list-disc list-inside content font-sans  text-black ml-4">
+                          {item.keyAchievements
+                            .split("\n")
+                            .filter(achievement => achievement.trim())
+                            .map((achievement, subIndex) => (
+                              <li key={`${item.name}-${index}-${subIndex}`}>
+                                {achievement}
+                              </li>
+                            ))}
+                        </ul>
+                      )}
+                    </SortableItem>
+                  ))}
+                </SortableContext>
+              </DndContext>
+            ) : (
+              /* Mobile: Disable nested drag, show items normally */
+              resumeData.projects.map((item, index) => (
+                <div key={`project-${index}`} className="mb-1.5">
+                  <div className='flex justify-between items-start mb-1'>
+                    <div className='flex-1'>
+                      <div className='flex items-center gap-2'>
+                        <h3 className='content i-bold text-gray-900'>
+                          {item.name}
+                        </h3>
+                        {item.link && (
+                          <a
+                            href={item.link}
+                            className='text-black hover:text-gray-700 transition-colors'
+                            target='_blank'
+                            rel='noopener noreferrer'
+                          >
+                            <FaExternalLinkAlt className='w-3 h-3' />
+                          </a>
+                        )}
                       </div>
                     </div>
-                    <p className="content font-sans font-light text-black mb-1">{item.description}</p>
-                    {typeof item.keyAchievements === "string" && item.keyAchievements.trim() && (
-                      <ul className="list-disc list-inside content font-sans  text-black ml-4">
-                        {item.keyAchievements
-                          .split("\n")
-                          .filter(achievement => achievement.trim())
-                          .map((achievement, subIndex) => (
-                            <li key={`${item.name}-${index}-${subIndex}`}>
-                              {achievement}
-                            </li>
-                          ))}
-                      </ul>
-                    )}
-                  </SortableItem>
-                ))}
-              </SortableContext>
-            </DndContext>
+                    <div className='text-right'>
+                      <DateRange
+                        startYear={item.startYear}
+                        endYear={item.endYear}
+                        id={`projects-${index}`}
+                      />
+                    </div>
+                  </div>
+                  <p className="content font-sans font-light text-black mb-1">{item.description}</p>
+                  {typeof item.keyAchievements === "string" && item.keyAchievements.trim() && (
+                    <ul className="list-disc list-inside content font-sans  text-black ml-4">
+                      {item.keyAchievements
+                        .split("\n")
+                        .filter(achievement => achievement.trim())
+                        .map((achievement, subIndex) => (
+                          <li key={`${item.name}-${index}-${subIndex}`}>
+                            {achievement}
+                          </li>
+                        ))}
+                    </ul>
+                  )}
+                </div>
+              ))
+            )}
           </div>
         ) : null;
 

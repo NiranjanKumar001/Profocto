@@ -1039,6 +1039,22 @@
 
 /* Mobile drag and drop improvements */
 @media (max-width: 768px) {
+  /* Prevent text selection during drag attempts */
+  .preview-content {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+
+  /* Allow text selection in specific areas (like textareas in forms) */
+  .preview-content textarea,
+  .preview-content input {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    user-select: text;
+  }
+
   /* Improve touch targets for draggable items */
   [data-sortable-item] {
     touch-action: none;
@@ -1067,7 +1083,14 @@
 
   [data-drag-handle]:active {
     cursor: grabbing;
-    background-color: rgba(236, 72, 153, 0.1);
+    background-color: rgba(236, 72, 153, 0.15);
     border-radius: 4px;
+    transform: scale(1.05);
+  }
+
+  /* Visual feedback when dragging sections */
+  .preview-content [style*="opacity: 0.5"] {
+    transform: scale(0.98);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
   }
 }
