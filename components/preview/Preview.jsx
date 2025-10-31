@@ -693,6 +693,42 @@ const ClassicTemplate = ({
           );
           setResumeData((prev) => ({ ...prev, workExperience: newExperience }));
         }
+      } else if (sectionType === "education" && setResumeData) {
+        const oldIndex = parseInt(active.id.replace("edu-", ""));
+        const newIndex = parseInt(over.id.replace("edu-", ""));
+
+        if (oldIndex !== -1 && newIndex !== -1) {
+          const newEducation = arrayMove(
+            resumeData.education,
+            oldIndex,
+            newIndex
+          );
+          setResumeData((prev) => ({ ...prev, education: newEducation }));
+        }
+      } else if (sectionType === "skills" && setResumeData) {
+        const oldIndex = parseInt(active.id.replace("skill-", ""));
+        const newIndex = parseInt(over.id.replace("skill-", ""));
+
+        if (oldIndex !== -1 && newIndex !== -1) {
+          const newSkills = arrayMove(
+            resumeData.skills,
+            oldIndex,
+            newIndex
+          );
+          setResumeData((prev) => ({ ...prev, skills: newSkills }));
+        }
+      } else if (sectionType === "certifications" && setResumeData) {
+        const oldIndex = parseInt(active.id.replace("cert-", ""));
+        const newIndex = parseInt(over.id.replace("cert-", ""));
+
+        if (oldIndex !== -1 && newIndex !== -1) {
+          const newCertifications = arrayMove(
+            resumeData.certifications,
+            oldIndex,
+            newIndex
+          );
+          setResumeData((prev) => ({ ...prev, certifications: newCertifications }));
+        }
       }
     }
   };
@@ -760,21 +796,54 @@ const ClassicTemplate = ({
             <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.education || "Education"}
             </h2>
-            {resumeData.education.map((item, index) => (
-              <div key={index} className="mb-1 flex justify-between items-start">
-                <div className="flex-1">
-                  <h3 className="content school-name font-bold">{item.school}</h3>
-                  <p className="content degree-name">{item.degree}</p>
+            {/* Desktop: Enable nested drag and drop for individual items */}
+            {!isMobileView ? (
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={(event) => handleItemDragEnd(event, "education")}
+              >
+                <SortableContext
+                  items={resumeData.education.map((_, idx) => `edu-${idx}`)}
+                  strategy={verticalListSortingStrategy}
+                >
+                  {resumeData.education.map((item, index) => (
+                    <SortableItem key={`edu-${index}`} id={`edu-${index}`}>
+                      <div className="flex justify-between items-start">
+                        <div className="flex-1">
+                          <h3 className="content school-name font-bold">{item.school}</h3>
+                          <p className="content degree-name">{item.degree}</p>
+                        </div>
+                        <div className='ml-4 text-right'>
+                          <DateRange
+                            startYear={item.startYear}
+                            endYear={item.endYear}
+                            id={`education-${index}`}
+                          />
+                        </div>
+                      </div>
+                    </SortableItem>
+                  ))}
+                </SortableContext>
+              </DndContext>
+            ) : (
+              /* Mobile: Disable nested drag, show items normally */
+              resumeData.education.map((item, index) => (
+                <div key={`edu-${index}`} className="mb-1 flex justify-between items-start">
+                  <div className="flex-1">
+                    <h3 className="content school-name font-bold">{item.school}</h3>
+                    <p className="content degree-name">{item.degree}</p>
+                  </div>
+                  <div className='ml-4 text-right'>
+                    <DateRange
+                      startYear={item.startYear}
+                      endYear={item.endYear}
+                      id={`education-${index}`}
+                    />
+                  </div>
                 </div>
-                <div className='ml-4 text-right'>
-                  <DateRange
-                    startYear={item.startYear}
-                    endYear={item.endYear}
-                    id={`education-${index}`}
-                  />
-                </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         ) : null;
 
@@ -976,21 +1045,44 @@ const ClassicTemplate = ({
         ) : null;
 
       case "skills":
-        return (
+        const technicalSkills = resumeData.skills.filter((skill) => skill.title !== "Soft Skills");
+        return technicalSkills.length > 0 ? (
           <div>
             <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.skills || "Technical Skills"}
             </h2>
-            {resumeData.skills
-              .filter((skill) => skill.title !== "Soft Skills")
-              .map((skill, index) => (
+            {/* Desktop: Enable nested drag and drop for skill groups */}
+            {!isMobileView ? (
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={(event) => handleItemDragEnd(event, "skills")}
+              >
+                <SortableContext
+                  items={technicalSkills.map((_, idx) => `skill-${idx}`)}
+                  strategy={verticalListSortingStrategy}
+                >
+                  {technicalSkills.map((skill, index) => (
+                    <SortableItem key={`skill-${index}`} id={`skill-${index}`}>
+                      <div>
+                        <h3 className="content i-bold text-gray-900 mb-1">{skill.title}</h3>
+                        <p className="content font-sans font-light text-black">{skill.skills.join(", ")}</p>
+                      </div>
+                    </SortableItem>
+                  ))}
+                </SortableContext>
+              </DndContext>
+            ) : (
+              /* Mobile: Disable nested drag, show items normally */
+              technicalSkills.map((skill, index) => (
                 <div key={`SKILLS-${index}`} className="mb-1">
                   <h3 className="content i-bold text-gray-900 mb-1">{skill.title}</h3>
                   <p className="content font-sans font-light text-black">{skill.skills.join(", ")}</p>
                 </div>
-              ))}
+              ))
+            )}
           </div>
-        );
+        ) : null;
 
       case "softSkills":
         return (
@@ -1024,53 +1116,118 @@ const ClassicTemplate = ({
             <h2 className='section-title border-b-2 border-black mb-1 text-gray-900'>
               {customSectionTitles.certifications || "Certifications"}
             </h2>
-            <ul className="list-disc list-inside content font-sans font-light text-black">
-              {resumeData.certifications.map((cert, index) => {
-                // Format date to match DateRange style (e.g., "Jun, 2018")
-                const formatCertDate = (dateString) => {
-                  if (!dateString) return '';
-                  const date = new Date(dateString);
-                  if (isNaN(date.getTime())) return dateString; // Return original if invalid
-                  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
-                                 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                  return `${months[date.getMonth()]}, ${date.getFullYear()}`;
-                };
-                
-                const certDate = typeof cert === 'object' && cert.date ? formatCertDate(cert.date) : '';
-                
-                return (
-                  <li key={index} className='mb-1'>
-                    <div className='flex items-start justify-between gap-2'>
-                      <div className='flex items-center gap-2 flex-1'>
-                        <span>
-                          {typeof cert === 'string' ? cert : cert.name}
-                          {typeof cert === 'object' && cert.issuer && (
-                            <span className="font-sans font-light text-black"> - {cert.issuer}</span>
-                          )}
-                        </span>
-                        {typeof cert === "object" &&
-                          cert.link &&
-                          cert.link.trim() !== "" && (
-                            <Link
-                              href={cert.link}
-                              className='text-black hover:text-gray-700 transition-colors'
-                              target='_blank'
-                              rel='noopener noreferrer'
-                            >
-                              <FaExternalLinkAlt className='w-3 h-3' />
-                            </Link>
-                          )}
+            {/* Desktop: Enable nested drag and drop for certifications */}
+            {!isMobileView ? (
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={(event) => handleItemDragEnd(event, "certifications")}
+              >
+                <SortableContext
+                  items={resumeData.certifications.map((_, idx) => `cert-${idx}`)}
+                  strategy={verticalListSortingStrategy}
+                >
+                  <ul className="list-disc list-inside content font-sans font-light text-black">
+                    {resumeData.certifications.map((cert, index) => {
+                      // Format date to match DateRange style (e.g., "Jun, 2018")
+                      const formatCertDate = (dateString) => {
+                        if (!dateString) return '';
+                        const date = new Date(dateString);
+                        if (isNaN(date.getTime())) return dateString;
+                        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                                       'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                        return `${months[date.getMonth()]}, ${date.getFullYear()}`;
+                      };
+                      
+                      const certDate = typeof cert === 'object' && cert.date ? formatCertDate(cert.date) : '';
+                      
+                      return (
+                        <SortableItem key={`cert-${index}`} id={`cert-${index}`}>
+                          <li className='mb-1'>
+                            <div className='flex items-start justify-between gap-2'>
+                              <div className='flex items-center gap-2 flex-1'>
+                                <span>
+                                  {typeof cert === 'string' ? cert : cert.name}
+                                  {typeof cert === 'object' && cert.issuer && (
+                                    <span className="font-sans font-light text-black"> - {cert.issuer}</span>
+                                  )}
+                                </span>
+                                {typeof cert === "object" &&
+                                  cert.link &&
+                                  cert.link.trim() !== "" && (
+                                    <Link
+                                      href={cert.link}
+                                      className='text-black hover:text-gray-700 transition-colors'
+                                      target='_blank'
+                                      rel='noopener noreferrer'
+                                    >
+                                      <FaExternalLinkAlt className='w-3 h-3' />
+                                    </Link>
+                                  )}
+                              </div>
+                              {certDate && (
+                                <p className="sub-content text-right">
+                                  {certDate}
+                                </p>
+                              )}
+                            </div>
+                          </li>
+                        </SortableItem>
+                      );
+                    })}
+                  </ul>
+                </SortableContext>
+              </DndContext>
+            ) : (
+              /* Mobile: Disable nested drag, show items normally */
+              <ul className="list-disc list-inside content font-sans font-light text-black">
+                {resumeData.certifications.map((cert, index) => {
+                  // Format date to match DateRange style (e.g., "Jun, 2018")
+                  const formatCertDate = (dateString) => {
+                    if (!dateString) return '';
+                    const date = new Date(dateString);
+                    if (isNaN(date.getTime())) return dateString;
+                    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                                   'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                    return `${months[date.getMonth()]}, ${date.getFullYear()}`;
+                  };
+                  
+                  const certDate = typeof cert === 'object' && cert.date ? formatCertDate(cert.date) : '';
+                  
+                  return (
+                    <li key={index} className='mb-1'>
+                      <div className='flex items-start justify-between gap-2'>
+                        <div className='flex items-center gap-2 flex-1'>
+                          <span>
+                            {typeof cert === 'string' ? cert : cert.name}
+                            {typeof cert === 'object' && cert.issuer && (
+                              <span className="font-sans font-light text-black"> - {cert.issuer}</span>
+                            )}
+                          </span>
+                          {typeof cert === "object" &&
+                            cert.link &&
+                            cert.link.trim() !== "" && (
+                              <Link
+                                href={cert.link}
+                                className='text-black hover:text-gray-700 transition-colors'
+                                target='_blank'
+                                rel='noopener noreferrer'
+                              >
+                                <FaExternalLinkAlt className='w-3 h-3' />
+                              </Link>
+                            )}
+                        </div>
+                        {certDate && (
+                          <p className="sub-content text-right">
+                            {certDate}
+                          </p>
+                        )}
                       </div>
-                      {certDate && (
-                        <p className="sub-content text-right">
-                          {certDate}
-                        </p>
-                      )}
-                    </div>
-                  </li>
-                );
-              })}
-            </ul>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
           </div>
         ) : null;
         case "awards":

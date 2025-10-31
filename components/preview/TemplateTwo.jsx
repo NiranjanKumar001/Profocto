@@ -195,6 +195,12 @@ const TemplateTwo = ({
       case "awards":
         moveData(awardsData, "awards", "award");
         break;
+      case "skills":
+        moveData(skillsData, "skills", "skill");
+        break;
+      case "certifications":
+        moveData(certificationsData, "certifications", "cert");
+        break;
       default:
         break;
     }
@@ -371,12 +377,29 @@ const TemplateTwo = ({
             <h2 className="text-sm font-bold border-b border-black pb-0.5 mb-1.5 uppercase">
               {customSectionTitles.skills || "Skills"}
             </h2>
-            {technicalSkills.map((skillGroup, idx) => (
-              <div key={idx} className="mb-1.5">
-                <h3 className="text-xs font-bold">{skillGroup.title}</h3>
-                <p className="text-xs text-gray-900">{skillGroup.skills.join(" • ")}</p>
-              </div>
-            ))}
+            {/* Desktop: Enable nested drag and drop */}
+            {!isMobileView ? (
+              <DndContext sensors={sensors} onDragEnd={(e) => handleItemDragEnd(e, "skills")}>
+                <SortableContext items={technicalSkills.map((_, i) => `skill-${i}`)} strategy={verticalListSortingStrategy}>
+                  {technicalSkills.map((skillGroup, idx) => (
+                    <SortableItem key={`skill-${idx}`} id={`skill-${idx}`}>
+                      <div className="mb-1.5">
+                        <h3 className="text-xs font-bold">{skillGroup.title}</h3>
+                        <p className="text-xs text-gray-900">{skillGroup.skills.join(" • ")}</p>
+                      </div>
+                    </SortableItem>
+                  ))}
+                </SortableContext>
+              </DndContext>
+            ) : (
+              /* Mobile: Disable nested drag, show items normally */
+              technicalSkills.map((skillGroup, idx) => (
+                <div key={idx} className="mb-1.5">
+                  <h3 className="text-xs font-bold">{skillGroup.title}</h3>
+                  <p className="text-xs text-gray-900">{skillGroup.skills.join(" • ")}</p>
+                </div>
+              ))
+            )}
           </div>
         ) : null;
 
@@ -411,32 +434,69 @@ const TemplateTwo = ({
             <h2 className="text-sm font-bold border-b border-black pb-0.5 mb-1.5 uppercase">
               {customSectionTitles.certifications || "Certifications"}
             </h2>
-            {certificationsData.map((cert, idx) => {
-              // Format date to match DateRange style
-              const formatDate = (dateString) => {
-                if (!dateString) return '';
-                const date = new Date(dateString);
-                if (isNaN(date.getTime())) return dateString;
-                const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
-                               'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                return `${months[date.getMonth()]}, ${date.getFullYear()}`;
-              };
-              
-              return (
-                <div key={idx} className="mb-1.5">
-                  <div className="flex items-center gap-1.5">
-                    <h3 className="text-xs font-bold">{cert.name}</h3>
-                    {cert.link && (
-                      <a href={cert.link} target="_blank" rel="noopener noreferrer" className="text-black hover:text-gray-700">
-                        <FaExternalLinkAlt className="w-2.5 h-2.5" />
-                      </a>
-                    )}
+            {/* Desktop: Enable nested drag and drop */}
+            {!isMobileView ? (
+              <DndContext sensors={sensors} onDragEnd={(e) => handleItemDragEnd(e, "certifications")}>
+                <SortableContext items={certificationsData.map((_, i) => `cert-${i}`)} strategy={verticalListSortingStrategy}>
+                  {certificationsData.map((cert, idx) => {
+                    // Format date to match DateRange style
+                    const formatDate = (dateString) => {
+                      if (!dateString) return '';
+                      const date = new Date(dateString);
+                      if (isNaN(date.getTime())) return dateString;
+                      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                                     'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                      return `${months[date.getMonth()]}, ${date.getFullYear()}`;
+                    };
+                    
+                    return (
+                      <SortableItem key={`cert-${idx}`} id={`cert-${idx}`}>
+                        <div className="mb-1.5">
+                          <div className="flex items-center gap-1.5">
+                            <h3 className="text-xs font-bold">{cert.name}</h3>
+                            {cert.link && (
+                              <a href={cert.link} target="_blank" rel="noopener noreferrer" className="text-black hover:text-gray-700">
+                                <FaExternalLinkAlt className="w-2.5 h-2.5" />
+                              </a>
+                            )}
+                          </div>
+                          {cert.issuer && <p className="text-xs italic text-gray-700">{cert.issuer}</p>}
+                          {cert.date && <p className="text-xs text-gray-700">{formatDate(cert.date)}</p>}
+                        </div>
+                      </SortableItem>
+                    );
+                  })}
+                </SortableContext>
+              </DndContext>
+            ) : (
+              /* Mobile: Disable nested drag, show items normally */
+              certificationsData.map((cert, idx) => {
+                // Format date to match DateRange style
+                const formatDate = (dateString) => {
+                  if (!dateString) return '';
+                  const date = new Date(dateString);
+                  if (isNaN(date.getTime())) return dateString;
+                  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                                 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                  return `${months[date.getMonth()]}, ${date.getFullYear()}`;
+                };
+                
+                return (
+                  <div key={idx} className="mb-1.5">
+                    <div className="flex items-center gap-1.5">
+                      <h3 className="text-xs font-bold">{cert.name}</h3>
+                      {cert.link && (
+                        <a href={cert.link} target="_blank" rel="noopener noreferrer" className="text-black hover:text-gray-700">
+                          <FaExternalLinkAlt className="w-2.5 h-2.5" />
+                        </a>
+                      )}
+                    </div>
+                    {cert.issuer && <p className="text-xs italic text-gray-700">{cert.issuer}</p>}
+                    {cert.date && <p className="text-xs text-gray-700">{formatDate(cert.date)}</p>}
                   </div>
-                  {cert.issuer && <p className="text-xs italic text-gray-700">{cert.issuer}</p>}
-                  {cert.date && <p className="text-xs text-gray-700">{formatDate(cert.date)}</p>}
-                </div>
-              );
-            })}
+                );
+              })
+            )}
           </div>
         ) : null;
 
