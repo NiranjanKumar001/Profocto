@@ -339,7 +339,7 @@ const Preview = () => {
 
             {/* Section Toggle Dropdown */}
             {showSectionToggle && (
-              <div className='absolute right-0 mt-2 w-[80vw] sm:w-72 max-w-[250px] bg-white rounded-lg shadow-lg border border-gray-200 py-3'>
+              <div className='absolute right-0 mt-2 w-[80vw] sm:w-72 max-w-[200px] bg-white rounded-lg shadow-lg border border-gray-200 py-3'>
                 <div className='px-3 sm:px-4 pb-2 border-b border-gray-200'>
                   <h3 className='text-xs sm:text-sm font-semibold text-gray-900'>
                     Toggle Resume Sections
