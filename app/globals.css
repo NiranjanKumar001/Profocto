@@ -1036,3 +1036,38 @@
   visibility: visible;
   opacity: 1;
 }
+
+/* Mobile drag and drop improvements */
+@media (max-width: 768px) {
+  /* Improve touch targets for draggable items */
+  [data-sortable-item] {
+    touch-action: none;
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: grab;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  [data-sortable-item]:active {
+    cursor: grabbing;
+    opacity: 0.8;
+  }
+
+  /* Add visual feedback for drag handles on mobile */
+  [data-drag-handle] {
+    cursor: grab;
+    touch-action: none;
+    -webkit-tap-highlight-color: transparent;
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  [data-drag-handle]:active {
+    cursor: grabbing;
+    background-color: rgba(236, 72, 153, 0.1);
+    border-radius: 4px;
+  }
+}

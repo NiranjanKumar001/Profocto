@@ -205,7 +205,7 @@ const Preview = () => {
     { name: "custom", icon: <CgWebsite /> }, // Default icon for custom platforms
   ];
 
-  const sensors = useSensors(
+  const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
         distance: 8, // 8px movement required before drag starts
@@ -213,16 +213,14 @@ const Preview = () => {
     }),
     useSensor(TouchSensor, {
       activationConstraint: {
-        delay: 200, // 200ms delay before drag starts on touch
-        tolerance: 5, // 5px tolerance for touch movement
+        delay: 250, // 250ms press and hold before drag starts on mobile
+        tolerance: 8, // 8px tolerance - prevents accidental drags while scrolling
       },
     }),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
-
-  useEffect(() => {
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );  useEffect(() => {
     setIsClient(true);
   }, []);
 
