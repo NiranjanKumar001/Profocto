@@ -119,7 +119,7 @@ export default function Hero() {
                 suppressHydrationWarning
             />
 
-            <div className="absolute top-0 left-0 w-full h-full overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-full overflow-hidden" suppressHydrationWarning>
                 <video
                     ref={videoRef}
                     autoPlay
@@ -142,14 +142,14 @@ export default function Hero() {
                 </video>
             </div>
 
-            <div className="absolute inset-0 z-5 opacity-40">
+            <div className="absolute inset-0 z-5 opacity-40" suppressHydrationWarning>
                 <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:70px_70px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
                 <div className="absolute inset-0 bg-gradient-to-b from-pink-900/10 to-purple-900/10"></div>
                 <div className="absolute left-1/4 top-0 h-[300px] w-[600px] -translate-x-1/2 rounded-full bg-purple-500/20 blur-[80px]"></div>
                 <div className="absolute right-1/4 top-0 h-[300px] w-[600px] -translate-y-1/2 rounded-full bg-pink-500/30 blur-[80px]"></div>
             </div>
 
-            <div className="absolute inset-0 z-15">
+            <div className="absolute inset-0 z-15" suppressHydrationWarning>
                 <div className="absolute inset-0 opacity-30" style={{
                     backgroundImage: `
                         linear-gradient(to right, rgba(255, 255, 255, 0.15) 1px, transparent 1px),
@@ -175,7 +175,7 @@ export default function Hero() {
                 }}></div>
             </div>
 
-            <div className="absolute inset-0 z-15 opacity-10">
+            <div className="absolute inset-0 z-15 opacity-10" suppressHydrationWarning>
                 <div className="absolute top-10 left-10 w-16 sm:w-20 md:w-24 h-16 sm:h-20 md:h-24 rounded-full border-2 border-white/20 hidden sm:block"></div>
                 <div className="absolute top-10 right-10 w-16 sm:w-20 md:w-24 h-16 sm:h-20 md:h-24 rounded-full border-2 border-white/20 hidden sm:block"></div>
                 <div className="absolute bottom-10 left-10 w-16 sm:w-20 md:w-24 h-16 sm:h-20 md:h-24 rounded-full border-2 border-white/20 hidden sm:block"></div>
@@ -185,7 +185,7 @@ export default function Hero() {
                 <div className="absolute left-1/2 top-0 w-px h-full bg-gradient-to-b from-transparent via-white/20 sm:via-white/30 to-transparent"></div>
             </div>
 
-            <div className="absolute top-4 sm:top-8 left-4 sm:left-8 z-20 text-white/80 text-xs sm:text-sm font-light tracking-wide transition-all duration-500 hover:text-white">
+            <div className="absolute top-4 sm:top-8 left-4 sm:left-8 z-20 text-white/80 text-xs sm:text-sm font-light tracking-wide transition-all duration-500 hover:text-white" suppressHydrationWarning>
                 <div className="opacity-80 hover:opacity-100 transition-opacity">RESUME BUILDER</div>
                 <div className="mt-1 opacity-60 hover:opacity-100 transition-opacity">SERIF DESIGN</div>
             </div>
