@@ -50,6 +50,15 @@ const SortableItem = ({ id, children }) => {
 
 // Sortable Section Component
 const SortableSection = ({ id, children }) => {
+  const [isMobile, setIsMobile] = React.useState(false);
+
+  React.useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
     useSortable({ id });
 
@@ -60,8 +69,32 @@ const SortableSection = ({ id, children }) => {
   };
 
   return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners} className={`cursor-move ${isDragging ? "shadow-lg rounded" : ""}`}>
-      {children}
+    <div ref={setNodeRef} style={style} className={`relative group ${isDragging ? "shadow-lg rounded" : ""}`}>
+      {/* Desktop drag handle - appears on hover */}
+      <div
+        {...attributes}
+        {...listeners}
+        className="absolute -left-8 top-0 bottom-0 w-6 hidden md:flex items-center justify-center cursor-move opacity-0 group-hover:opacity-100 transition-opacity exclude-print"
+        aria-label="Drag to reorder section"
+      >
+        <span className="text-gray-400 hover:text-gray-600 text-lg">⋮⋮</span>
+      </div>
+      
+      {/* Mobile drag handle - always visible */}
+      <div
+        {...attributes}
+        {...listeners}
+        className="absolute left-0 top-0 bottom-0 w-10 flex md:hidden items-center justify-center cursor-move exclude-print"
+        data-drag-handle
+        aria-label="Drag to reorder section"
+      >
+        <span className="text-gray-400 text-lg">⋮⋮</span>
+      </div>
+      
+      {/* Content wrapper with padding for mobile handles */}
+      <div className={isMobile ? "pl-10 print:pl-0" : ""}>
+        {children}
+      </div>
     </div>
   );
 };
@@ -88,10 +121,19 @@ const TemplateTwo = ({
   icons,
 }) => {
   const [isClient, setIsClient] = useState(false);
+  const [isMobileView, setIsMobileView] = useState(false);
   const { customSectionTitles } = useSectionTitles();
 
   useEffect(() => {
     setIsClient(true);
+    
+    // Check if mobile view
+    const checkMobile = () => {
+      setIsMobileView(window.innerWidth <= 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   const sensors = useSensors(
@@ -186,24 +228,41 @@ const TemplateTwo = ({
             <h2 className="text-sm font-bold border-b border-black pb-0.5 mb-1.5 uppercase">
               {customSectionTitles.education || "Education"}
             </h2>
-            <DndContext sensors={sensors} onDragEnd={(e) => handleItemDragEnd(e, "education")}>
-              <SortableContext items={educationData.map((_, i) => `edu-${i}`)} strategy={verticalListSortingStrategy}>
-                {educationData.map((edu, idx) => (
-                  <SortableItem key={`edu-${idx}`} id={`edu-${idx}`}>
-                    <div className="mb-2">
-                      <div className="flex justify-between">
-                        <DateRange startYear={edu.startYear} endYear={edu.endYear} className="text-xs" />
-                        <h3 className="text-sm font-bold">{edu.degree}</h3>
+            {/* Desktop: Enable nested drag and drop */}
+            {!isMobileView ? (
+              <DndContext sensors={sensors} onDragEnd={(e) => handleItemDragEnd(e, "education")}>
+                <SortableContext items={educationData.map((_, i) => `edu-${i}`)} strategy={verticalListSortingStrategy}>
+                  {educationData.map((edu, idx) => (
+                    <SortableItem key={`edu-${idx}`} id={`edu-${idx}`}>
+                      <div className="mb-2">
+                        <div className="flex justify-between">
+                          <DateRange startYear={edu.startYear} endYear={edu.endYear} className="text-xs" />
+                          <h3 className="text-sm font-bold">{edu.degree}</h3>
+                        </div>
+                        <div className="flex justify-between text-xs">
+                          <p>{edu.school}</p>
+                          <p>{edu.location}</p>
+                        </div>
                       </div>
-                      <div className="flex justify-between text-xs">
-                        <p>{edu.school}</p>
-                        <p>{edu.location}</p>
-                      </div>
-                    </div>
-                  </SortableItem>
-                ))}
-              </SortableContext>
-            </DndContext>
+                    </SortableItem>
+                  ))}
+                </SortableContext>
+              </DndContext>
+            ) : (
+              /* Mobile: Disable nested drag, show items normally */
+              educationData.map((edu, idx) => (
+                <div key={`edu-${idx}`} className="mb-2">
+                  <div className="flex justify-between">
+                    <DateRange startYear={edu.startYear} endYear={edu.endYear} className="text-xs" />
+                    <h3 className="text-sm font-bold">{edu.degree}</h3>
+                  </div>
+                  <div className="flex justify-between text-xs">
+                    <p>{edu.school}</p>
+                    <p>{edu.location}</p>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         ) : null;
 
@@ -213,22 +272,37 @@ const TemplateTwo = ({
             <h2 className="text-sm font-bold border-b border-black pb-0.5 mb-1.5 uppercase">
               {customSectionTitles.experience || "Professional Experience"}
             </h2>
-            <DndContext sensors={sensors} onDragEnd={(e) => handleItemDragEnd(e, "experience")}>
-              <SortableContext items={workExperienceData.map((_, i) => `work-${i}`)} strategy={verticalListSortingStrategy}>
-                {workExperienceData.map((work, idx) => (
-                  <SortableItem key={`work-${idx}`} id={`work-${idx}`}>
-                    <div className="mb-2.5">
-                      <div className="flex justify-between items-baseline mb-0.5">
-                        <DateRange startYear={work.startYear} endYear={work.endYear} className="text-xs" />
-                        <h3 className="text-sm font-bold">{work.position}</h3>
+            {/* Desktop: Enable nested drag and drop */}
+            {!isMobileView ? (
+              <DndContext sensors={sensors} onDragEnd={(e) => handleItemDragEnd(e, "experience")}>
+                <SortableContext items={workExperienceData.map((_, i) => `work-${i}`)} strategy={verticalListSortingStrategy}>
+                  {workExperienceData.map((work, idx) => (
+                    <SortableItem key={`work-${idx}`} id={`work-${idx}`}>
+                      <div className="mb-2.5">
+                        <div className="flex justify-between items-baseline mb-0.5">
+                          <DateRange startYear={work.startYear} endYear={work.endYear} className="text-xs" />
+                          <h3 className="text-sm font-bold">{work.position}</h3>
+                        </div>
+                        <p className="text-xs italic text-gray-700">{work.company}</p>
+                        {work.description && <p className="text-xs text-gray-900 mt-0.5">{work.description}</p>}
                       </div>
-                      <p className="text-xs italic text-gray-700">{work.company}</p>
-                      {work.description && <p className="text-xs text-gray-900 mt-0.5">{work.description}</p>}
-                    </div>
-                  </SortableItem>
-                ))}
-              </SortableContext>
-            </DndContext>
+                    </SortableItem>
+                  ))}
+                </SortableContext>
+              </DndContext>
+            ) : (
+              /* Mobile: Disable nested drag, show items normally */
+              workExperienceData.map((work, idx) => (
+                <div key={`work-${idx}`} className="mb-2.5">
+                  <div className="flex justify-between items-baseline mb-0.5">
+                    <DateRange startYear={work.startYear} endYear={work.endYear} className="text-xs" />
+                    <h3 className="text-sm font-bold">{work.position}</h3>
+                  </div>
+                  <p className="text-xs italic text-gray-700">{work.company}</p>
+                  {work.description && <p className="text-xs text-gray-900 mt-0.5">{work.description}</p>}
+                </div>
+              ))
+            )}
           </div>
         ) : null;
 
@@ -238,25 +312,43 @@ const TemplateTwo = ({
             <h2 className="text-sm font-bold border-b border-black pb-0.5 mb-1.5 uppercase">
               {customSectionTitles.projects || "Projects"}
             </h2>
-            <DndContext sensors={sensors} onDragEnd={(e) => handleItemDragEnd(e, "projects")}>
-              <SortableContext items={projectsData.map((_, i) => `project-${i}`)} strategy={verticalListSortingStrategy}>
-                {projectsData.map((project, idx) => (
-                  <SortableItem key={`project-${idx}`} id={`project-${idx}`}>
-                    <div className="mb-2.5">
-                      <div className="flex justify-between items-baseline">
-                        <h3 className="text-sm font-bold">{project.name}</h3>
-                        {project.link && (
-                          <a href={project.link} target="_blank" rel="noopener noreferrer" className="text-black hover:text-gray-700">
-                            <FaExternalLinkAlt className="w-2.5 h-2.5" />
-                          </a>
-                        )}
+            {/* Desktop: Enable nested drag and drop */}
+            {!isMobileView ? (
+              <DndContext sensors={sensors} onDragEnd={(e) => handleItemDragEnd(e, "projects")}>
+                <SortableContext items={projectsData.map((_, i) => `project-${i}`)} strategy={verticalListSortingStrategy}>
+                  {projectsData.map((project, idx) => (
+                    <SortableItem key={`project-${idx}`} id={`project-${idx}`}>
+                      <div className="mb-2.5">
+                        <div className="flex justify-between items-baseline">
+                          <h3 className="text-sm font-bold">{project.name}</h3>
+                          {project.link && (
+                            <a href={project.link} target="_blank" rel="noopener noreferrer" className="text-black hover:text-gray-700">
+                              <FaExternalLinkAlt className="w-2.5 h-2.5" />
+                            </a>
+                          )}
+                        </div>
+                        {project.description && <p className="text-xs text-gray-900 mt-0.5">{project.description}</p>}
                       </div>
-                      {project.description && <p className="text-xs text-gray-900 mt-0.5">{project.description}</p>}
-                    </div>
-                  </SortableItem>
-                ))}
-              </SortableContext>
-            </DndContext>
+                    </SortableItem>
+                  ))}
+                </SortableContext>
+              </DndContext>
+            ) : (
+              /* Mobile: Disable nested drag, show items normally */
+              projectsData.map((project, idx) => (
+                <div key={`project-${idx}`} className="mb-2.5">
+                  <div className="flex justify-between items-baseline">
+                    <h3 className="text-sm font-bold">{project.name}</h3>
+                    {project.link && (
+                      <a href={project.link} target="_blank" rel="noopener noreferrer" className="text-black hover:text-gray-700">
+                        <FaExternalLinkAlt className="w-2.5 h-2.5" />
+                      </a>
+                    )}
+                  </div>
+                  {project.description && <p className="text-xs text-gray-900 mt-0.5">{project.description}</p>}
+                </div>
+              ))
+            )}
           </div>
         ) : null;
 
@@ -342,39 +434,71 @@ const TemplateTwo = ({
             <h2 className="text-sm font-bold border-b border-black pb-0.5 mb-1.5 uppercase">
               {customSectionTitles.awards || "Awards & Achievements"}
             </h2>
-            <DndContext sensors={sensors} onDragEnd={(e) => handleItemDragEnd(e, "awards")}>
-              <SortableContext items={awardsData.map((_, i) => `award-${i}`)} strategy={verticalListSortingStrategy}>
-                {awardsData.map((award, idx) => {
-                  // Format date to match DateRange style
-                  const formatDate = (dateString) => {
-                    if (!dateString) return '';
-                    const date = new Date(dateString);
-                    if (isNaN(date.getTime())) return dateString;
-                    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
-                                   'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                    return `${months[date.getMonth()]}, ${date.getFullYear()}`;
-                  };
-                  
-                  return (
-                    <SortableItem key={`award-${idx}`} id={`award-${idx}`}>
-                      <div className="mb-1.5">
-                        <div className="flex items-center gap-1.5">
-                          <h3 className="text-xs font-bold">{award.title || award.name}</h3>
-                          {award.link && (
-                            <a href={award.link} target="_blank" rel="noopener noreferrer" className="text-black hover:text-gray-700">
-                              <FaExternalLinkAlt className="w-2.5 h-2.5" />
-                            </a>
-                          )}
+            {/* Desktop: Enable nested drag and drop */}
+            {!isMobileView ? (
+              <DndContext sensors={sensors} onDragEnd={(e) => handleItemDragEnd(e, "awards")}>
+                <SortableContext items={awardsData.map((_, i) => `award-${i}`)} strategy={verticalListSortingStrategy}>
+                  {awardsData.map((award, idx) => {
+                    // Format date to match DateRange style
+                    const formatDate = (dateString) => {
+                      if (!dateString) return '';
+                      const date = new Date(dateString);
+                      if (isNaN(date.getTime())) return dateString;
+                      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                                     'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                      return `${months[date.getMonth()]}, ${date.getFullYear()}`;
+                    };
+                    
+                    return (
+                      <SortableItem key={`award-${idx}`} id={`award-${idx}`}>
+                        <div className="mb-1.5">
+                          <div className="flex items-center gap-1.5">
+                            <h3 className="text-xs font-bold">{award.title || award.name}</h3>
+                            {award.link && (
+                              <a href={award.link} target="_blank" rel="noopener noreferrer" className="text-black hover:text-gray-700">
+                                <FaExternalLinkAlt className="w-2.5 h-2.5" />
+                              </a>
+                            )}
+                          </div>
+                          {award.issuer && <p className="text-xs italic text-gray-700">{award.issuer}</p>}
+                          {award.date && <p className="text-xs text-gray-700">{formatDate(award.date)}</p>}
+                          {award.description && <p className="text-xs text-gray-900 mt-0.5">{award.description}</p>}
                         </div>
-                        {award.issuer && <p className="text-xs italic text-gray-700">{award.issuer}</p>}
-                        {award.date && <p className="text-xs text-gray-700">{formatDate(award.date)}</p>}
-                        {award.description && <p className="text-xs text-gray-900 mt-0.5">{award.description}</p>}
-                      </div>
-                    </SortableItem>
-                  );
-                })}
-              </SortableContext>
-            </DndContext>
+                      </SortableItem>
+                    );
+                  })}
+                </SortableContext>
+              </DndContext>
+            ) : (
+              /* Mobile: Disable nested drag, show items normally */
+              awardsData.map((award, idx) => {
+                // Format date to match DateRange style
+                const formatDate = (dateString) => {
+                  if (!dateString) return '';
+                  const date = new Date(dateString);
+                  if (isNaN(date.getTime())) return dateString;
+                  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                                 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                  return `${months[date.getMonth()]}, ${date.getFullYear()}`;
+                };
+                
+                return (
+                  <div key={`award-${idx}`} className="mb-1.5">
+                    <div className="flex items-center gap-1.5">
+                      <h3 className="text-xs font-bold">{award.title || award.name}</h3>
+                      {award.link && (
+                        <a href={award.link} target="_blank" rel="noopener noreferrer" className="text-black hover:text-gray-700">
+                          <FaExternalLinkAlt className="w-2.5 h-2.5" />
+                        </a>
+                      )}
+                    </div>
+                    {award.issuer && <p className="text-xs italic text-gray-700">{award.issuer}</p>}
+                    {award.date && <p className="text-xs text-gray-700">{formatDate(award.date)}</p>}
+                    {award.description && <p className="text-xs text-gray-900 mt-0.5">{award.description}</p>}
+                  </div>
+                );
+              })
+            )}
           </div>
         ) : null;
 
