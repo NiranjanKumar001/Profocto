@@ -339,8 +339,8 @@ const Preview = () => {
 
             {/* Section Toggle Dropdown */}
             {showSectionToggle && (
-              <div className='absolute right-0 mt-2 w-64 sm:w-72 bg-white rounded-lg shadow-lg border border-gray-200 py-3'>
-                <div className='px-3 sm:px-4 pb-2 border-b border-gray-200'>
+              <div className='absolute right-0 mt-2 w-64 sm:w-72 bg-white rounded-lg shadow-lg border border-gray-200 py-3 max-h-[70vh] overflow-hidden flex flex-col'>
+                <div className='px-3 sm:px-4 pb-2 border-b border-gray-200 flex-shrink-0'>
                   <h3 className='text-xs sm:text-sm font-semibold text-gray-900'>
                     Toggle Resume Sections
                   </h3>
@@ -349,7 +349,7 @@ const Preview = () => {
                     experience)
                   </p>
                 </div>
-                <div className='py-2 max-h-60 overflow-y-auto'>
+                <div className='py-2 max-h-[40vh] sm:max-h-60 overflow-y-auto flex-1'>
                   {defaultSections.map((sectionId) => (
                     <label
                       key={sectionId}
@@ -373,7 +373,7 @@ const Preview = () => {
                     </label>
                   ))}
                 </div>
-                <div className='px-4 pt-2 border-t border-gray-200'>
+                <div className='px-4 pt-2 border-t border-gray-200 flex-shrink-0'>
                   <div className='text-xs text-gray-500'>
                     {Object.values(enabledSections).filter(Boolean).length} of{" "}
                     {defaultSections.length} sections visible
