@@ -34,7 +34,7 @@ const SocialMedia = () => {
   const handleSocialMedia = (e, index) => {
     const newSocialMedia = [...resumeData.socialMedia];
     const fieldName = e.target.name;
-    const fieldValue = e.target.value.replace("https://", "");
+    const fieldValue = e.target.value;
     
     newSocialMedia[index][fieldName] = fieldValue;
     
