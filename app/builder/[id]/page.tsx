@@ -5,6 +5,11 @@ import dynamic from "next/dynamic";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import LogoutLoader from "@/components/auth/LogoutLoader";
+import { useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { useParams } from "next/navigation";
+import { Id } from "@/convex/_generated/dataModel";
+import toast from "react-hot-toast";
 
 // Import your existing builder components
 import Language from "@/components/form/Language";
@@ -40,12 +45,20 @@ const Print = dynamic(() => import("@/components/utility/WinPrint"), {
 export default function BuilderPage() {
   // Get user session data
   const { data: session } = useSession();
+  
+  // Get resume ID from URL params
+  const params = useParams();
+  const resumeId = params?.id as string;
+
+  // Convex mutation for updating resume
+  const updateResumeMutation = useMutation(api.resume.updateResume);
 
   // Resume data state with localStorage persistence (hydration-safe)
   const [resumeData, setResumeData] = useState<ResumeData>(
     JSON.parse(JSON.stringify(DefaultResumeData)) as ResumeData
   );
   const [isHydrated, setIsHydrated] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   // Load from localStorage after hydration to prevent mismatches
   useEffect(() => {
@@ -154,6 +167,38 @@ export default function BuilderPage() {
     setResumeData({ ...resumeData, [e.target.name]: e.target.value });
   };
 
+  // Save resume to database
+  const saveResume = async () => {
+    // Don't save if not hydrated or already saving
+    if (!isHydrated || isSaving) return;
+    
+    // Validate resume ID
+    if (!resumeId) {
+      toast.error("Resume ID is missing");
+      return;
+    }
+
+    try {
+      setIsSaving(true);
+      
+      // Convert resume data to JSON string
+      const resumeDataString = JSON.stringify(resumeData);
+      
+      // Call the Convex mutation
+      await updateResumeMutation({
+        resume_id: resumeId as Id<"resume">,
+        resume_data: resumeDataString,
+      });
+      
+      toast.success("Resume saved successfully!");
+    } catch (error) {
+      console.error("Failed to save resume:", error);
+      toast.error("Failed to save resume. Please try again.");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   // Keyboard shortcut for sidebar toggle (Ctrl+B or Cmd+B)
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -194,6 +239,8 @@ export default function BuilderPage() {
             setResumeData,
             handleProfilePicture,
             handleChange,
+            saveResume,
+            isSaving,
           }}
         >
           <MobileNavbar />

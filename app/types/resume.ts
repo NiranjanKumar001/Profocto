@@ -48,4 +48,6 @@ export interface ResumeContextType {
   setResumeData: React.Dispatch<React.SetStateAction<ResumeData>>;
   handleProfilePicture: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  saveResume?: () => Promise<void>;
+  isSaving?: boolean;
 }

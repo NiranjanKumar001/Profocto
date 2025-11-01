@@ -17,6 +17,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'daily',
       priority: 0.9,
     },
-    // Dynamic builder pages can be added here if needed
   ]
 }
