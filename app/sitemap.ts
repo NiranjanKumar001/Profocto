@@ -17,13 +17,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'daily',
       priority: 0.9,
     },
-    {
-      url: `${baseUrl}/templates`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
     // Dynamic builder pages can be added here if needed
-    // Individual template pages could be added as well
   ]
 }
