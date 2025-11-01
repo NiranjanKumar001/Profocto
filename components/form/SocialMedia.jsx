@@ -65,7 +65,7 @@ const SocialMedia = () => {
     <div className="form-section">
       <h2 className="form-section-title">Social Media</h2>
       {resumeData.socialMedia.map((socialMedia, index) => (
-        <div key={index} className="space-y-2 mb-4 p-4 border border-gray-700/40 rounded-lg bg-gray-800/20">
+        <div key={index} className="section-card">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
               <label className="block text-xs text-gray-400 mb-1">Platform</label>
