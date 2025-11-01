@@ -57,6 +57,40 @@ export const updateResume = mutation({
 });
 
 
+// upsert resume - create if doesn't exist, update if it does
+export const upsertResume = mutation({
+  args: {
+    resume_id: v.optional(v.string()),
+    resume_data: v.string(),
+    owner: v.id("users"),
+  },
+  handler: async (ctx, args) => {
+    // If resume_id is provided, try to find and update it
+    if (args.resume_id) {
+      try {
+        const existingResume = await ctx.db.get(args.resume_id as any);
+        if (existingResume) {
+          await ctx.db.replace(args.resume_id as any, {
+            ...existingResume,
+            resume_data: args.resume_data,
+          });
+          return { success: true, id: args.resume_id, action: "updated" };
+        }
+      } catch (error) {
+        // If ID is invalid or resume not found, create new one
+        console.log("Resume not found, creating new one");
+      }
+    }
+
+    // Create new resume
+    const newId = await ctx.db.insert("resume", {
+      resume_data: args.resume_data,
+      owner: args.owner,
+    });
+    return { success: true, id: newId, action: "created" };
+  },
+});
+
 // delete a resume
 export const deleteResume = mutation({
   args: { id: v.id("resume") },
@@ -64,3 +98,4 @@ export const deleteResume = mutation({
     return await ctx.db.delete(args.id);
   },
 });
+
