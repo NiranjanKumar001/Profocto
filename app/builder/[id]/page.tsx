@@ -30,6 +30,7 @@ import MobileNavbar from "@/components/ui/MobileNavbar";
 import MobileBottomNav from "@/components/ui/MobileBottomNav";
 import FormSkeleton from "@/components/ui/FormSkeleton";
 import PreviewSkeleton from "@/components/ui/PreviewSkeleton";
+import LazySection from "@/components/ui/LazySection";
 
 // server side rendering false
 const Print = dynamic(() => import("@/components/utility/WinPrint"), {
@@ -230,6 +231,8 @@ export default function BuilderPage() {
                     WebkitOverflowScrolling: 'touch',
                     scrollbarWidth: 'thin',
                     scrollbarColor: 'rgba(236, 72, 153, 0.3) transparent',
+                    willChange: 'scroll-position',
+                    transform: 'translateZ(0)',
                   }}
                 >
                   {!isHydrated ? (
@@ -251,55 +254,78 @@ export default function BuilderPage() {
                     </div>
 
                       <div className='space-y-2.5 lg:space-y-6'>
-                      <LoadUnload />
-                      <PersonalInformation />
-                      <SocialMedia />
-                      <Summary />
-                      <Education />
-                      <WorkExperience />
-                      <Projects />
+                      <LazySection height="200px">
+                        <LoadUnload />
+                      </LazySection>
+                      <LazySection height="350px">
+                        <PersonalInformation />
+                      </LazySection>
+                      <LazySection height="250px">
+                        <SocialMedia />
+                      </LazySection>
+                      <LazySection height="200px">
+                        <Summary />
+                      </LazySection>
+                      <LazySection height="300px">
+                        <Education />
+                      </LazySection>
+                      <LazySection height="350px">
+                        <WorkExperience />
+                      </LazySection>
+                      <LazySection height="350px">
+                        <Projects />
+                      </LazySection>
 
-                      <div className='form-section'>
-                        <EditableFormTitle
-                          sectionKey='skills'
-                          defaultTitle='Technical Skills'
-                          className='input-title'
-                        />
-                        <div className='space-y-4'>
-                          {resumeData.skills
-                            .filter(
-                              (skill: { title: string; skills: string[] }) =>
-                                skill.title !== "Soft Skills"
-                            )
-                            .map(
-                              (
-                                skill: { title: string; skills: string[] },
-                                index: number
-                              ) => (
-                                <Skill title={skill.title} key={index} />
+                      <LazySection height="300px">
+                        <div className='form-section'>
+                          <EditableFormTitle
+                            sectionKey='skills'
+                            defaultTitle='Technical Skills'
+                            className='input-title'
+                          />
+                          <div className='space-y-4'>
+                            {resumeData.skills
+                              .filter(
+                                (skill: { title: string; skills: string[] }) =>
+                                  skill.title !== "Soft Skills"
                               )
-                            )}
+                              .map(
+                                (
+                                  skill: { title: string; skills: string[] },
+                                  index: number
+                                ) => (
+                                  <Skill title={skill.title} key={index} />
+                                )
+                              )}
+                          </div>
                         </div>
-                      </div>
+                      </LazySection>
 
-                      {resumeData.skills
-                        .filter(
-                          (skill: { title: string; skills: string[] }) =>
-                            skill.title === "Soft Skills"
-                        )
-                        .map(
-                          (
-                            skill: { title: string; skills: string[] },
-                            index: number
-                          ) => (
-                            <Skill title={skill.title} key={index} />
+                      <LazySection height="200px">
+                        {resumeData.skills
+                          .filter(
+                            (skill: { title: string; skills: string[] }) =>
+                              skill.title === "Soft Skills"
                           )
-                        )}
+                          .map(
+                            (
+                              skill: { title: string; skills: string[] },
+                              index: number
+                            ) => (
+                              <Skill title={skill.title} key={index} />
+                            )
+                          )}
+                      </LazySection>
 
-                      <Language />
-                      <Certification />
-                      
-                      <Award /> 
+                      <LazySection height="200px">
+                        <Language />
+                      </LazySection>
+                      <LazySection height="300px">
+                        <Certification />
+                      </LazySection>
+                      <LazySection height="300px">
+                        <Award />
+                      </LazySection> 
                     </div>
 
                     <div className='hidden lg:block relative lg:sticky bottom-0 left-0 right-0 p-4 z-10 mt-6'>

@@ -42,6 +42,30 @@
             -webkit-transform: translateZ(0);
         }
         
+        /* Optimize form sections for mobile scrolling */
+        .form-section,
+        .section-card {
+            will-change: auto;
+            contain: layout style;
+        }
+        
+        /* Disable expensive transitions on mobile */
+        .form-section,
+        .section-card,
+        input,
+        textarea,
+        select,
+        button {
+            transition: none !important;
+        }
+        
+        /* Re-enable only essential transitions */
+        input:focus,
+        textarea:focus,
+        select:focus {
+            transition: border-color 0.15s ease !important;
+        }
+        
         * {
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
