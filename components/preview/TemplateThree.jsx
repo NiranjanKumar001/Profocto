@@ -734,11 +734,15 @@ const TemplateFour = ({
         <div className='flex justify-center items-center gap-4 contact mb-2'>
           <div className='flex items-center gap-1'>
             <MdPhone className='text-black' />
-            <span>{resumeData.contactInformation}</span>
+            <a href={`tel:${resumeData.contactInformation}`}>
+              {resumeData.contactInformation}
+            </a>
           </div>
           <div className='flex items-center gap-1'>
             <MdEmail className='text-black' />
-            <span>{resumeData.email}</span>
+            <a href={`mailto:${resumeData.email}`}>
+              {resumeData.email}
+            </a>
           </div>
           <div className='flex items-center gap-1'>
             <MdLocationOn className='text-black' />

@@ -434,13 +434,17 @@ const TemplateFive = ({
           {resumeData.contactInformation && (
             <div className="flex items-center gap-1">
               <MdPhone className="w-3 h-3 text-gray-700" />
-              <span>{resumeData.contactInformation}</span>
+              <a href={`tel:${resumeData.contactInformation}`}>
+                {resumeData.contactInformation}
+              </a>
             </div>
           )}
           {resumeData.email && (
             <div className="flex items-center gap-1">
               <MdEmail className="w-3 h-3 text-gray-700" />
-              <span>{resumeData.email}</span>
+              <a href={`mailto:${resumeData.email}`}>
+                {resumeData.email}
+              </a>
             </div>
           )}
           {resumeData.address && (

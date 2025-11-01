@@ -782,13 +782,17 @@ const TemplateFive = ({
               {resumeData.email && (
                 <div className='flex items-center gap-1.5 flex-shrink-0'>
                   <FaEnvelope className='text-gray-600 flex-shrink-0' />
-                  <span className='truncate max-w-[200px]'>{resumeData.email}</span>
+                  <a href={`mailto:${resumeData.email}`} className='truncate max-w-[200px]'>
+                    {resumeData.email}
+                  </a>
                 </div>
               )}
               {resumeData.contactInformation && (
                 <div className='flex items-center gap-1.5 flex-shrink-0'>
                   <FaPhoneAlt className='text-gray-600 flex-shrink-0' />
-                  <span className='whitespace-nowrap'>{resumeData.contactInformation}</span>
+                  <a href={`tel:${resumeData.contactInformation}`} className='whitespace-nowrap'>
+                    {resumeData.contactInformation}
+                  </a>
                 </div>
               )}
               {resumeData.address && (

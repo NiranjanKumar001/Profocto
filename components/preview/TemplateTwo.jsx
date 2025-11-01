@@ -604,13 +604,13 @@ const TemplateTwo = ({
               {contactData && (
                 <div className="flex items-center gap-1.5">
                   <FaPhoneAlt className="text-gray-700 text-sm" />
-                  <span>{contactData}</span>
+                  <a href={`tel:${contactData}`}>{contactData}</a>
                 </div>
               )}
               {emailData && (
                 <div className="flex items-center gap-1.5">
                   <FaEnvelope className="text-gray-700 text-sm" />
-                  <span>{emailData}</span>
+                  <a href={`mailto:${emailData}`}>{emailData}</a>
                 </div>
               )}
             </div>
