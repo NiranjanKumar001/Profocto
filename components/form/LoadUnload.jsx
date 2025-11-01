@@ -1,6 +1,6 @@
 "use client";
 
-import { FaCloudUploadAlt, FaCloudDownloadAlt } from "react-icons/fa";
+import { FaCloudUploadAlt, FaCloudDownloadAlt, FaSave } from "react-icons/fa";
 import { RiResetLeftLine } from "react-icons/ri";
 import React, { useContext, useState, useEffect } from "react";
 import { createPortal } from "react-dom";
@@ -8,7 +8,7 @@ import { ResumeContext } from "../../contexts/ResumeContext";
 import DefaultResumeData from "../utility/DefaultResumeData";
 
 const LoadUnload = () => {
-  const { resumeData, setResumeData } = useContext(ResumeContext);
+  const { resumeData, setResumeData, saveResume, isSaving } = useContext(ResumeContext);
   const [showResetModal, setShowResetModal] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -97,6 +97,24 @@ const LoadUnload = () => {
           </button>
           <span className="tooltiptext">Reset to default data</span>
         </div>
+
+        {saveResume && (
+          <div className="tooltip">
+            <button
+              aria-label="Save Resume"
+              className={`p-2 sm:p-2 text-white rounded transition-colors ${
+                isSaving
+                  ? 'bg-gray-600 cursor-not-allowed'
+                  : 'bg-pink-600 hover:bg-pink-700'
+              }`}
+              onClick={saveResume}
+              disabled={isSaving}
+            >
+              <FaSave className="text-[1.1rem] sm:text-[1.2rem] text-white" />
+            </button>
+            <span className="tooltiptext">{isSaving ? 'Saving...' : 'Save to database'}</span>
+          </div>
+        )}
       </div>
 
       {/* Reset Confirmation Modal - Using Portal to render outside scroll container */}

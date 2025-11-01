@@ -50,11 +50,14 @@ export default function BuilderPage() {
   const params = useParams();
   const resumeId = params?.id as string;
 
-  // Query to get the resume and its Convex _id
-  const resumeFromDb = useQuery(api.resume.getResume, resumeId ? { id: resumeId } : "skip");
+  // Get user from Convex by email
+  const convexUser = useQuery(
+    api.auth.getUserByEmail,
+    session?.user?.email ? { email: session.user.email } : "skip"
+  );
 
-  // Convex mutation for updating resume
-  const updateResumeMutation = useMutation(api.resume.updateResume);
+  // Convex mutation for upserting resume (create or update)
+  const upsertResumeMutation = useMutation(api.resume.upsertResume);
 
   // Resume data state with localStorage persistence (hydration-safe)
   const [resumeData, setResumeData] = useState<ResumeData>(
@@ -175,9 +178,15 @@ export default function BuilderPage() {
     // Don't save if not hydrated or already saving
     if (!isHydrated || isSaving) return;
     
-    // Validate resume exists in database
-    if (!resumeFromDb || !resumeFromDb._id) {
-      toast.error("Resume not found in database");
+    // Check if user is logged in
+    if (!session?.user?.email) {
+      toast.error("Please sign in to save your resume");
+      return;
+    }
+
+    // Check if convex user is loaded
+    if (!convexUser || !convexUser._id) {
+      toast.error("Loading user data... Please try again in a moment.");
       return;
     }
 
@@ -187,13 +196,18 @@ export default function BuilderPage() {
       // Convert resume data to JSON string
       const resumeDataString = JSON.stringify(resumeData);
       
-      // Call the Convex mutation with the actual Convex _id
-      await updateResumeMutation({
-        resume_id: resumeFromDb._id,
+      // Call the Convex upsert mutation
+      const result = await upsertResumeMutation({
+        resume_id: resumeId,
         resume_data: resumeDataString,
+        owner: convexUser._id,
       });
       
-      toast.success("Resume saved successfully!");
+      if (result.action === "created") {
+        toast.success("Resume created successfully!");
+      } else {
+        toast.success("Resume saved successfully!");
+      }
     } catch (error) {
       console.error("Failed to save resume:", error);
       toast.error("Failed to save resume. Please try again.");

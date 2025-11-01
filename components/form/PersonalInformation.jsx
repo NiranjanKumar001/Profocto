@@ -5,7 +5,7 @@ import { ResumeContext } from "../../contexts/ResumeContext";
 import { FaTrash } from "react-icons/fa";
 
 const PersonalInformation = ({}) => {
-  const { resumeData, setResumeData, handleProfilePicture, handleChange, saveResume, isSaving } =
+  const { resumeData, setResumeData, handleProfilePicture, handleChange } =
     useContext(ResumeContext);
 
   // Ref for file input to reset it
@@ -80,22 +80,7 @@ const PersonalInformation = ({}) => {
 
   return (
     <div className="form-section">
-      <div className="form-section-title">
-        <span>Personal Information</span>
-        {saveResume && (
-          <button
-            onClick={saveResume}
-            disabled={isSaving}
-            className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
-              isSaving
-                ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                : 'bg-pink-600 text-white hover:bg-pink-700 active:scale-95'
-            }`}
-          >
-            {isSaving ? 'Saving...' : 'Save Resume'}
-          </button>
-        )}
-      </div>
+      <h2 className="form-section-title">Personal Information</h2>
       
       <div className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
