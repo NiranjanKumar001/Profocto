@@ -33,6 +33,8 @@ export default defineSchema({
     .index("by_session_token", ["sessionToken"])
     .index("by_user_id", ["userId"]),
 
+  // NOTE: Only "resume" (singular) table is used in the application
+  // Any "resumes" table should be deleted from the dashboard
   resume: defineTable({
     resume_data: v.string(),
     owner:  v.id("users"),
