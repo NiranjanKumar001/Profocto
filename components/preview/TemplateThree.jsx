@@ -754,15 +754,19 @@ const TemplateFour = ({
               const icon = icons.find(
                 (icon) => icon.name === socialMedia.socialMedia.toLowerCase()
               );
+              
+              // Check if link already has protocol
+              const hasProtocol = socialMedia.link.startsWith('http://') || socialMedia.link.startsWith('https://');
+              const prefix = hasProtocol ? '' : 
+                socialMedia.socialMedia.toLowerCase() === "website"
+                  ? "https://"
+                  : socialMedia.socialMedia.toLowerCase() === "linkedin"
+                    ? "https://www."
+                    : "https://www.";
+              
               return (
                 <a
-                  href={`${
-                    socialMedia.socialMedia.toLowerCase() === "website"
-                      ? "https://"
-                      : socialMedia.socialMedia.toLowerCase() === "linkedin"
-                      ? "https://www."
-                      : "https://www."
-                  }${socialMedia.link}`}
+                  href={`${prefix}${socialMedia.link}`}
                   key={index}
                   className='inline-flex items-center gap-1 text-black transition-colors'
                   target='_blank'
