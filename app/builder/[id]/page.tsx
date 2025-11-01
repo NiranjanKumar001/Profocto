@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import LogoutLoader from "@/components/auth/LogoutLoader";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useParams } from "next/navigation";
 import { Id } from "@/convex/_generated/dataModel";
@@ -49,6 +49,9 @@ export default function BuilderPage() {
   // Get resume ID from URL params
   const params = useParams();
   const resumeId = params?.id as string;
+
+  // Query to get the resume and its Convex _id
+  const resumeFromDb = useQuery(api.resume.getResume, resumeId ? { id: resumeId } : "skip");
 
   // Convex mutation for updating resume
   const updateResumeMutation = useMutation(api.resume.updateResume);
@@ -172,9 +175,9 @@ export default function BuilderPage() {
     // Don't save if not hydrated or already saving
     if (!isHydrated || isSaving) return;
     
-    // Validate resume ID
-    if (!resumeId) {
-      toast.error("Resume ID is missing");
+    // Validate resume exists in database
+    if (!resumeFromDb || !resumeFromDb._id) {
+      toast.error("Resume not found in database");
       return;
     }
 
@@ -184,9 +187,9 @@ export default function BuilderPage() {
       // Convert resume data to JSON string
       const resumeDataString = JSON.stringify(resumeData);
       
-      // Call the Convex mutation
+      // Call the Convex mutation with the actual Convex _id
       await updateResumeMutation({
-        resume_id: resumeId as Id<"resume">,
+        resume_id: resumeFromDb._id,
         resume_data: resumeDataString,
       });
       
