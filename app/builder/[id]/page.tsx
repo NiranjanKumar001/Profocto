@@ -36,6 +36,7 @@ import MobileBottomNav from "@/components/ui/MobileBottomNav";
 import FormSkeleton from "@/components/ui/FormSkeleton";
 import PreviewSkeleton from "@/components/ui/PreviewSkeleton";
 import LazySection from "@/components/ui/LazySection";
+import ProfileModal from "@/components/ui/ProfileModal";
 
 // server side rendering false
 const Print = dynamic(() => import("@/components/utility/WinPrint"), {
@@ -65,6 +66,7 @@ export default function BuilderPage() {
   );
   const [isHydrated, setIsHydrated] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [showProfileModal, setShowProfileModal] = useState(false);
 
   // Load from localStorage after hydration to prevent mismatches
   useEffect(() => {
@@ -315,6 +317,7 @@ export default function BuilderPage() {
                         
                         {/* Right side - Settings Icon */}
                         <button 
+                          onClick={() => setShowProfileModal(true)}
                           className='p-2 rounded-lg hover:bg-gray-800/50 transition-colors'
                           aria-label='Settings'
                         >
@@ -587,6 +590,12 @@ export default function BuilderPage() {
       </SectionTitleProvider>
 
       <LogoutLoader isVisible={isLoggingOut} />
+      
+      {/* Profile Modal */}
+      <ProfileModal 
+        isOpen={showProfileModal} 
+        onClose={() => setShowProfileModal(false)} 
+      />
     </>
   );
 }
