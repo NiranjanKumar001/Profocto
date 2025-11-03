@@ -7,10 +7,6 @@ export default defineSchema({
     email: v.string(),
     image: v.optional(v.string()),
     emailVerified: v.optional(v.number()),
-    // Premium subscription status
-    isPremium: v.optional(v.boolean()),
-    premiumSince: v.optional(v.number()), // Timestamp when premium was activated
-    premiumExpiresAt: v.optional(v.number()), // Timestamp when premium expires (for future subscription management)
   }).index("by_email", ["email"]),
 
   accounts: defineTable({

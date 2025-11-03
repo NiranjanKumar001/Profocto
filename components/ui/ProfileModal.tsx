@@ -36,17 +36,6 @@ export default function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
   // Delete mutation
   const deleteResume = useMutation(api.resume.deleteResume);
 
-  // Get premium status from database
-  const premiumStatus = useQuery(
-    api.premium.getPremiumStatus,
-    convexUser?._id ? { userId: convexUser._id } : "skip"
-  );
-
-  // Free tier: max 2 resumes
-  const FREE_RESUME_LIMIT = 2;
-  const isPremium = premiumStatus?.isPremium || false;
-  const canCreateMore = isPremium || (resumes?.length || 0) < FREE_RESUME_LIMIT;
-
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -65,10 +54,6 @@ export default function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
   };
 
   const handleCreateNew = () => {
-    if (!canCreateMore) {
-      toast.error('Free plan allows only 2 resumes. Upgrade to Premium for unlimited resumes.');
-      return;
-    }
     // Generate a new UUID for the resume
     const newId = crypto.randomUUID();
     router.push(`/builder/${newId}`);
@@ -153,24 +138,20 @@ export default function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-2 gap-3">
             <div className="bg-gray-900/50 border border-gray-800 rounded-lg p-3">
               <div className="text-xl font-semibold text-gray-200">
                 {resumes?.length || 0}
               </div>
-              <div className="text-xs text-gray-500 mt-1">Total</div>
+              <div className="text-xs text-gray-500 mt-1">Total Resumes</div>
             </div>
             <div className="bg-gray-900/50 border border-gray-800 rounded-lg p-3">
               <div className="text-xl font-semibold text-gray-200">
-                {isPremium ? 'Premium' : 'Free'}
+                {resumes && resumes.length > 0
+                  ? formatDate(Math.max(...resumes.map((r) => r._creationTime)))
+                  : "N/A"}
               </div>
-              <div className="text-xs text-gray-500 mt-1">Plan</div>
-            </div>
-            <div className="bg-gray-900/50 border border-gray-800 rounded-lg p-3">
-              <div className="text-xl font-semibold text-gray-200">
-                {isPremium ? '∞' : Math.max(0, FREE_RESUME_LIMIT - (resumes?.length || 0))}
-              </div>
-              <div className="text-xs text-gray-500 mt-1">Remaining</div>
+              <div className="text-xs text-gray-500 mt-1">Last Updated</div>
             </div>
           </div>
         </div>
@@ -181,12 +162,7 @@ export default function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
             <h3 className="text-base font-medium text-gray-200">My Resumes</h3>
             <button
               onClick={handleCreateNew}
-              disabled={!canCreateMore}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all text-sm font-medium ${
-                canCreateMore
-                  ? 'bg-gray-800 hover:bg-gray-700 text-gray-200 border border-gray-700'
-                  : 'bg-gray-900 text-gray-600 border border-gray-800 cursor-not-allowed'
-              }`}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg transition-all text-sm font-medium bg-gray-800 hover:bg-gray-700 text-gray-200 border border-gray-700"
             >
               <FaPlus className="size-3.5" />
               New Resume
@@ -212,7 +188,10 @@ export default function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
           ) : (
             <>
               <div className="space-y-2">
-                {resumes.map((resume) => (
+                {resumes
+                  .sort((a, b) => b._creationTime - a._creationTime)
+                  .slice(0, 3)
+                  .map((resume) => (
                   <div
                     key={resume._id}
                     className="bg-gray-900/50 hover:bg-gray-900 rounded-lg p-4 border border-gray-800 hover:border-gray-700 transition-all"
@@ -275,30 +254,6 @@ export default function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                   </div>
                 ))}
               </div>
-
-              {/* Premium Upgrade Banner - Show if at limit */}
-              {!isPremium && resumes.length >= FREE_RESUME_LIMIT && (
-                <div className="mt-4 p-4 rounded-lg bg-gray-900/50 border border-gray-800">
-                  <div className="flex items-center justify-between gap-4">
-                    <div className="flex items-start gap-3 flex-1">
-                      <div className="w-10 h-10 rounded-lg bg-gray-800 border border-gray-700 flex items-center justify-center flex-shrink-0">
-                        <FaFileAlt className="text-gray-500 size-4" />
-                      </div>
-                      <div className="flex-1">
-                        <h4 className="text-gray-200 font-medium text-sm mb-1">
-                          Resume Limit Reached
-                        </h4>
-                        <p className="text-gray-500 text-xs">
-                          You&apos;ve created {FREE_RESUME_LIMIT} resumes on the free plan. Upgrade to Premium for unlimited resumes and advanced features.
-                        </p>
-                      </div>
-                    </div>
-                    <button className="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-200 rounded-lg transition-all text-xs font-medium border border-gray-700 whitespace-nowrap">
-                      Upgrade to Premium
-                    </button>
-                  </div>
-                </div>
-              )}
             </>
           )}
         </div>
