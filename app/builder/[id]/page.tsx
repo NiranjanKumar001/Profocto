@@ -262,7 +262,7 @@ export default function BuilderPage() {
             isSaving,
           }}
         >
-          <MobileNavbar />
+          <MobileNavbar onSettingsClick={() => setShowProfileModal(true)} />
 
           <MobileBottomNav
             activeView={mobileView}

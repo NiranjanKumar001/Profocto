@@ -31,6 +31,20 @@ export const createResume = mutation({
     owner: v.id("users"),
   },
   handler: async (ctx, args) => {
+    // Check resume count for free tier limit (2 resumes max)
+    const FREE_RESUME_LIMIT = 2;
+    const existingResumes = await ctx.db
+      .query("resume")
+      .filter((q) => q.eq(q.field("owner"), args.owner))
+      .collect();
+    
+    // TODO: Check if user is premium from database
+    const isPremium = false;
+    
+    if (!isPremium && existingResumes.length >= FREE_RESUME_LIMIT) {
+      throw new Error(`Free plan allows only ${FREE_RESUME_LIMIT} resumes. Upgrade to Premium for unlimited resumes.`);
+    }
+    
     return await ctx.db.insert("resume", args);
   },
 });
@@ -80,6 +94,20 @@ export const upsertResume = mutation({
         // If ID is invalid or resume not found, create new one
         console.log("Resume not found, creating new one");
       }
+    }
+
+    // Check resume count for free tier limit (2 resumes max)
+    const FREE_RESUME_LIMIT = 2;
+    const existingResumes = await ctx.db
+      .query("resume")
+      .filter((q) => q.eq(q.field("owner"), args.owner))
+      .collect();
+    
+    // TODO: Check if user is premium from database
+    const isPremium = false;
+    
+    if (!isPremium && existingResumes.length >= FREE_RESUME_LIMIT) {
+      throw new Error(`Free plan allows only ${FREE_RESUME_LIMIT} resumes. Upgrade to Premium for unlimited resumes.`);
     }
 
     // Create new resume

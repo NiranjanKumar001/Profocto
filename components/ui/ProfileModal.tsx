@@ -36,6 +36,11 @@ export default function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
   // Delete mutation
   const deleteResume = useMutation(api.resume.deleteResume);
 
+  // Free tier: max 2 resumes
+  const FREE_RESUME_LIMIT = 2;
+  const isPremium = false; // TODO: Connect to premium status from database
+  const canCreateMore = isPremium || (resumes?.length || 0) < FREE_RESUME_LIMIT;
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -54,6 +59,10 @@ export default function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
   };
 
   const handleCreateNew = () => {
+    if (!canCreateMore) {
+      toast.error('Free plan allows only 2 resumes. Upgrade to Premium for unlimited resumes.');
+      return;
+    }
     // Generate a new UUID for the resume
     const newId = crypto.randomUUID();
     router.push(`/builder/${newId}`);
@@ -98,157 +107,193 @@ export default function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
   };
 
   return createPortal(
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center backdrop-blur-sm bg-black/60 exclude-print">
-      <div className="bg-gradient-to-br from-gray-900 to-gray-950 rounded-2xl border border-pink-500/30 max-w-4xl w-[95%] max-h-[90vh] overflow-hidden shadow-2xl">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-md exclude-print p-4">
+      <div 
+        className="bg-[#0a0a0a] rounded-xl border border-gray-800 max-w-4xl w-full max-h-[90vh] overflow-hidden"
+        style={{
+          boxShadow: '0 0 0 1px rgba(236, 72, 153, 0.1), 0 20px 50px rgba(0, 0, 0, 0.5)',
+        }}
+      >
         {/* Header */}
-        <div className="relative p-6 border-b border-gray-800">
-          <div className="flex items-center justify-between">
+        <div className="relative px-6 py-5 border-b border-gray-800/60">
+          <div className="flex items-start justify-between mb-4">
             <div className="flex items-center gap-4">
               {session?.user?.image && (
-                <Image
-                  src={session.user.image}
-                  alt={session.user.name || "User"}
-                  width={56}
-                  height={56}
-                  className="rounded-full border-2 border-pink-500"
-                />
+                <div className="relative">
+                  <Image
+                    src={session.user.image}
+                    alt={session.user.name || "User"}
+                    width={48}
+                    height={48}
+                    className="rounded-full"
+                  />
+                  <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-[#0a0a0a]"></div>
+                </div>
               )}
               <div>
-                <h2 className="text-2xl font-bold text-white">
+                <h2 className="text-xl font-semibold text-gray-100">
                   {session?.user?.name || "User Profile"}
                 </h2>
-                <p className="text-gray-400 text-sm">{session?.user?.email}</p>
+                <p className="text-gray-500 text-sm mt-0.5">{session?.user?.email}</p>
               </div>
             </div>
             <button
               onClick={onClose}
-              className="p-2 rounded-lg hover:bg-gray-800 transition-colors"
+              className="p-2 rounded-lg hover:bg-gray-800/50 transition-colors group"
               aria-label="Close"
             >
-              <FaTimes className="text-gray-400 hover:text-white size-5" />
+              <FaTimes className="text-gray-500 group-hover:text-gray-300 size-4" />
             </button>
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-3 gap-4 mt-6">
-            <div className="bg-gray-800/50 rounded-lg p-3 text-center">
-              <div className="text-2xl font-bold text-pink-500">
+          <div className="grid grid-cols-3 gap-3">
+            <div className="bg-gray-900/50 border border-gray-800 rounded-lg p-3">
+              <div className="text-xl font-semibold text-gray-200">
                 {resumes?.length || 0}
               </div>
-              <div className="text-xs text-gray-400 mt-1">Total Resumes</div>
+              <div className="text-xs text-gray-500 mt-1">Total</div>
             </div>
-            <div className="bg-gray-800/50 rounded-lg p-3 text-center">
-              <div className="text-2xl font-bold text-blue-500">
-                {resumes?.filter((r) => {
-                  const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
-                  return r._creationTime > weekAgo;
-                }).length || 0}
+            <div className="bg-gray-900/50 border border-gray-800 rounded-lg p-3">
+              <div className="text-xl font-semibold text-gray-200">
+                {isPremium ? 'Premium' : 'Free'}
               </div>
-              <div className="text-xs text-gray-400 mt-1">This Week</div>
+              <div className="text-xs text-gray-500 mt-1">Plan</div>
             </div>
-            <div className="bg-gray-800/50 rounded-lg p-3 text-center">
-              <div className="text-2xl font-bold text-green-500">
-                {resumes && resumes.length > 0
-                  ? formatDate(
-                      Math.max(...resumes.map((r) => r._creationTime))
-                    )
-                  : "N/A"}
+            <div className="bg-gray-900/50 border border-gray-800 rounded-lg p-3">
+              <div className="text-xl font-semibold text-gray-200">
+                {isPremium ? '∞' : Math.max(0, FREE_RESUME_LIMIT - (resumes?.length || 0))}
               </div>
-              <div className="text-xs text-gray-400 mt-1">Last Active</div>
+              <div className="text-xs text-gray-500 mt-1">Remaining</div>
             </div>
           </div>
         </div>
 
         {/* Resume List */}
-        <div className="p-6 overflow-y-auto max-h-[calc(90vh-280px)]">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-white">Your Resumes</h3>
+        <div className="px-6 py-5 overflow-y-auto max-h-[calc(90vh-280px)]">
+          <div className="flex items-center justify-between mb-5">
+            <h3 className="text-base font-medium text-gray-200">My Resumes</h3>
             <button
               onClick={handleCreateNew}
-              className="flex items-center gap-2 px-4 py-2 bg-pink-600 hover:bg-pink-700 text-white rounded-lg transition-colors text-sm font-medium"
+              disabled={!canCreateMore}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all text-sm font-medium ${
+                canCreateMore
+                  ? 'bg-gray-800 hover:bg-gray-700 text-gray-200 border border-gray-700'
+                  : 'bg-gray-900 text-gray-600 border border-gray-800 cursor-not-allowed'
+              }`}
             >
-              <FaPlus className="size-4" />
-              Create New
+              <FaPlus className="size-3.5" />
+              New Resume
             </button>
           </div>
 
           {!resumes || resumes.length === 0 ? (
-            <div className="text-center py-12">
-              <FaFileAlt className="size-16 text-gray-600 mx-auto mb-4" />
-              <p className="text-gray-400 text-lg mb-2">No resumes yet</p>
+            <div className="text-center py-16">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-lg bg-gray-900 flex items-center justify-center border border-gray-800">
+                <FaFileAlt className="size-8 text-gray-600" />
+              </div>
+              <p className="text-gray-300 text-base mb-1 font-medium">No resumes yet</p>
               <p className="text-gray-500 text-sm mb-6">
                 Create your first resume to get started
               </p>
               <button
                 onClick={handleCreateNew}
-                className="px-6 py-3 bg-pink-600 hover:bg-pink-700 text-white rounded-lg transition-colors font-medium"
+                className="px-6 py-2.5 bg-gray-800 hover:bg-gray-700 text-gray-200 rounded-lg transition-all font-medium border border-gray-700"
               >
                 Create First Resume
               </button>
             </div>
           ) : (
-            <div className="space-y-3">
-              {resumes.map((resume) => (
-                <div
-                  key={resume._id}
-                  className="bg-gray-800/50 hover:bg-gray-800 rounded-xl p-4 border border-gray-700 hover:border-pink-500/50 transition-all group"
-                >
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-3 mb-2">
-                        <FaFileAlt className="text-pink-500 size-5 flex-shrink-0" />
+            <>
+              <div className="space-y-2">
+                {resumes.map((resume) => (
+                  <div
+                    key={resume._id}
+                    className="bg-gray-900/50 hover:bg-gray-900 rounded-lg p-4 border border-gray-800 hover:border-gray-700 transition-all"
+                  >
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="flex items-center gap-3 flex-1 min-w-0">
+                        <div className="w-10 h-10 rounded-lg bg-gray-800 border border-gray-700 flex items-center justify-center flex-shrink-0">
+                          <FaFileAlt className="text-gray-500 size-4" />
+                        </div>
                         <div className="flex-1 min-w-0">
-                          <h4 className="text-white font-semibold truncate">
+                          <h4 className="text-gray-200 font-medium truncate text-sm">
                             {getResumeTitle(resume.resume_data)}
                           </h4>
-                          <p className="text-gray-400 text-sm truncate">
-                            {getResumePosition(resume.resume_data)}
-                          </p>
+                          <div className="flex items-center gap-3 mt-1">
+                            <p className="text-gray-500 text-xs truncate">
+                              {getResumePosition(resume.resume_data)}
+                            </p>
+                            <span className="text-gray-700 text-xs">•</span>
+                            <span className="text-gray-500 text-xs whitespace-nowrap">
+                              {formatDate(resume._creationTime)}
+                            </span>
+                          </div>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2 text-xs text-gray-500">
-                        <FaClock className="size-3" />
-                        <span>Created {formatDate(resume._creationTime)}</span>
-                      </div>
-                    </div>
 
-                    <div className="flex items-center gap-2 ml-4">
-                      <button
-                        onClick={() => handleEditResume(resume._id)}
-                        className="p-2 rounded-lg bg-blue-600/20 hover:bg-blue-600 text-blue-400 hover:text-white transition-colors"
-                        title="Edit Resume"
-                      >
-                        <FaEdit className="size-4" />
-                      </button>
-                      {deleteConfirm === resume._id ? (
-                        <div className="flex items-center gap-2">
-                          <button
-                            onClick={() => handleDeleteResume(resume._id)}
-                            className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs rounded transition-colors"
-                          >
-                            Confirm
-                          </button>
-                          <button
-                            onClick={() => setDeleteConfirm(null)}
-                            className="px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-white text-xs rounded transition-colors"
-                          >
-                            Cancel
-                          </button>
-                        </div>
-                      ) : (
+                      <div className="flex items-center gap-1.5 flex-shrink-0">
                         <button
-                          onClick={() => setDeleteConfirm(resume._id)}
-                          className="p-2 rounded-lg bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white transition-colors"
-                          title="Delete Resume"
+                          onClick={() => handleEditResume(resume._id)}
+                          className="p-2 rounded-lg bg-gray-800 hover:bg-gray-700 border border-gray-700 transition-all"
+                          title="Edit Resume"
                         >
-                          <FaTrash className="size-4" />
+                          <FaEdit className="size-3.5 text-gray-400" />
                         </button>
-                      )}
+                        {deleteConfirm === resume._id ? (
+                          <div className="flex items-center gap-1.5">
+                            <button
+                              onClick={() => handleDeleteResume(resume._id)}
+                              className="px-3 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs rounded-lg transition-all font-medium border border-gray-700"
+                            >
+                              Confirm
+                            </button>
+                            <button
+                              onClick={() => setDeleteConfirm(null)}
+                              className="px-3 py-2 bg-gray-900 hover:bg-gray-800 text-gray-400 text-xs rounded-lg transition-all border border-gray-800"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        ) : (
+                          <button
+                            onClick={() => setDeleteConfirm(resume._id)}
+                            className="p-2 rounded-lg bg-gray-800 hover:bg-gray-700 border border-gray-700 transition-all"
+                            title="Delete Resume"
+                          >
+                            <FaTrash className="size-3.5 text-gray-400" />
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </div>
+                ))}
+              </div>
+
+              {/* Premium Upgrade Banner - Show if at limit */}
+              {!isPremium && resumes.length >= FREE_RESUME_LIMIT && (
+                <div className="mt-4 p-4 rounded-lg bg-gray-900/50 border border-gray-800">
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="flex items-start gap-3 flex-1">
+                      <div className="w-10 h-10 rounded-lg bg-gray-800 border border-gray-700 flex items-center justify-center flex-shrink-0">
+                        <FaFileAlt className="text-gray-500 size-4" />
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="text-gray-200 font-medium text-sm mb-1">
+                          Resume Limit Reached
+                        </h4>
+                        <p className="text-gray-500 text-xs">
+                          You&apos;ve created {FREE_RESUME_LIMIT} resumes on the free plan. Upgrade to Premium for unlimited resumes and advanced features.
+                        </p>
+                      </div>
+                    </div>
+                    <button className="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-200 rounded-lg transition-all text-xs font-medium border border-gray-700 whitespace-nowrap">
+                      Upgrade to Premium
+                    </button>
+                  </div>
                 </div>
-              ))}
-            </div>
+              )}
+            </>
           )}
         </div>
       </div>

@@ -2,15 +2,16 @@
 
 import Image from "next/image";
 import { useSession, signOut } from "next-auth/react";
-import { FaOctopusDeploy } from "react-icons/fa";
+import { FaOctopusDeploy, FaCog } from "react-icons/fa";
 import { MdLogout, MdEmail } from "react-icons/md";
 import { useState, useRef, useEffect } from "react";
 
 interface MobileNavbarProps {
   className?: string;
+  onSettingsClick?: () => void;
 }
 
-export default function MobileNavbar({ className = "" }: MobileNavbarProps) {
+export default function MobileNavbar({ className = "", onSettingsClick }: MobileNavbarProps) {
   const { data: session } = useSession();
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -53,8 +54,21 @@ export default function MobileNavbar({ className = "" }: MobileNavbarProps) {
           </h1>
         </div>
 
-        {/* Profile Picture */}
-        <div className="relative" ref={dropdownRef}>
+        {/* Settings and Profile */}
+        <div className="flex items-center gap-3">
+          {/* Settings Button */}
+          {onSettingsClick && (
+            <button
+              onClick={onSettingsClick}
+              className="p-2 rounded-lg hover:bg-gray-800/50 transition-colors"
+              aria-label="Settings"
+            >
+              <FaCog className="text-gray-400 hover:text-pink-500 text-lg sm:text-xl transition-colors" />
+            </button>
+          )}
+
+          {/* Profile Picture */}
+          <div className="relative" ref={dropdownRef}>
           <div
             onClick={() => setShowDropdown(!showDropdown)}
             className="w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center text-white font-semibold shadow-lg ring-2 ring-pink-500/30 overflow-hidden transition-transform hover:scale-105 cursor-pointer"
@@ -138,6 +152,7 @@ export default function MobileNavbar({ className = "" }: MobileNavbarProps) {
               </button>
             </div>
           )}
+          </div>
         </div>
       </div>
     </div>
