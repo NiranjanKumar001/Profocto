@@ -36,9 +36,15 @@ export default function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
   // Delete mutation
   const deleteResume = useMutation(api.resume.deleteResume);
 
+  // Get premium status from database
+  const premiumStatus = useQuery(
+    api.premium.getPremiumStatus,
+    convexUser?._id ? { userId: convexUser._id } : "skip"
+  );
+
   // Free tier: max 2 resumes
   const FREE_RESUME_LIMIT = 2;
-  const isPremium = false; // TODO: Connect to premium status from database
+  const isPremium = premiumStatus?.isPremium || false;
   const canCreateMore = isPremium || (resumes?.length || 0) < FREE_RESUME_LIMIT;
 
   useEffect(() => {

@@ -14,6 +14,7 @@ import type {
   FunctionReference,
 } from "convex/server";
 import type * as auth from "../auth.js";
+import type * as premium from "../premium.js";
 import type * as resume from "../resume.js";
 
 /**
@@ -26,6 +27,7 @@ import type * as resume from "../resume.js";
  */
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
+  premium: typeof premium;
   resume: typeof resume;
 }>;
 export declare const api: FilterApi<
