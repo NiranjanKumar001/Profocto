@@ -30,7 +30,7 @@ import { SectionTitleProvider } from "@/contexts/SectionTitleContext";
 import { ResumeContext } from "@/contexts/ResumeContext";
 import Squares from "@/components/ui/Squares";
 import type { ResumeData } from "../../types/resume";
-import { FaChevronUp, FaOctopusDeploy } from "react-icons/fa";
+import { FaChevronUp, FaOctopusDeploy, FaCog } from "react-icons/fa";
 import MobileNavbar from "@/components/ui/MobileNavbar";
 import MobileBottomNav from "@/components/ui/MobileBottomNav";
 import FormSkeleton from "@/components/ui/FormSkeleton";
@@ -303,19 +303,24 @@ export default function BuilderPage() {
                     <FormSkeleton />
                   ) : (
                     <div className='p-2.5 sm:p-4 lg:p-5 relative z-20 lg:backdrop-blur-[1.5px]' style={{ minHeight: '100%' }}>
-                      <div className='hidden lg:flex bg-black/85 border border-pink-400/80 hover:border-pink-400  h-12 relative md:p-0 overflow-hidden flex-col gap-1 justify-center items-center mb-6 w-full rounded-full'>
-                        <div className='flex gap-0.5 items-center'>
-                        <h1 className='text-2xl md:text-3-xl text-gray-200 font-bold tracking-wide'>
-                          Profocto
-                        </h1>
-                        <FaOctopusDeploy className='text-pink-500 size-6 ' />
+                      {/* Header with Logo and Settings */}
+                      <div className='hidden lg:flex items-center justify-between mb-6 py-3'>
+                        {/* Left side - Profocto Logo */}
+                        <div className='flex gap-2 items-center'>
+                          <FaOctopusDeploy className='text-pink-500 size-7' />
+                          <h1 className='text-2xl text-gray-200 font-bold tracking-wide'>
+                            Profocto
+                          </h1>
+                        </div>
+                        
+                        {/* Right side - Settings Icon */}
+                        <button 
+                          className='p-2 rounded-lg hover:bg-gray-800/50 transition-colors'
+                          aria-label='Settings'
+                        >
+                          <FaCog className='text-gray-400 hover:text-pink-500 size-5 transition-colors' />
+                        </button>
                       </div>
-                      <FaOctopusDeploy className='text-pink-300 size-6 absolute left-5 bottom-2 opacity-20 -rotate-12' />
-                      <FaOctopusDeploy className='text-pink-300 size-6 absolute right-5 bottom-2 opacity-20 rotate-12' />
-
-                      <FaOctopusDeploy className='text-pink-300 size-6 absolute left-16 -top-1 opacity-20 rotate-180' />
-                      <FaOctopusDeploy className='text-pink-300 size-6 absolute right-16 -top-1 opacity-20 rotate-180' />
-                    </div>
 
                       <div className='space-y-2.5 lg:space-y-6'>
                       <LazySection height="200px">
