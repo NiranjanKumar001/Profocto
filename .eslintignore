@@ -1,0 +1,27 @@
+# Build outputs
+.next/
+out/
+build/
+dist/
+
+# Dependencies
+node_modules/
+
+# Convex generated files
+convex/_generated/
+
+# Cache
+.cache/
+.turbo/
+
+# Testing
+coverage/
+
+# Misc
+.DS_Store
+*.log
+.env
+.env.local
+.env.production.local
+.env.development.local
+.env.test.local
