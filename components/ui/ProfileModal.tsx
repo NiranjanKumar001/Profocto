@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { createPortal } from "react-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { FaTimes, FaFileAlt, FaTrash, FaEdit, FaPlus } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
@@ -21,16 +21,16 @@ export default function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
   const [mounted, setMounted] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
 
-  // Get user from Convex
+  // Get user from Convex - only query when modal is open
   const convexUser = useQuery(
     api.auth.getUserByEmail,
-    session?.user?.email ? { email: session.user.email } : "skip"
+    isOpen && session?.user?.email ? { email: session.user.email } : "skip"
   );
 
-  // Get all resumes for this user
+  // Get all resumes for this user - only query when modal is open
   const resumes = useQuery(
     api.resume.getResumes,
-    convexUser?._id ? { id: convexUser._id } : "skip"
+    isOpen && convexUser?._id ? { id: convexUser._id } : "skip"
   );
 
   // Delete mutation
@@ -59,11 +59,9 @@ export default function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
     };
   }, [isOpen]);
 
-  if (!mounted || !isOpen) return null;
-
-  const handleDeleteResume = async (resumeId: string) => {
+  // Memoized handlers to prevent re-creation on every render
+  const handleDeleteResume = useCallback(async (resumeId: string) => {
     try {
-      // The resumeId is already in the correct format from Convex
       const id = resumeId as any;
       await deleteResume({ id });
       toast.success("Resume deleted successfully!");
@@ -72,21 +70,21 @@ export default function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
       console.error("Failed to delete resume:", error);
       toast.error("Failed to delete resume. Please try again.");
     }
-  };
+  }, [deleteResume]);
 
-  const handleCreateNew = () => {
-    // Generate a new UUID for the resume
+  const handleCreateNew = useCallback(() => {
     const newId = crypto.randomUUID();
     router.push(`/builder/${newId}`);
     onClose();
-  };
+  }, [router, onClose]);
 
-  const handleEditResume = (resumeId: string) => {
+  const handleEditResume = useCallback((resumeId: string) => {
     router.push(`/builder/${resumeId}`);
     onClose();
-  };
+  }, [router, onClose]);
 
-  const formatDate = (timestamp: number) => {
+  // Memoized utility functions
+  const formatDate = useCallback((timestamp: number) => {
     const date = new Date(timestamp);
     const now = new Date();
     const diff = now.getTime() - date.getTime();
@@ -98,25 +96,41 @@ export default function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
     if (days < 30) return `${Math.floor(days / 7)} weeks ago`;
     if (days < 365) return `${Math.floor(days / 30)} months ago`;
     return date.toLocaleDateString();
-  };
+  }, []);
 
-  const getResumeTitle = (resumeData: string) => {
+  const getResumeTitle = useCallback((resumeData: string) => {
     try {
       const data = JSON.parse(resumeData);
       return data.name || "Untitled Resume";
     } catch {
       return "Untitled Resume";
     }
-  };
+  }, []);
 
-  const getResumePosition = (resumeData: string) => {
+  const getResumePosition = useCallback((resumeData: string) => {
     try {
       const data = JSON.parse(resumeData);
       return data.position || "No position specified";
     } catch {
       return "No position specified";
     }
-  };
+  }, []);
+
+  // Memoize sorted and sliced resumes to prevent recalculation
+  const displayResumes = useMemo(() => {
+    if (!resumes || resumes.length === 0) return [];
+    return resumes
+      .sort((a, b) => b._creationTime - a._creationTime)
+      .slice(0, 3);
+  }, [resumes]);
+
+  // Memoize last updated time
+  const lastUpdated = useMemo(() => {
+    if (!resumes || resumes.length === 0) return "N/A";
+    return formatDate(Math.max(...resumes.map((r) => r._creationTime)));
+  }, [resumes, formatDate]);
+
+  if (!mounted || !isOpen) return null;
 
   return createPortal(
     <div 
@@ -172,9 +186,7 @@ export default function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
             </div>
             <div className="bg-gray-900/50 border border-gray-800 rounded-lg p-3">
               <div className="text-xl font-semibold text-gray-200">
-                {resumes && resumes.length > 0
-                  ? formatDate(Math.max(...resumes.map((r) => r._creationTime)))
-                  : "N/A"}
+                {lastUpdated}
               </div>
               <div className="text-xs text-gray-500 mt-1">Last Updated</div>
             </div>
@@ -213,10 +225,7 @@ export default function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
           ) : (
             <>
               <div className="space-y-2">
-                {resumes
-                  .sort((a, b) => b._creationTime - a._creationTime)
-                  .slice(0, 3)
-                  .map((resume) => (
+                {displayResumes.map((resume) => (
                   <div
                     key={resume._id}
                     className="bg-gray-900/50 hover:bg-gray-900 rounded-lg p-4 border border-gray-800 hover:border-gray-700 transition-all"

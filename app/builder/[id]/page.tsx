@@ -51,16 +51,17 @@ export default function BuilderPage() {
   const params = useParams();
   const resumeId = params?.id as string;
 
-  // Get user from Convex by email
+  // Get user from Convex by email - memoized to prevent unnecessary queries
   const convexUser = useQuery(
     api.auth.getUserByEmail,
     session?.user?.email ? { email: session.user.email } : "skip"
   );
 
-  // Get specific resume from database if editing
+  // Get specific resume from database if editing - only once on mount
+  const [shouldFetchResume, setShouldFetchResume] = useState(true);
   const existingResume = useQuery(
     api.resume.getResume,
-    resumeId ? { id: resumeId } : "skip"
+    shouldFetchResume && resumeId ? { id: resumeId } : "skip"
   );
 
   // Convex mutation for upserting resume (create or update)
@@ -75,10 +76,11 @@ export default function BuilderPage() {
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [isLoadingFromDB, setIsLoadingFromDB] = useState(false);
 
-  // Load resume data from database if editing existing resume
+  // Load resume data from database if editing existing resume - only once
   useEffect(() => {
     if (existingResume && existingResume.resume_data && !isLoadingFromDB) {
       setIsLoadingFromDB(true);
+      setShouldFetchResume(false); // Stop querying after first load
       try {
         const dbResumeData = JSON.parse(existingResume.resume_data);
         // Merge with default data to ensure all fields exist
