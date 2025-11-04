@@ -40,16 +40,37 @@ export default function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
     setMounted(true);
   }, []);
 
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+    } else {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+    };
+  }, [isOpen]);
+
   if (!mounted || !isOpen) return null;
 
   const handleDeleteResume = async (resumeId: string) => {
     try {
-      await deleteResume({ id: resumeId as any });
+      // The resumeId is already in the correct format from Convex
+      const id = resumeId as any;
+      await deleteResume({ id });
       toast.success("Resume deleted successfully!");
       setDeleteConfirm(null);
     } catch (error) {
       console.error("Failed to delete resume:", error);
-      toast.error("Failed to delete resume");
+      toast.error("Failed to delete resume. Please try again.");
     }
   };
 
@@ -98,12 +119,16 @@ export default function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
   };
 
   return createPortal(
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-md exclude-print p-4">
+    <div 
+      className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/80 backdrop-blur-lg exclude-print p-4 overflow-hidden"
+      onClick={onClose}
+    >
       <div 
         className="bg-[#0a0a0a] rounded-xl border border-gray-800 max-w-4xl w-full max-h-[90vh] overflow-hidden"
         style={{
           boxShadow: '0 0 0 1px rgba(236, 72, 153, 0.1), 0 20px 50px rgba(0, 0, 0, 0.5)',
         }}
+        onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div className="relative px-6 py-5 border-b border-gray-800/60">
@@ -229,13 +254,13 @@ export default function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                           <div className="flex items-center gap-1.5">
                             <button
                               onClick={() => handleDeleteResume(resume._id)}
-                              className="px-3 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs rounded-lg transition-all font-medium border border-gray-700"
+                              className="px-3 py-2 bg-red-600 hover:bg-red-500 text-white text-xs rounded-lg transition-all font-medium shadow-lg shadow-red-600/20"
                             >
-                              Confirm
+                              Delete
                             </button>
                             <button
                               onClick={() => setDeleteConfirm(null)}
-                              className="px-3 py-2 bg-gray-900 hover:bg-gray-800 text-gray-400 text-xs rounded-lg transition-all border border-gray-800"
+                              className="px-3 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs rounded-lg transition-all border border-gray-700"
                             >
                               Cancel
                             </button>
@@ -243,10 +268,10 @@ export default function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                         ) : (
                           <button
                             onClick={() => setDeleteConfirm(resume._id)}
-                            className="p-2 rounded-lg bg-gray-800 hover:bg-gray-700 border border-gray-700 transition-all"
+                            className="p-2 rounded-lg bg-gray-800 hover:bg-red-900/20 border border-gray-700 hover:border-red-800 transition-all group"
                             title="Delete Resume"
                           >
-                            <FaTrash className="size-3.5 text-gray-400" />
+                            <FaTrash className="size-3.5 text-gray-400 group-hover:text-red-500 transition-colors" />
                           </button>
                         )}
                       </div>

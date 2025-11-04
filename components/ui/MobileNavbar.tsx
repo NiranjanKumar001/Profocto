@@ -40,7 +40,7 @@ export default function MobileNavbar({ className = "", onSettingsClick }: Mobile
 
   return (
     <div
-      className={`lg:hidden fixed top-0 left-0 right-0 z-50 bg-[hsl(240_10%_3.9%)] border-b border-[hsl(240_3.7%_15.9%)] backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.3)] ${className}`}
+      className={`lg:hidden fixed top-0 left-0 right-0 z-50 bg-[hsl(240_10%_3.9%)] border-b border-[hsl(240_3.7%_15.9%)] backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.3)] exclude-print ${className}`}
       style={{
         WebkitTapHighlightColor: "transparent",
       }}

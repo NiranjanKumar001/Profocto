@@ -57,6 +57,12 @@ export default function BuilderPage() {
     session?.user?.email ? { email: session.user.email } : "skip"
   );
 
+  // Get specific resume from database if editing
+  const existingResume = useQuery(
+    api.resume.getResume,
+    resumeId ? { id: resumeId } : "skip"
+  );
+
   // Convex mutation for upserting resume (create or update)
   const upsertResumeMutation = useMutation(api.resume.upsertResume);
 
@@ -67,40 +73,71 @@ export default function BuilderPage() {
   const [isHydrated, setIsHydrated] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
+  const [isLoadingFromDB, setIsLoadingFromDB] = useState(false);
 
-  // Load from localStorage after hydration to prevent mismatches
+  // Load resume data from database if editing existing resume
   useEffect(() => {
-    const savedData = localStorage.getItem("resumeData");
-    if (savedData) {
+    if (existingResume && existingResume.resume_data && !isLoadingFromDB) {
+      setIsLoadingFromDB(true);
       try {
-        const parsedData = JSON.parse(savedData);
-        
-        // Merge saved data with default data to ensure all new fields exist
+        const dbResumeData = JSON.parse(existingResume.resume_data);
+        // Merge with default data to ensure all fields exist
         const migratedData = {
           ...JSON.parse(JSON.stringify(DefaultResumeData)),
-          ...parsedData,
-          // Ensure arrays are properly merged (keep saved data if it exists)
-          education: parsedData.education || DefaultResumeData.education,
-          workExperience: parsedData.workExperience || DefaultResumeData.workExperience,
-          projects: parsedData.projects || DefaultResumeData.projects,
-          skills: parsedData.skills || DefaultResumeData.skills,
-          certifications: parsedData.certifications || DefaultResumeData.certifications,
-          languages: parsedData.languages || DefaultResumeData.languages,
-          socialMedia: parsedData.socialMedia || DefaultResumeData.socialMedia,
+          ...dbResumeData,
+          education: dbResumeData.education || DefaultResumeData.education,
+          workExperience: dbResumeData.workExperience || DefaultResumeData.workExperience,
+          projects: dbResumeData.projects || DefaultResumeData.projects,
+          skills: dbResumeData.skills || DefaultResumeData.skills,
+          certifications: dbResumeData.certifications || DefaultResumeData.certifications,
+          languages: dbResumeData.languages || DefaultResumeData.languages,
+          socialMedia: dbResumeData.socialMedia || DefaultResumeData.socialMedia,
         };
-        
         setResumeData(migratedData as ResumeData);
+        // Also save to localStorage for persistence
+        localStorage.setItem("resumeData", JSON.stringify(migratedData));
       } catch (error) {
-        console.warn("Failed to parse saved resume data:", error);
-        // If parsing fails, use default data (deep copy)
+        console.error("Failed to load resume from database:", error);
+      }
+    }
+  }, [existingResume, isLoadingFromDB]);
+
+  // Load from localStorage after hydration to prevent mismatches (only for new resumes)
+  useEffect(() => {
+    // Only load from localStorage if not editing an existing resume
+    if (!existingResume) {
+      const savedData = localStorage.getItem("resumeData");
+      if (savedData) {
+        try {
+          const parsedData = JSON.parse(savedData);
+          
+          // Merge saved data with default data to ensure all new fields exist
+          const migratedData = {
+            ...JSON.parse(JSON.stringify(DefaultResumeData)),
+            ...parsedData,
+            // Ensure arrays are properly merged (keep saved data if it exists)
+            education: parsedData.education || DefaultResumeData.education,
+            workExperience: parsedData.workExperience || DefaultResumeData.workExperience,
+            projects: parsedData.projects || DefaultResumeData.projects,
+            skills: parsedData.skills || DefaultResumeData.skills,
+            certifications: parsedData.certifications || DefaultResumeData.certifications,
+            languages: parsedData.languages || DefaultResumeData.languages,
+            socialMedia: parsedData.socialMedia || DefaultResumeData.socialMedia,
+          };
+          
+          setResumeData(migratedData as ResumeData);
+        } catch (error) {
+          console.warn("Failed to parse saved resume data:", error);
+          // If parsing fails, use default data (deep copy)
+          setResumeData(JSON.parse(JSON.stringify(DefaultResumeData)) as ResumeData);
+        }
+      } else {
+        // If no saved data, ensure we're using default data (deep copy)
         setResumeData(JSON.parse(JSON.stringify(DefaultResumeData)) as ResumeData);
       }
-    } else {
-      // If no saved data, ensure we're using default data (deep copy)
-      setResumeData(JSON.parse(JSON.stringify(DefaultResumeData)) as ResumeData);
     }
     setIsHydrated(true);
-  }, []);
+  }, [existingResume]);
 
   // Logout loading state
   const [isLoggingOut, setIsLoggingOut] = useState(false);
