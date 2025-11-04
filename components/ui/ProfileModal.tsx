@@ -207,7 +207,7 @@ export default function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
           </div>
 
           {!resumes || resumes.length === 0 ? (
-            <div className="text-center py-16">
+            <div className="text-center py-16 min-h-[280px] flex flex-col items-center justify-center">
               <div className="w-16 h-16 mx-auto mb-4 rounded-lg bg-gray-900 flex items-center justify-center border border-gray-800">
                 <FaFileAlt className="size-8 text-gray-600" />
               </div>
