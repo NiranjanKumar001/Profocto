@@ -5,7 +5,7 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { createPortal } from "react-dom";
 import { useState, useEffect } from "react";
-import { FaTimes, FaFileAlt, FaTrash, FaEdit, FaPlus, FaClock } from "react-icons/fa";
+import { FaTimes, FaFileAlt, FaTrash, FaEdit, FaPlus } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import Image from "next/image";

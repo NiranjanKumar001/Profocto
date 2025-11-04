@@ -483,11 +483,6 @@ const TemplateFive = ({
         );
 
       case "languages":
-        console.log("Languages Debug:", {
-          sectionContent: section.content,
-          resumeLanguages: resumeData.languages,
-          hasContent: section.content && section.content.length > 0
-        });
         return section.content && section.content.length > 0 ? (
           <div className='mb-4'>
             <h2 className='text-sm font-bold uppercase mb-2 pb-0.5 border-b border-gray-400'>
