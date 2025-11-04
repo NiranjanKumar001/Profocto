@@ -93,6 +93,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <html lang='en'>
       <head>
         <StructuredData />
+        {/* Explicit favicon links to ensure browsers pick up the image */}
+        <link rel="icon" href="/assets/1.png" />
+        <link rel="shortcut icon" href="/assets/1.png" />
+        <link rel="apple-touch-icon" href="/assets/1.png" />
+        {/* theme-color can help mobile browsers set the address bar color */}
+        <meta name="theme-color" content="#ec4899" />
       </head>
       <body suppressHydrationWarning={true}>
         <ConvexClientProvider>
