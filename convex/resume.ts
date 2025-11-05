@@ -56,7 +56,6 @@ export const updateResume = mutation({
   },
 });
 
-
 // upsert resume - create if doesn't exist, update if it does
 export const upsertResume = mutation({
   args: {
@@ -81,7 +80,6 @@ export const upsertResume = mutation({
         console.log("Resume not found, creating new one");
       }
     }
-
     // Create new resume
     const newId = await ctx.db.insert("resume", {
       resume_data: args.resume_data,
@@ -90,7 +88,6 @@ export const upsertResume = mutation({
     return { success: true, id: newId, action: "created" };
   },
 });
-
 // delete a resume
 export const deleteResume = mutation({
   args: { id: v.id("resume") },
@@ -98,4 +95,3 @@ export const deleteResume = mutation({
     return await ctx.db.delete(args.id);
   },
 });
-
