@@ -21,16 +21,17 @@ export default function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
   const [mounted, setMounted] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
 
-  // Get user from Convex - only query when modal is open
+  // Get user from Convex - queries run always and Convex caches the results
+  // This prevents refetching every time the modal opens
   const convexUser = useQuery(
     api.auth.getUserByEmail,
-    isOpen && session?.user?.email ? { email: session.user.email } : "skip"
+    session?.user?.email ? { email: session.user.email } : "skip"
   );
 
-  // Get all resumes for this user - only query when modal is open
+  // Get all resumes for this user - Convex caches this query
   const resumes = useQuery(
     api.resume.getResumes,
-    isOpen && convexUser?._id ? { id: convexUser._id } : "skip"
+    convexUser?._id ? { id: convexUser._id } : "skip"
   );
 
   // Delete mutation
