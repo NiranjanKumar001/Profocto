@@ -1320,7 +1320,7 @@ const ClassicTemplate = ({
         <h2 className="profession">{resumeData.position}</h2>
         
         {/* Contact Information & Social Media */}
-        <div className="flex justify-center items-center gap-6 contact mb-0 flex-wrap">
+        <div className="flex justify-center items-center gap-x-6 gap-y-1 contact mb-0 flex-wrap">
           <div className="flex items-center gap-1">
             <MdPhone className="text-black" />
             <a href={`tel:${resumeData.contactInformation}`}>

@@ -753,7 +753,7 @@ const TemplateFour = ({
         {/* Social Media */}
         {resumeData.socialMedia.length > 0 &&
         resumeData.socialMedia.length < 6 ? (
-          <div className='flex justify-center items-center gap-3 text-sm'>
+          <div className='flex justify-center items-center gap-x-3 gap-y-1 text-sm flex-wrap'>
             {resumeData.socialMedia.map((socialMedia, index) => {
               const icon = icons.find(
                 (icon) => icon.name === socialMedia.socialMedia.toLowerCase()
