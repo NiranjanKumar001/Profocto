@@ -47,6 +47,21 @@ const nextConfig = {
     maxInactiveAge: 25 * 1000,
     pagesBufferLength: 2,
   },
+  // Webpack configuration for pdfjs-dist
+  webpack: (config, { isServer }) => {
+    // Fix for pdfjs-dist canvas dependency
+    if (isServer) {
+      config.externals.push('canvas');
+    }
+    
+    // Alias pdfjs-dist worker for client-side
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      'pdfjs-dist/build/pdf.worker.min.mjs': 'pdfjs-dist/build/pdf.worker.min.js',
+    };
+    
+    return config;
+  },
 };
 
 export default nextConfig;
