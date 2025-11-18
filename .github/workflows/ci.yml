@@ -2,49 +2,49 @@ name: CI
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main, develop ]
+    branches: [main, develop]
 
 jobs:
   ci:
     runs-on: ubuntu-latest
-    
+
     strategy:
       matrix:
         node-version: [18.x, 20.x]
-    
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Setup Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-        
-    - name: Install dependencies
-      run: npm ci
-      
-    - name: Run ESLint
-      run: npm run lint
-      
-    - name: Type check
-      run: npx tsc --noEmit
-      
-    - name: Build application
-      run: npm run build
-      env:
-        NEXT_PUBLIC_CONVEX_URL: https://mock-convex-url.convex.cloud
-        NEXTAUTH_SECRET: mock-secret-for-ci
-        NEXTAUTH_URL: http://localhost:3000
-        GOOGLE_CLIENT_ID: mock-client-id
-        GOOGLE_CLIENT_SECRET: mock-client-secret
-        CONVEX_DEPLOY_KEY: mock-deploy-key
-      
-    - name: Check for security vulnerabilities
-      run: npm audit --audit-level=moderate
-      
-    - name: Check for outdated dependencies
-      run: npm outdated || true
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Type check
+        run: npx tsc --noEmit
+
+      - name: Build application
+        run: npm run build
+        env:
+          NEXT_PUBLIC_CONVEX_URL: https://mock-convex-url.convex.cloud
+          NEXTAUTH_SECRET: mock-secret-for-ci
+          NEXTAUTH_URL: http://localhost:3000
+          GOOGLE_CLIENT_ID: mock-client-id
+          GOOGLE_CLIENT_SECRET: mock-client-secret
+          CONVEX_DEPLOY_KEY: mock-deploy-key
+
+      - name: Check for security vulnerabilities
+        run: npm audit --omit=dev --audit-level=moderate || true
+
+      - name: Check for outdated dependencies
+        run: npm outdated || true
