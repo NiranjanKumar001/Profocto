@@ -4,6 +4,11 @@
 
 @layer base {
     
+    /* Force dark color scheme for autocomplete dropdowns */
+    input, select, textarea {
+        color-scheme: dark;
+    }
+    
     ::selection {
         background-color: hsl(330 81% 60% / 0.3);
         color: hsl(0 0% 98%);
@@ -327,6 +332,18 @@
     .other-input:focus {
         border-color: hsl(330 81% 60%);
         box-shadow: 0 0 0 2px hsl(330 81% 60% / 0.2);
+    }
+
+    /* Style autocomplete dropdown suggestions */
+    .other-input:-webkit-autofill,
+    .other-input:-webkit-autofill:hover,
+    .other-input:-webkit-autofill:focus,
+    .other-input:-webkit-autofill:active {
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: hsl(0 0% 98%);
+        transition: background-color 5000s ease-in-out 0s;
+        box-shadow: inset 0 0 20px 20px #282828;
+        caret-color: hsl(0 0% 98%);
     }
 
     input[type="date"] {
