@@ -6,25 +6,78 @@ import React, { useContext, useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { ResumeContext } from "../../contexts/ResumeContext";
 import DefaultResumeData from "../utility/DefaultResumeData";
+import { extractFromFile, validateResumeSchema } from "../../lib/resumeParser";
+import toast from "react-hot-toast";
 
 const LoadUnload = () => {
   const { resumeData, setResumeData, saveResume, isSaving } = useContext(ResumeContext);
   const [showResetModal, setShowResetModal] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState("");
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // load backup resume data
-  const handleLoad = (event) => {
+  // Load resume data from JSON, PDF, or DOCX
+  const handleLoad = async (event) => {
     const file = event.target.files[0];
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const resumeData = JSON.parse(event.target.result);
-      setResumeData(resumeData);
-    };
-    reader.readAsText(file);
+    if (!file) return;
+
+    // Reset file input for re-upload
+    event.target.value = '';
+
+    setIsLoading(true);
+    
+    try {
+      // Extract data based on file type
+      setLoadingMessage("Reading file...");
+      const { text, json, fileType } = await extractFromFile(file);
+
+      // Handle JSON files directly
+      if (fileType === 'json') {
+        setLoadingMessage("Validating data...");
+        const validated = validateResumeSchema(json);
+        setResumeData(validated);
+        toast.success("Resume loaded successfully!");
+        setIsLoading(false);
+        return;
+      }
+
+      // Handle PDF and DOCX with AI parsing
+      if (text) {
+        setLoadingMessage(`Parsing ${fileType.toUpperCase()} with AI...`);
+        
+        const response = await fetch('/api/parse-resume', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ text }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to parse resume');
+        }
+
+        const { data } = await response.json();
+        
+        setLoadingMessage("Validating parsed data...");
+        const validated = validateResumeSchema(data);
+        
+        setResumeData(validated);
+        toast.success(`Resume imported from ${fileType.toUpperCase()} successfully!`);
+      }
+
+    } catch (error) {
+      console.error('Load error:', error);
+      toast.error(error.message || 'Failed to load resume. Please try again.');
+    } finally {
+      setIsLoading(false);
+      setLoadingMessage("");
+    }
   };
 
   // download resume data
@@ -58,15 +111,20 @@ const LoadUnload = () => {
   return (
     <>
       <div className="flex flex-nowrap gap-2 sm:gap-4 mb-2 justify-center items-center">
-        <label className="tooltip p-2 sm:p-2 text-white bg-zinc-800 rounded cursor-pointer hover:bg-zinc-700 transition-colors">
+        <label className={`tooltip p-2 sm:p-2 text-white rounded cursor-pointer transition-colors ${
+          isLoading ? 'bg-gray-600 cursor-not-allowed' : 'bg-zinc-800 hover:bg-zinc-700'
+        }`}>
           <FaCloudUploadAlt className="text-[1.1rem] sm:text-[1.2rem] text-white" />
-          <span className="tooltiptext">Load Data</span>
+          <span className="tooltiptext">
+            {isLoading ? loadingMessage : 'Load JSON, PDF, or DOCX'}
+          </span>
           <input
             aria-label="Load Data"
             type="file"
             className="hidden"
             onChange={handleLoad}
-            accept=".json"
+            accept=".json,.pdf,.docx,.doc"
+            disabled={isLoading}
           />
         </label>
         
@@ -151,6 +209,29 @@ const LoadUnload = () => {
                 >
                   Reset
                 </button>
+              </div>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
+
+      {/* Loading Modal */}
+      {mounted && isLoading && createPortal(
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center backdrop-blur-sm bg-black/50 exclude-print">
+          <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20 max-w-sm w-[90%]">
+            <div className="flex flex-col items-center space-y-4">
+              {/* Spinner */}
+              <div className="w-12 h-12 border-4 border-pink-500/30 border-t-pink-500 rounded-full animate-spin"></div>
+              
+              {/* Message */}
+              <div className="text-center">
+                <h3 className="text-white text-lg font-semibold mb-1">
+                  Processing Resume
+                </h3>
+                <p className="text-white/70 text-sm">
+                  {loadingMessage || "Please wait..."}
+                </p>
               </div>
             </div>
           </div>
