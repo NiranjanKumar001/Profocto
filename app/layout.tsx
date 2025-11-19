@@ -33,9 +33,12 @@ export const metadata: Metadata = {
     canonical: "https://profocto.tech",
   },
   icons: {
-    icon: "/assets/1.png",
-    shortcut: "/assets/1.png",
-    apple: "/assets/1.png",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon.png", type: "image/png" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
   },
   openGraph: {
     type: "website",
@@ -93,10 +96,11 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <html lang='en'>
       <head>
         <StructuredData />
-        {/* Explicit favicon links to ensure browsers pick up the image */}
-        <link rel="icon" href="/assets/1.png" />
-        <link rel="shortcut icon" href="/assets/1.png" />
-        <link rel="apple-touch-icon" href="/assets/1.png" />
+        {/* Standard favicon in root for better search engine compatibility */}
+        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" href="/favicon.png" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="manifest" href="/site.webmanifest" />
         {/* theme-color can help mobile browsers set the address bar color */}
         <meta name="theme-color" content="#ec4899" />
       </head>
