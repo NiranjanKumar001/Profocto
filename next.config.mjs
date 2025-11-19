@@ -41,6 +41,18 @@ const nextConfig = {
   },
   experimental: {
     optimizePackageImports: ['react-icons', 'framer-motion', '@dnd-kit/core', '@dnd-kit/sortable'],
+    turbo: {
+      rules: {
+        '*.svg': {
+          loaders: ['@svgr/webpack'],
+          as: '*.js',
+        },
+      },
+      resolveAlias: {
+        'pdfjs-dist/build/pdf.worker.min.mjs': 'pdfjs-dist/build/pdf.worker.min.js',
+      },
+      resolveExtensions: ['.mdx', '.tsx', '.ts', '.jsx', '.js', '.mjs', '.json'],
+    },
   },
   // Reduce memory usage
   onDemandEntries: {
