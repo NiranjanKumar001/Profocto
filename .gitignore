@@ -46,6 +46,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# development scripts
+dev.ps1
+
 # setup and config files with sensitive data
 *OAUTH*.md
 *_SETUP.md
