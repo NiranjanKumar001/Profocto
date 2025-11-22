@@ -5,13 +5,16 @@ import { useSession, signOut } from "next-auth/react";
 import { FaOctopusDeploy, FaCog } from "react-icons/fa";
 import { MdLogout, MdEmail } from "react-icons/md";
 import { useState, useRef, useEffect } from "react";
+import SavingIndicator from "./SavingIndicator";
 
 interface MobileNavbarProps {
   className?: string;
   onSettingsClick?: () => void;
+  isSaving?: boolean;
+  lastSaved?: Date | null;
 }
 
-export default function MobileNavbar({ className = "", onSettingsClick }: MobileNavbarProps) {
+export default function MobileNavbar({ className = "", onSettingsClick, isSaving, lastSaved }: MobileNavbarProps) {
   const { data: session } = useSession();
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -53,6 +56,13 @@ export default function MobileNavbar({ className = "", onSettingsClick }: Mobile
             Profocto
           </h1>
         </div>
+
+        {/* Center - Saving Indicator (visible on larger mobile screens) */}
+        {isSaving !== undefined && lastSaved !== undefined && (
+          <div className="hidden sm:block">
+            <SavingIndicator isSaving={isSaving} lastSaved={lastSaved} />
+          </div>
+        )}
 
         {/* Settings and Profile */}
         <div className="flex items-center gap-3">

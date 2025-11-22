@@ -10,6 +10,8 @@ import { api } from "@/convex/_generated/api";
 import { useParams } from "next/navigation";
 import { Id } from "@/convex/_generated/dataModel";
 import toast from "react-hot-toast";
+import { useAutoSave } from "@/lib/useAutoSave";
+import SavingIndicator from "@/components/ui/SavingIndicator";
 
 // Import your existing builder components
 import Language from "@/components/form/Language";
@@ -216,46 +218,43 @@ export default function BuilderPage() {
 
   // Save resume to database
   const saveResume = async () => {
-    // Don't save if not hydrated or already saving
-    if (!isHydrated || isSaving) return;
+    // Don't save if not hydrated
+    if (!isHydrated) return;
     
     // Check if user is logged in
     if (!session?.user?.email) {
-      toast.error("Please sign in to save your resume");
-      return;
+      return; // Silent fail for auto-save
     }
 
     // Check if convex user is loaded
     if (!convexUser || !convexUser._id) {
-      toast.error("Loading user data... Please try again in a moment.");
-      return;
+      return; // Silent fail for auto-save
     }
 
     try {
-      setIsSaving(true);
-      
       // Convert resume data to JSON string
       const resumeDataString = JSON.stringify(resumeData);
       
       // Call the Convex upsert mutation
-      const result = await upsertResumeMutation({
+      await upsertResumeMutation({
         resume_id: resumeId,
         resume_data: resumeDataString,
         owner: convexUser._id,
       });
-      
-      if (result.action === "created") {
-        toast.success("Resume created successfully!");
-      } else {
-        toast.success("Resume saved successfully!");
-      }
     } catch (error) {
       console.error("Failed to save resume:", error);
-      toast.error("Failed to save resume. Please try again.");
-    } finally {
-      setIsSaving(false);
+      throw error; // Let auto-save handle the error
     }
   };
+
+  // Auto-save hook with activity tracking and debouncing
+  const autoSaveState = useAutoSave({
+    onSave: saveResume,
+    data: resumeData,
+    interval: 60000, // 1 minute
+    debounceDelay: 2000, // 2 seconds after user stops typing
+    enabled: isHydrated && !!session?.user?.email && !!convexUser?._id,
+  });
 
   // Keyboard shortcut for sidebar toggle (Ctrl+B or Cmd+B)
   useEffect(() => {
@@ -297,11 +296,15 @@ export default function BuilderPage() {
             setResumeData,
             handleProfilePicture,
             handleChange,
-            saveResume,
-            isSaving,
+            saveResume: autoSaveState.triggerSave,
+            isSaving: autoSaveState.isSaving,
           }}
         >
-          <MobileNavbar onSettingsClick={() => setShowProfileModal(true)} />
+          <MobileNavbar 
+            onSettingsClick={() => setShowProfileModal(true)}
+            isSaving={autoSaveState.isSaving}
+            lastSaved={autoSaveState.lastSaved}
+          />
 
           <MobileBottomNav
             activeView={mobileView}
@@ -353,6 +356,12 @@ export default function BuilderPage() {
                             Profocto
                           </h1>
                         </div>
+                        
+                        {/* Center - Saving Indicator */}
+                        <SavingIndicator 
+                          isSaving={autoSaveState.isSaving}
+                          lastSaved={autoSaveState.lastSaved}
+                        />
                         
                         {/* Right side - Settings Icon */}
                         <button 
