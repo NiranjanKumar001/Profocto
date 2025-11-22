@@ -548,6 +548,8 @@ export default function BuilderPage() {
                             <button
                               className='absolute   border-pink-500/40 border-[1.7px]  bg-black rounded-full z-[9999] text-white -translate-y-16 bottom-0 mt-3 p-2 right-0 text-xs '
                               onClick={scrollToTop}
+                              title='Back to Top'
+                              aria-label='Scroll to top'
                             >
                               {" "}
                               <FaChevronUp />
