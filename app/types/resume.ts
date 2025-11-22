@@ -50,4 +50,5 @@ export interface ResumeContextType {
   handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   saveResume?: () => Promise<void>;
   isSaving?: boolean;
+  manualSave?: () => Promise<void>;
 }

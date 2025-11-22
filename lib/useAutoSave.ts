@@ -13,6 +13,7 @@ interface UseAutoSaveReturn {
   isUserActive: boolean;
   lastSaved: Date | null;
   triggerSave: () => Promise<void>;
+  lastSavedData: string;
 }
 
 export function useAutoSave({
@@ -108,7 +109,7 @@ export function useAutoSave({
 
   // Debounced save on data changes
   useEffect(() => {
-    if (!enabled) return;
+    if (!enabled || !isInitializedRef.current) return;
 
     const currentData = JSON.stringify(data);
     
@@ -189,5 +190,6 @@ export function useAutoSave({
     isUserActive,
     lastSaved,
     triggerSave,
+    lastSavedData: lastDataRef.current,
   };
 }

@@ -9,6 +9,7 @@ const ResumeContext = createContext<ResumeContextType>({
   handleChange: () => {},
   saveResume: undefined,
   isSaving: false,
+  manualSave: undefined,
 });
 
 export { ResumeContext };

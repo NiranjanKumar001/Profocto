@@ -247,6 +247,38 @@ export default function BuilderPage() {
     }
   };
 
+  // Manual save with user feedback
+  const manualSave = async () => {
+    if (!isHydrated) {
+      toast.error("Please wait for the app to load");
+      return;
+    }
+
+    if (!session?.user?.email) {
+      toast.error("Please sign in to save your resume");
+      return;
+    }
+
+    if (!convexUser || !convexUser._id) {
+      toast.error("Loading user data... Please try again");
+      return;
+    }
+
+    // Check if data has changed
+    const currentData = JSON.stringify(resumeData);
+    if (currentData === autoSaveState.lastSavedData) {
+      toast.success("No changes to save!");
+      return;
+    }
+
+    try {
+      await autoSaveState.triggerSave();
+      toast.success("Resume saved successfully!");
+    } catch (error) {
+      toast.error("Failed to save resume. Please try again.");
+    }
+  };
+
   // Auto-save hook with activity tracking and debouncing
   const autoSaveState = useAutoSave({
     onSave: saveResume,
@@ -298,6 +330,7 @@ export default function BuilderPage() {
             handleChange,
             saveResume: autoSaveState.triggerSave,
             isSaving: autoSaveState.isSaving,
+            manualSave,
           }}
         >
           <MobileNavbar 
