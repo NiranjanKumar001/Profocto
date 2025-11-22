@@ -32,6 +32,15 @@ export function useAutoSave({
   const autoSaveIntervalRef = useRef<NodeJS.Timeout>();
   const isSavingRef = useRef(false);
   const hasUnsavedChangesRef = useRef(false);
+  const isInitializedRef = useRef(false);
+
+  // Initialize lastDataRef with current data on mount
+  useEffect(() => {
+    if (!isInitializedRef.current) {
+      lastDataRef.current = JSON.stringify(data);
+      isInitializedRef.current = true;
+    }
+  }, [data]);
 
   // Track user activity (mouse move, keyboard, scroll, touch)
   useEffect(() => {
@@ -72,6 +81,14 @@ export function useAutoSave({
   const triggerSave = useCallback(async () => {
     if (isSavingRef.current || !enabled) return;
 
+    // Check if data has actually changed
+    const currentData = JSON.stringify(data);
+    if (currentData === lastDataRef.current) {
+      // No changes, skip save
+      hasUnsavedChangesRef.current = false;
+      return;
+    }
+
     try {
       isSavingRef.current = true;
       setIsSaving(true);
@@ -79,7 +96,7 @@ export function useAutoSave({
       await onSave();
       
       setLastSaved(new Date());
-      lastDataRef.current = JSON.stringify(data);
+      lastDataRef.current = currentData;
       hasUnsavedChangesRef.current = false;
     } catch (error) {
       console.error('Auto-save failed:', error);
@@ -146,7 +163,11 @@ export function useAutoSave({
   // Save before page unload if there are unsaved changes
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (hasUnsavedChangesRef.current && !isSavingRef.current) {
+      // Check if data has actually changed
+      const currentData = JSON.stringify(data);
+      const hasActualChanges = currentData !== lastDataRef.current;
+      
+      if (hasActualChanges && !isSavingRef.current) {
         // Trigger save synchronously
         triggerSave();
         
@@ -161,7 +182,7 @@ export function useAutoSave({
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
-  }, [triggerSave]);
+  }, [triggerSave, data]);
 
   return {
     isSaving,
