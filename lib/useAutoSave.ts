@@ -143,26 +143,6 @@ export function useAutoSave({
     };
   }, [enabled, interval, isUserActive, triggerSave]);
 
-  // Save before page unload if there are unsaved changes
-  useEffect(() => {
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (hasUnsavedChangesRef.current && !isSavingRef.current) {
-        // Trigger save synchronously
-        triggerSave();
-        
-        // Show browser confirmation dialog
-        e.preventDefault();
-        e.returnValue = '';
-      }
-    };
-
-    window.addEventListener('beforeunload', handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
-  }, [triggerSave]);
-
   return {
     isSaving,
     isUserActive,

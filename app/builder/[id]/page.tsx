@@ -217,7 +217,8 @@ export default function BuilderPage() {
   };
 
   // Save resume to database
-  const saveResume = async () => {
+  // Auto-save (not significant - won't show in profile)
+  const autoSaveResume = async () => {
     // Don't save if not hydrated
     if (!isHydrated) return;
     
@@ -235,26 +236,86 @@ export default function BuilderPage() {
       // Convert resume data to JSON string
       const resumeDataString = JSON.stringify(resumeData);
       
-      // Call the Convex upsert mutation
+      // Call the Convex upsert mutation - mark as auto-save only
       await upsertResumeMutation({
         resume_id: resumeId,
         resume_data: resumeDataString,
         owner: convexUser._id,
+        isSignificantSave: false, // Auto-save, won't show in profile
       });
     } catch (error) {
-      console.error("Failed to save resume:", error);
+      console.error("Failed to auto-save resume:", error);
       throw error; // Let auto-save handle the error
+    }
+  };
+
+  // Manual save or save on close (significant - will show in profile)
+  const saveResumeManually = async () => {
+    // Don't save if not hydrated
+    if (!isHydrated) return;
+    
+    // Check if user is logged in
+    if (!session?.user?.email) {
+      toast.error("Please sign in to save your resume");
+      return;
+    }
+
+    // Check if convex user is loaded
+    if (!convexUser || !convexUser._id) {
+      toast.error("Loading user data... Please try again.");
+      return;
+    }
+
+    try {
+      // Convert resume data to JSON string
+      const resumeDataString = JSON.stringify(resumeData);
+      
+      // Call the Convex upsert mutation - mark as significant save
+      await upsertResumeMutation({
+        resume_id: resumeId,
+        resume_data: resumeDataString,
+        owner: convexUser._id,
+        isSignificantSave: true, // Manual save, will show in profile
+      });
+      
+      toast.success("Resume saved successfully!");
+    } catch (error) {
+      console.error("Failed to save resume:", error);
+      toast.error("Failed to save resume. Please try again.");
+      throw error;
     }
   };
 
   // Auto-save hook with activity tracking and debouncing
   const autoSaveState = useAutoSave({
-    onSave: saveResume,
+    onSave: autoSaveResume, // Use auto-save function
     data: resumeData,
     interval: 60000, // 1 minute
     debounceDelay: 2000, // 2 seconds after user stops typing
     enabled: isHydrated && !!session?.user?.email && !!convexUser?._id,
   });
+
+  // Save on window close (significant save)
+  useEffect(() => {
+    const handleBeforeUnload = async () => {
+      if (isHydrated && session?.user?.email && convexUser?._id) {
+        // Save as significant on close
+        try {
+          await upsertResumeMutation({
+            resume_id: resumeId,
+            resume_data: JSON.stringify(resumeData),
+            owner: convexUser._id,
+            isSignificantSave: true, // Mark as significant on close
+          });
+        } catch (error) {
+          console.error("Failed to save on close:", error);
+        }
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [isHydrated, session, convexUser, resumeId, resumeData, upsertResumeMutation]);
 
   // Keyboard shortcut for sidebar toggle (Ctrl+B or Cmd+B)
   useEffect(() => {
@@ -296,7 +357,7 @@ export default function BuilderPage() {
             setResumeData,
             handleProfilePicture,
             handleChange,
-            saveResume: autoSaveState.triggerSave,
+            saveResume: saveResumeManually, // Manual save for buttons
             isSaving: autoSaveState.isSaving,
           }}
         >

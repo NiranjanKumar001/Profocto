@@ -13,6 +13,7 @@ export const getResumes = query({
 });
 
 // get significant resumes (manually saved or saved on close)
+// Optimized with index and filtering
 export const getSignificantResumes = query({
   args: { id: v.optional(v.id("users")) },
   handler: async (ctx, args) => {
@@ -20,14 +21,22 @@ export const getSignificantResumes = query({
       return [];
     }
     
+    // Use index for better performance
     const allResumes = await ctx.db
       .query("resume")
-      .filter((q) => q.eq(q.field("owner"), args.id))
+      .withIndex("by_owner_id", (q) => q.eq("owner", args.id))
       .collect();
     
-    // Filter to only include resumes that have been manually saved
-    // Treat missing isAutoSaveOnly as false (manually saved) for backwards compatibility
-    return allResumes.filter(resume => resume.isAutoSaveOnly !== true);
+    // Filter to only include significant saves and sort by last save time
+    const significantResumes = allResumes
+      .filter(resume => resume.isAutoSaveOnly !== true)
+      .sort((a, b) => {
+        const timeA = a.lastSignificantSave ?? a._creationTime;
+        const timeB = b.lastSignificantSave ?? b._creationTime;
+        return timeB - timeA; // Most recent first
+      });
+    
+    return significantResumes;
   },
 });
 
