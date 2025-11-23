@@ -16,13 +16,18 @@ export const getResumes = query({
 export const getSignificantResumes = query({
   args: { id: v.optional(v.id("users")) },
   handler: async (ctx, args) => {
+    if (!args.id) {
+      return [];
+    }
+    
     const allResumes = await ctx.db
       .query("resume")
       .filter((q) => q.eq(q.field("owner"), args.id))
       .collect();
     
     // Filter to only include resumes that have been manually saved
-    return allResumes.filter(resume => !resume.isAutoSaveOnly);
+    // Treat missing isAutoSaveOnly as false (manually saved) for backwards compatibility
+    return allResumes.filter(resume => resume.isAutoSaveOnly !== true);
   },
 });
 
@@ -93,17 +98,17 @@ export const upsertResume = mutation({
             // Update lastSignificantSave only if this is a manual/close save
             lastSignificantSave: args.isSignificantSave 
               ? now 
-              : existingResume.lastSignificantSave,
+              : (existingResume.lastSignificantSave ?? undefined),
             // Clear isAutoSaveOnly flag if this is a significant save
             isAutoSaveOnly: args.isSignificantSave 
               ? false 
-              : existingResume.isAutoSaveOnly,
+              : (existingResume.isAutoSaveOnly ?? true),
           });
           return { success: true, id: args.resume_id, action: "updated" };
         }
       } catch (error) {
         // If ID is invalid or resume not found, create new one
-        console.log("Resume not found, creating new one");
+        console.log("Resume not found, creating new one", error);
       }
     }
     // Create new resume
