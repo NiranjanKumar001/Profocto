@@ -1,7 +1,7 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
 
 interface UseAutoSaveOptions {
-  onSave: (isSignificant: boolean) => Promise<void>;
+  onSave: () => Promise<void>;
   data: any;
   interval?: number; // Auto-save interval in milliseconds (default: 60000 = 1 minute)
   debounceDelay?: number; // Debounce delay for changes (default: 2000ms)
@@ -12,8 +12,7 @@ interface UseAutoSaveReturn {
   isSaving: boolean;
   isUserActive: boolean;
   lastSaved: Date | null;
-  triggerSave: (isSignificant?: boolean) => Promise<void>;
-  triggerSignificantSave: () => Promise<void>;
+  triggerSave: () => Promise<void>;
 }
 
 export function useAutoSave({
@@ -70,14 +69,14 @@ export function useAutoSave({
   }, []);
 
   // Trigger save function
-  const triggerSave = useCallback(async (isSignificant: boolean = false) => {
+  const triggerSave = useCallback(async () => {
     if (isSavingRef.current || !enabled) return;
 
     try {
       isSavingRef.current = true;
       setIsSaving(true);
       
-      await onSave(isSignificant);
+      await onSave();
       
       setLastSaved(new Date());
       lastDataRef.current = JSON.stringify(data);
@@ -89,11 +88,6 @@ export function useAutoSave({
       setIsSaving(false);
     }
   }, [onSave, data, enabled]);
-
-  // Trigger significant save (manual save)
-  const triggerSignificantSave = useCallback(async () => {
-    await triggerSave(true);
-  }, [triggerSave]);
 
   // Debounced save on data changes
   useEffect(() => {
@@ -153,8 +147,8 @@ export function useAutoSave({
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (hasUnsavedChangesRef.current && !isSavingRef.current) {
-        // Trigger significant save on close (this should show in profile)
-        triggerSave(true);
+        // Trigger save synchronously
+        triggerSave();
         
         // Show browser confirmation dialog
         e.preventDefault();
@@ -174,6 +168,5 @@ export function useAutoSave({
     isUserActive,
     lastSaved,
     triggerSave,
-    triggerSignificantSave,
   };
 }

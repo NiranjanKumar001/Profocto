@@ -217,7 +217,7 @@ export default function BuilderPage() {
   };
 
   // Save resume to database
-  const saveResume = async (isSignificant: boolean = false) => {
+  const saveResume = async () => {
     // Don't save if not hydrated
     if (!isHydrated) return;
     
@@ -235,12 +235,11 @@ export default function BuilderPage() {
       // Convert resume data to JSON string
       const resumeDataString = JSON.stringify(resumeData);
       
-      // Call the Convex upsert mutation with isSignificantSave flag
+      // Call the Convex upsert mutation
       await upsertResumeMutation({
         resume_id: resumeId,
         resume_data: resumeDataString,
         owner: convexUser._id,
-        isSignificantSave: isSignificant,
       });
     } catch (error) {
       console.error("Failed to save resume:", error);
@@ -297,7 +296,7 @@ export default function BuilderPage() {
             setResumeData,
             handleProfilePicture,
             handleChange,
-            saveResume: autoSaveState.triggerSignificantSave,
+            saveResume: autoSaveState.triggerSave,
             isSaving: autoSaveState.isSaving,
           }}
         >
