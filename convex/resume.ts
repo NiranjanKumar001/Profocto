@@ -12,6 +12,20 @@ export const getResumes = query({
   },
 });
 
+// get significant resumes (manually saved or saved on close)
+export const getSignificantResumes = query({
+  args: { id: v.optional(v.id("users")) },
+  handler: async (ctx, args) => {
+    const allResumes = await ctx.db
+      .query("resume")
+      .filter((q) => q.eq(q.field("owner"), args.id))
+      .collect();
+    
+    // Filter to only include resumes that have been manually saved
+    return allResumes.filter(resume => !resume.isAutoSaveOnly);
+  },
+});
+
 // get single resume 
 // for getting _id of a resume
 export const getResume = query({
@@ -62,8 +76,11 @@ export const upsertResume = mutation({
     resume_id: v.optional(v.string()),
     resume_data: v.string(),
     owner: v.id("users"),
+    isSignificantSave: v.optional(v.boolean()), // True for manual saves or on close
   },
   handler: async (ctx, args) => {
+    const now = Date.now();
+    
     // If resume_id is provided, try to find and update it
     if (args.resume_id) {
       try {
@@ -72,6 +89,14 @@ export const upsertResume = mutation({
           await ctx.db.replace(args.resume_id as any, {
             ...existingResume,
             resume_data: args.resume_data,
+            // Update lastSignificantSave only if this is a manual/close save
+            lastSignificantSave: args.isSignificantSave 
+              ? now 
+              : existingResume.lastSignificantSave,
+            // Clear isAutoSaveOnly flag if this is a significant save
+            isAutoSaveOnly: args.isSignificantSave 
+              ? false 
+              : existingResume.isAutoSaveOnly,
           });
           return { success: true, id: args.resume_id, action: "updated" };
         }
@@ -84,6 +109,8 @@ export const upsertResume = mutation({
     const newId = await ctx.db.insert("resume", {
       resume_data: args.resume_data,
       owner: args.owner,
+      lastSignificantSave: args.isSignificantSave ? now : undefined,
+      isAutoSaveOnly: !args.isSignificantSave,
     });
     return { success: true, id: newId, action: "created" };
   },

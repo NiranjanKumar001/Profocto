@@ -1,7 +1,7 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
 
 interface UseAutoSaveOptions {
-  onSave: () => Promise<void>;
+  onSave: (isSignificant: boolean) => Promise<void>;
   data: any;
   interval?: number; // Auto-save interval in milliseconds (default: 60000 = 1 minute)
   debounceDelay?: number; // Debounce delay for changes (default: 2000ms)
@@ -12,7 +12,8 @@ interface UseAutoSaveReturn {
   isSaving: boolean;
   isUserActive: boolean;
   lastSaved: Date | null;
-  triggerSave: () => Promise<void>;
+  triggerSave: (isSignificant?: boolean) => Promise<void>;
+  triggerSignificantSave: () => Promise<void>;
 }
 
 export function useAutoSave({
@@ -82,7 +83,7 @@ export function useAutoSave({
   }, []);
 
   // Trigger save function - only saves if data has actually changed
-  const triggerSave = useCallback(async () => {
+  const triggerSave = useCallback(async (isSignificant = false) => {
     if (isSavingRef.current || !enabled) return;
 
     const currentData = JSON.stringify(data);
@@ -98,7 +99,7 @@ export function useAutoSave({
       isSavingRef.current = true;
       setIsSaving(true);
       
-      await onSave();
+      await onSave(isSignificant);
       
       // Update both refs after successful save
       setLastSaved(new Date());
@@ -113,6 +114,11 @@ export function useAutoSave({
       setIsSaving(false);
     }
   }, [onSave, data, enabled]);
+
+  // Trigger significant save (manual save)
+  const triggerSignificantSave = useCallback(async () => {
+    await triggerSave(true);
+  }, [triggerSave]);
 
   // Debounced save on data changes
   useEffect(() => {
@@ -180,8 +186,8 @@ export function useAutoSave({
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (hasUnsavedChangesRef.current && !isSavingRef.current) {
-        // Trigger save synchronously
-        triggerSave();
+        // Trigger significant save on close (synchronously)
+        triggerSave(true);
         
         // Show browser confirmation dialog
         e.preventDefault();
@@ -201,5 +207,6 @@ export function useAutoSave({
     isUserActive,
     lastSaved,
     triggerSave,
+    triggerSignificantSave,
   };
 }

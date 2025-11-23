@@ -28,9 +28,9 @@ export default function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
     session?.user?.email ? { email: session.user.email } : "skip"
   );
 
-  // Get all resumes for this user - Convex caches this query
+  // Get significant resumes for this user - only manually saved/closed resumes
   const resumes = useQuery(
-    api.resume.getResumes,
+    api.resume.getSignificantResumes,
     convexUser?._id ? { id: convexUser._id } : "skip"
   );
 

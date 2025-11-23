@@ -38,6 +38,8 @@ export default defineSchema({
   resume: defineTable({
     resume_data: v.string(),
     owner:  v.id("users"),
+    lastSignificantSave: v.optional(v.number()), // Timestamp of last manual/close save
+    isAutoSaveOnly: v.optional(v.boolean()), // True if only auto-saved, never manually saved
     // _id and _creationtime added automatically
   }).index('by_owner_id',["owner"])
 });
