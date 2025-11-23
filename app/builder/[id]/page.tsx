@@ -217,7 +217,7 @@ export default function BuilderPage() {
   };
 
   // Save resume to database
-  const saveResume = async (isSignificant = false) => {
+  const saveResume = async (isSignificant: boolean = false) => {
     // Don't save if not hydrated
     if (!isHydrated) return;
     
@@ -235,7 +235,7 @@ export default function BuilderPage() {
       // Convert resume data to JSON string
       const resumeDataString = JSON.stringify(resumeData);
       
-      // Call the Convex upsert mutation
+      // Call the Convex upsert mutation with isSignificantSave flag
       await upsertResumeMutation({
         resume_id: resumeId,
         resume_data: resumeDataString,
@@ -297,7 +297,7 @@ export default function BuilderPage() {
             setResumeData,
             handleProfilePicture,
             handleChange,
-            saveResume: autoSaveState.triggerSignificantSave, // Manual saves are significant
+            saveResume: autoSaveState.triggerSignificantSave,
             isSaving: autoSaveState.isSaving,
           }}
         >

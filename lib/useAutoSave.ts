@@ -28,24 +28,11 @@ export function useAutoSave({
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   
   const lastDataRef = useRef<string>('');
-  const lastSavedDataRef = useRef<string>(''); // Track what was last saved to database
   const saveTimeoutRef = useRef<NodeJS.Timeout>();
   const activityTimeoutRef = useRef<NodeJS.Timeout>();
   const autoSaveIntervalRef = useRef<NodeJS.Timeout>();
   const isSavingRef = useRef(false);
   const hasUnsavedChangesRef = useRef(false);
-  const isInitializedRef = useRef(false);
-
-  // Initialize with current data on mount to prevent initial save
-  useEffect(() => {
-    if (!isInitializedRef.current) {
-      const initialData = JSON.stringify(data);
-      lastDataRef.current = initialData;
-      lastSavedDataRef.current = initialData;
-      isInitializedRef.current = true;
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Run only once on mount
 
   // Track user activity (mouse move, keyboard, scroll, touch)
   useEffect(() => {
@@ -82,18 +69,9 @@ export function useAutoSave({
     };
   }, []);
 
-  // Trigger save function - only saves if data has actually changed
-  const triggerSave = useCallback(async (isSignificant = false) => {
+  // Trigger save function
+  const triggerSave = useCallback(async (isSignificant: boolean = false) => {
     if (isSavingRef.current || !enabled) return;
-
-    const currentData = JSON.stringify(data);
-    
-    // Skip save if current data is identical to last saved data
-    if (currentData === lastSavedDataRef.current) {
-      console.log('Auto-save skipped: No changes detected');
-      hasUnsavedChangesRef.current = false;
-      return;
-    }
 
     try {
       isSavingRef.current = true;
@@ -101,14 +79,11 @@ export function useAutoSave({
       
       await onSave(isSignificant);
       
-      // Update both refs after successful save
       setLastSaved(new Date());
-      lastDataRef.current = currentData;
-      lastSavedDataRef.current = currentData;
+      lastDataRef.current = JSON.stringify(data);
       hasUnsavedChangesRef.current = false;
     } catch (error) {
       console.error('Auto-save failed:', error);
-      // Don't update lastSavedDataRef on failure so it retries
     } finally {
       isSavingRef.current = false;
       setIsSaving(false);
@@ -126,21 +101,13 @@ export function useAutoSave({
 
     const currentData = JSON.stringify(data);
     
-    // Skip if data hasn't changed from last check
+    // Skip if data hasn't changed
     if (currentData === lastDataRef.current) {
       return;
     }
 
-    // Update last data ref
-    lastDataRef.current = currentData;
-
-    // Check if data differs from last saved version
-    if (currentData !== lastSavedDataRef.current) {
-      hasUnsavedChangesRef.current = true;
-    } else {
-      hasUnsavedChangesRef.current = false;
-      return; // No need to schedule save if already in sync with DB
-    }
+    // Mark that there are unsaved changes
+    hasUnsavedChangesRef.current = true;
 
     // Clear existing timeout
     if (saveTimeoutRef.current) {
@@ -186,7 +153,7 @@ export function useAutoSave({
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (hasUnsavedChangesRef.current && !isSavingRef.current) {
-        // Trigger significant save on close (synchronously)
+        // Trigger significant save on close (this should show in profile)
         triggerSave(true);
         
         // Show browser confirmation dialog
