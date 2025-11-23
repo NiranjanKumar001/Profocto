@@ -74,10 +74,18 @@ export default function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
   }, [deleteResume]);
 
   const handleCreateNew = useCallback(() => {
+    // Check resume limit (20 max)
+    if (resumes && resumes.length >= 20) {
+      toast.error("You've reached the maximum of 20 resumes. Please delete some existing resumes to create new ones.", {
+        duration: 5000,
+      });
+      return;
+    }
+    
     const newId = crypto.randomUUID();
     router.push(`/builder/${newId}`);
     onClose();
-  }, [router, onClose]);
+  }, [router, onClose, resumes]);
 
   const handleEditResume = useCallback((resumeId: string) => {
     router.push(`/builder/${resumeId}`);
@@ -181,9 +189,9 @@ export default function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
           <div className="grid grid-cols-2 gap-3">
             <div className="bg-gray-900/50 border border-gray-800 rounded-lg p-3">
               <div className="text-xl font-semibold text-gray-200">
-                {resumes?.length || 0}
+                {resumes?.length || 0} / 20
               </div>
-              <div className="text-xs text-gray-500 mt-1">Total Resumes</div>
+              <div className="text-xs text-gray-500 mt-1">Saved Resumes</div>
             </div>
             <div className="bg-gray-900/50 border border-gray-800 rounded-lg p-3">
               <div className="text-xl font-semibold text-gray-200">
@@ -200,10 +208,16 @@ export default function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
             <h3 className="text-base font-medium text-gray-200">My Resumes</h3>
             <button
               onClick={handleCreateNew}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg transition-all text-sm font-medium bg-gray-800 hover:bg-gray-700 text-gray-200 border border-gray-700"
+              disabled={resumes && resumes.length >= 20}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all text-sm font-medium border ${
+                resumes && resumes.length >= 20
+                  ? 'bg-gray-900 text-gray-600 border-gray-800 cursor-not-allowed opacity-50'
+                  : 'bg-gray-800 hover:bg-gray-700 text-gray-200 border-gray-700'
+              }`}
+              title={resumes && resumes.length >= 20 ? 'Maximum 20 resumes allowed. Delete some to create new ones.' : 'Create a new resume'}
             >
               <FaPlus className="size-3.5" />
-              New Resume
+              New Resume {resumes && resumes.length >= 20 && '(Limit Reached)'}
             </button>
           </div>
 

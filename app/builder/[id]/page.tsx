@@ -279,9 +279,17 @@ export default function BuilderPage() {
       });
       
       toast.success("Resume saved successfully!");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to save resume:", error);
-      toast.error("Failed to save resume. Please try again.");
+      
+      // Check if it's a resume limit error
+      if (error?.message?.includes("Resume limit reached")) {
+        toast.error("You've reached the maximum of 20 resumes. Please delete some existing resumes to save new ones.", {
+          duration: 5000,
+        });
+      } else {
+        toast.error("Failed to save resume. Please try again.");
+      }
       throw error;
     }
   };
