@@ -95,21 +95,6 @@ export const upsertResume = mutation({
   handler: async (ctx, args) => {
     const now = Date.now();
     
-    // Check resume limit (20 significant resumes per user)
-    if (!args.resume_id) {
-      // Only check limit when creating new resume
-      const userResumes = await ctx.db
-        .query("resume")
-        .withIndex("by_owner_id", (q) => q.eq("owner", args.owner))
-        .collect();
-      
-      const significantResumes = userResumes.filter(r => r.isAutoSaveOnly !== true);
-      
-      if (significantResumes.length >= 20) {
-        throw new Error("Resume limit reached. You can have maximum 20 saved resumes. Please delete some existing resumes to create new ones.");
-      }
-    }
-    
     // If resume_id is provided, try to find and update it
     if (args.resume_id) {
       try {
