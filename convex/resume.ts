@@ -24,7 +24,7 @@ export const getSignificantResumes = query({
     // Use index for better performance
     const allResumes = await ctx.db
       .query("resume")
-      .withIndex("by_owner_id", (q) => q.eq("owner", args.id))
+      .withIndex("by_owner_id", (q) => q.eq("owner", args.id!))
       .collect();
     
     // Filter to only include significant saves and sort by last save time
