@@ -10,7 +10,7 @@ import { extractFromFile, validateResumeSchema } from "../../lib/resumeParser";
 import toast from "react-hot-toast";
 
 const LoadUnload = () => {
-  const { resumeData, setResumeData, manualSave, isSaving } = useContext(ResumeContext);
+  const { resumeData, setResumeData, saveResume, isSaving } = useContext(ResumeContext);
   const [showResetModal, setShowResetModal] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -165,7 +165,7 @@ const LoadUnload = () => {
                   ? 'bg-gray-600 cursor-not-allowed'
                   : 'bg-pink-600 hover:bg-pink-700'
               }`}
-              onClick={manualSave}
+              onClick={saveResume}
               disabled={isSaving}
             >
               <FaSave className="text-[1.1rem] sm:text-[1.2rem] text-white" />

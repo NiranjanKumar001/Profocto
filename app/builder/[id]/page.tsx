@@ -247,38 +247,6 @@ export default function BuilderPage() {
     }
   };
 
-  // Manual save with user feedback
-  const manualSave = async () => {
-    if (!isHydrated) {
-      toast.error("Please wait for the app to load");
-      return;
-    }
-
-    if (!session?.user?.email) {
-      toast.error("Please sign in to save your resume");
-      return;
-    }
-
-    if (!convexUser || !convexUser._id) {
-      toast.error("Loading user data... Please try again");
-      return;
-    }
-
-    // Check if data has changed
-    const currentData = JSON.stringify(resumeData);
-    if (currentData === autoSaveState.lastSavedData) {
-      toast.success("No changes to save!");
-      return;
-    }
-
-    try {
-      await autoSaveState.triggerSave();
-      toast.success("Resume saved successfully!");
-    } catch (error) {
-      toast.error("Failed to save resume. Please try again.");
-    }
-  };
-
   // Auto-save hook with activity tracking and debouncing
   const autoSaveState = useAutoSave({
     onSave: saveResume,
@@ -330,7 +298,6 @@ export default function BuilderPage() {
             handleChange,
             saveResume: autoSaveState.triggerSave,
             isSaving: autoSaveState.isSaving,
-            manualSave,
           }}
         >
           <MobileNavbar 
@@ -581,8 +548,6 @@ export default function BuilderPage() {
                             <button
                               className='absolute   border-pink-500/40 border-[1.7px]  bg-black rounded-full z-[9999] text-white -translate-y-16 bottom-0 mt-3 p-2 right-0 text-xs '
                               onClick={scrollToTop}
-                              title='Back to Top'
-                              aria-label='Scroll to top'
                             >
                               {" "}
                               <FaChevronUp />
