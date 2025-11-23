@@ -85,18 +85,19 @@ export const upsertResume = mutation({
     if (args.resume_id) {
       try {
         const existingResume = await ctx.db.get(args.resume_id as any);
-        if (existingResume) {
+        if (existingResume && existingResume.resume_data !== undefined) {
+          // Type guard to ensure this is a resume document
           await ctx.db.replace(args.resume_id as any, {
-            ...existingResume,
             resume_data: args.resume_data,
+            owner: existingResume.owner as any,
             // Update lastSignificantSave only if this is a manual/close save
             lastSignificantSave: args.isSignificantSave 
               ? now 
-              : existingResume.lastSignificantSave,
+              : (existingResume as any).lastSignificantSave,
             // Clear isAutoSaveOnly flag if this is a significant save
             isAutoSaveOnly: args.isSignificantSave 
               ? false 
-              : existingResume.isAutoSaveOnly,
+              : (existingResume as any).isAutoSaveOnly,
           });
           return { success: true, id: args.resume_id, action: "updated" };
         }
