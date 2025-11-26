@@ -305,7 +305,7 @@ export default function BuilderPage() {
             resume_id: resumeId,
             resume_data: JSON.stringify(resumeData),
             owner: convexUser._id,
-            isSignificantSave: true, // Mark as significant on close
+            isSignificantSave: true, 
           });
         } catch (error) {
           console.error("Failed to save on close:", error);
@@ -342,7 +342,7 @@ export default function BuilderPage() {
       //@ts-ignore
       divRef.current.scrollTo({
         top: 0,
-        behavior: "smooth", // smooth scrolling
+        behavior: "smooth", 
       });
     }
   };
@@ -357,7 +357,7 @@ export default function BuilderPage() {
             setResumeData,
             handleProfilePicture,
             handleChange,
-            saveResume: saveResumeManually, // Manual save for buttons
+            saveResume: saveResumeManually,
             isSaving: autoSaveState.isSaving,
           }}
         >
