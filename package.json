@@ -40,7 +40,7 @@
     "eslint-config-next": "^15.0.3",
     "framer-motion": "^12.4.3",
     "mammoth": "^1.11.0",
-    "next": "^15.5.18",
+    "next": "^15.5.22",
     "next-auth": "^4.24.15",
     "pdfjs-dist": "^5.4.394",
     "react": "^18.3.1",
