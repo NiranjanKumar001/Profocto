@@ -40,7 +40,7 @@
     "eslint-config-next": "^15.0.3",
     "framer-motion": "^12.4.3",
     "mammoth": "^1.11.0",
-    "next": "^15.5.22",
+    "next": "^16.3.1",
     "next-auth": "^4.24.15",
     "pdfjs-dist": "^5.4.394",
     "react": "^18.3.1",
@@ -56,7 +56,7 @@
     "autoprefixer": "^10.4.20",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.6",
-    "postcss": "^8.5.18",
+    "postcss": "^8.5.23",
     "prettier": "^3.6.2",
     "tailwindcss": "^3.4.14",
     "typescript": "^5.6.3"
