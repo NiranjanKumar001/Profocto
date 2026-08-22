@@ -37,7 +37,13 @@ export default function Hero() {
     useEffect(() => {
         const error = searchParams.get('error');
         if (error) {
-            toast.error('Sign-in was canceled. Please try again.');
+            if (error === 'AccessDenied') {
+                toast.error('Sign-in was canceled. Please try again.');
+            } else if (error === 'OAuthCallback') {
+                toast.error('Authentication failed during callback. Please try signing in again.');
+            } else {
+                toast.error('Sign-in failed. Please try again.');
+            }
         }
     }, [searchParams]);
 
