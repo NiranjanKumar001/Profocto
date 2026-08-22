@@ -37,15 +37,21 @@ export default function Hero() {
     useEffect(() => {
         const error = searchParams.get('error');
         if (error) {
-            if (error === 'AccessDenied') {
-                toast.error('Sign-in was canceled. Please try again.');
-            } else if (error === 'OAuthCallback') {
-                toast.error('Authentication failed during callback. Please try signing in again.');
-            } else {
-                toast.error('Sign-in failed. Please try again.');
+            if (status === 'authenticated') {
+                // User is successfully authenticated; clear stale error from URL
+                const cleanUrl = window.location.pathname;
+                window.history.replaceState({}, '', cleanUrl);
+            } else if (status !== 'loading') {
+                if (error === 'AccessDenied') {
+                    toast.error('Sign-in was canceled. Please try again.');
+                } else if (error === 'OAuthCallback') {
+                    toast.error('Authentication failed during callback. Please try signing in again.');
+                } else {
+                    toast.error('Sign-in failed. Please try again.');
+                }
             }
         }
-    }, [searchParams]);
+    }, [searchParams, status]);
 
     useEffect(() => {
         if (videoRef.current) {

@@ -9,6 +9,7 @@ const AuthModal = ({ isOpen, onClose }) => {
   const [loading, setLoading] = useState(false);
 
   const handleMethodSelect = async (provider) => {
+    if (loading) return;
     setLoading(true);
     await signIn(provider, {
       callbackUrl: '/builder',
