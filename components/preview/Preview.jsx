@@ -277,6 +277,7 @@ const Preview = () => {
         localStorage.setItem("enabledSections", JSON.stringify(initial));
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isClient]);
 
   // Handle drag and drop for section reordering using @dnd-kit

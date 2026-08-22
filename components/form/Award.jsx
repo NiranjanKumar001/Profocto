@@ -69,7 +69,7 @@ const AwardItem = ({ award, index, handleAwardChange, handleRemoveAward }) => (
         onChange={(e) => handleAwardChange(e, index, "link")}
       />
       <p className="text-xs text-gray-400 mt-1">
-        *For direct image upload, you'd need a separate backend service. This field accepts a URL to your photo.
+        *For direct image upload, you&apos;d need a separate backend service. This field accepts a URL to your photo.
       </p>
     </div>
   </div>
