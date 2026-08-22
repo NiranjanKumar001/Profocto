@@ -20,6 +20,7 @@ const eslintConfig = [
       // Add any custom rules here
       "@next/next/no-img-element": "off",
       "react-hooks/exhaustive-deps": "warn",
+      "react-hooks/set-state-in-effect": "off",
     },
   },
 ];
