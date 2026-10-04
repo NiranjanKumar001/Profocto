@@ -15,7 +15,6 @@ import type {
 } from "convex/server";
 import type * as auth from "../auth.js";
 import type * as resume from "../resume.js";
-import type * as seedUsers from "../seedUsers.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -28,7 +27,6 @@ import type * as seedUsers from "../seedUsers.js";
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   resume: typeof resume;
-  seedUsers: typeof seedUsers;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,

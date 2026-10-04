@@ -7,11 +7,21 @@
   
   A modern, feature-rich resume builder with real-time editing, multiple templates, and seamless cloud sync.
   
+  [![Active Users](https://img.shields.io/badge/Users-1.1k%2B-orange?style=for-the-badge&logo=convex)](https://profile-elegante.vercel.app)
   [![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen?style=for-the-badge)](https://profile-elegante.vercel.app)
   [![GitHub](https://img.shields.io/badge/GitHub-Repository-blue?style=for-the-badge&logo=github)](https://github.com/NiranjanKumar001/Profocto)
   [![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
   [![Next.js](https://img.shields.io/badge/Next.js-15.x-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
   [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
+</div>
+
+---
+
+## 🎉 Milestone: 1,100+ Registered Users!
+
+<div align="center">
+  <img src="public/assets/users-milestone.png" alt="Profocto 1k Users Milestone" width="850">
+  <p><em>Profocto (Profile Élegante) has officially crossed 1,100+ registered users creating resumes with cloud sync.</em></p>
 </div>
 
 ---
@@ -37,6 +47,7 @@ Create professional resumes in minutes with our intuitive, modern interface.
 ## ✨ Key Features
 
 ### 🎨 **Design & Templates**
+
 - **5 Professional Templates** - Classic, Modern, and specialized layouts for different industries
 - **Drag & Drop Sections** - Reorder resume sections with intuitive drag-and-drop (desktop & mobile optimized)
 - **Nested Drag & Drop** - Reorganize individual items within sections (education, experience, projects, skills, etc.)
@@ -45,12 +56,14 @@ Create professional resumes in minutes with our intuitive, modern interface.
 - **Custom Section Titles** - Rename any section to match your preferences
 
 ### 🔐 **Authentication & Data**
+
 - **Secure Google OAuth** - Quick and safe sign-in with NextAuth.js
 - **Real-time Database** - Powered by Convex for instant cloud synchronization
 - **Auto-save** - Local storage + cloud backup ensures you never lose progress
 - **Multi-device Sync** - Access your resumes from any device seamlessly
 
 ### ⚡ **User Experience**
+
 - **Live Preview** - See changes instantly as you type
 - **Editable Everything** - All sections, titles, and content fully customizable
 - **Mobile-Optimized Editing** - Touch-friendly controls with visible drag handles
@@ -59,6 +72,7 @@ Create professional resumes in minutes with our intuitive, modern interface.
 - **Performance Optimized** - Lazy section rendering for buttery-smooth mobile scrolling
 
 ### 🛠️ **Advanced Features**
+
 - **Rich Content Support** - Add links, achievements, descriptions to all sections
 - **Date Range Components** - Smart date formatting (e.g., "Jan 2023 - Present")
 - **Profile Picture Support** - Upload and display professional photos (Template 5)
@@ -72,39 +86,39 @@ Create professional resumes in minutes with our intuitive, modern interface.
 
 ### **Core Technologies**
 
-| **Category** | **Technology** | **Version** | **Purpose** |
-|--------------|----------------|-------------|-------------|
-| **Framework** | Next.js | 15.x | React framework with App Router, server-side rendering |
-| **Frontend** | React | 18.x | Component-based UI library |
-| **Language** | TypeScript | 5.x | Type-safe JavaScript development |
-| **Database** | Convex | Latest | Real-time database with automatic sync |
-| **Authentication** | NextAuth.js | 4.x | Secure authentication with OAuth providers |
+| **Category**       | **Technology** | **Version** | **Purpose**                                            |
+| ------------------ | -------------- | ----------- | ------------------------------------------------------ |
+| **Framework**      | Next.js        | 15.x        | React framework with App Router, server-side rendering |
+| **Frontend**       | React          | 18.x        | Component-based UI library                             |
+| **Language**       | TypeScript     | 5.x         | Type-safe JavaScript development                       |
+| **Database**       | Convex         | Latest      | Real-time database with automatic sync                 |
+| **Authentication** | NextAuth.js    | 4.x         | Secure authentication with OAuth providers             |
 
 ### **Styling & UI**
 
-| **Technology** | **Purpose** |
-|----------------|-------------|
-| **Tailwind CSS** | Utility-first CSS framework for rapid styling |
-| **Framer Motion** | Animation library for smooth transitions and interactions |
-| **React Icons** | Comprehensive icon library |
-| **Custom Components** | Reusable UI components built from scratch |
+| **Technology**        | **Purpose**                                               |
+| --------------------- | --------------------------------------------------------- |
+| **Tailwind CSS**      | Utility-first CSS framework for rapid styling             |
+| **Framer Motion**     | Animation library for smooth transitions and interactions |
+| **React Icons**       | Comprehensive icon library                                |
+| **Custom Components** | Reusable UI components built from scratch                 |
 
 ### **Development & Build Tools**
 
-| **Tool** | **Purpose** |
-|----------|-------------|
-| **ESLint** | Code linting and formatting |
-| **PostCSS** | CSS processing and optimization |
-| **Autoprefixer** | Automatic CSS vendor prefixing |
-| **TypeScript Compiler** | Type checking and compilation |
+| **Tool**                | **Purpose**                     |
+| ----------------------- | ------------------------------- |
+| **ESLint**              | Code linting and formatting     |
+| **PostCSS**             | CSS processing and optimization |
+| **Autoprefixer**        | Automatic CSS vendor prefixing  |
+| **TypeScript Compiler** | Type checking and compilation   |
 
 ### **Deployment & Hosting**
 
-| **Service** | **Purpose** |
-|-------------|-------------|
-| **Vercel** | Frontend hosting and deployment |
+| **Service**      | **Purpose**                         |
+| ---------------- | ----------------------------------- |
+| **Vercel**       | Frontend hosting and deployment     |
 | **Convex Cloud** | Database hosting and real-time sync |
-| **Google OAuth** | Authentication service |
+| **Google OAuth** | Authentication service              |
 
 ### **Key Dependencies**
 
@@ -135,7 +149,7 @@ Create professional resumes in minutes with our intuitive, modern interface.
 - **Component Architecture**: Modular, reusable components with clear separation of concerns
 - **Drag & Drop**: @dnd-kit for accessible, performant drag-and-drop functionality
 - **Responsive Design**: Mobile-first approach with Tailwind CSS utility classes
-- **Performance Optimized**: 
+- **Performance Optimized**:
   - Lazy section rendering with IntersectionObserver
   - Content-visibility CSS for off-screen optimization
   - GPU-accelerated scrolling with translateZ(0)
@@ -145,6 +159,7 @@ Create professional resumes in minutes with our intuitive, modern interface.
 ## 🎯 Quick Start
 
 ### 👤 **For Users**
+
 1. 🌐 **Visit**: [Profile Élegante](https://profile-elegante.vercel.app)
 2. 🔐 **Sign In**: Use your Google account for secure authentication
 3. � **Choose Template**: Select from professional resume layouts
@@ -155,7 +170,8 @@ Create professional resumes in minutes with our intuitive, modern interface.
 ### 💻 **For Developers**
 
 #### **Prerequisites**
-- Node.js 18+ 
+
+- Node.js 18+
 - npm or yarn
 - Git
 - Google OAuth credentials (for auth)
@@ -197,6 +213,7 @@ npm run lint         # Run ESLint
 ```
 
 #### **Development Workflow**
+
 1. Make your changes
 2. Test locally with `npm run dev`
 3. Run `npm run build` to ensure production build works
@@ -218,7 +235,7 @@ NEXTAUTH_URL=http://localhost:3000
 
 # Google OAuth (Required)
 GOOGLE_CLIENT_ID=your-google-oauth-client-id
-GOOGLE_CLIENT_SECRET=your-google-oauth-client-secret  
+GOOGLE_CLIENT_SECRET=your-google-oauth-client-secret
 
 # Convex Database (Required)
 NEXT_PUBLIC_CONVEX_URL=https://wooden-corgi-542.convex.cloud
@@ -228,22 +245,25 @@ CONVEX_DEPLOY_KEY=your-convex-deploy-key
 ### **How to Get These Values:**
 
 #### **Google OAuth Setup**
+
 1. Go to [Google Cloud Console](https://console.cloud.google.com/)
 2. Create a new project or select existing one
 3. Enable Google+ API
 4. Go to "Credentials" → "Create Credentials" → "OAuth 2.0 Client IDs"
-5. Set authorized redirect URIs: 
+5. Set authorized redirect URIs:
    - `http://localhost:3000/api/auth/callback/google` (for development)
    - `https://profile-elegante.vercel.app/api/auth/callback/google` (for production)
 
 #### **Convex Database Setup**
+
 1. Sign up at [Convex](https://convex.dev/)
-2. Create a new project  
+2. Create a new project
 3. Copy the deployment URL and deploy key from dashboard
 4. Run `npx convex dev` to sync your schema
 5. **Note**: The current deployment uses `wooden-corgi-542.convex.cloud` - you'll need your own Convex deployment
 
 #### **NextAuth Secret**
+
 ```bash
 # Generate a secure secret
 openssl rand -base64 32
@@ -303,6 +323,7 @@ We love contributions! Whether you're fixing bugs, adding features, or improving
 Please read our [Contributing Guide](CONTRIBUTING.md) for detailed guidelines.
 
 ### 🎯 Ways to Contribute:
+
 - 🐛 **Report bugs** - Help us identify and fix issues
 - 💡 **Suggest features** - Share ideas for new functionality
 - 🎨 **Improve UI/UX** - Enhance design and user experience
@@ -313,6 +334,7 @@ Please read our [Contributing Guide](CONTRIBUTING.md) for detailed guidelines.
 - 🌐 **Translations** - Help make Profocto accessible worldwide
 
 ### � Quick Contribution Steps:
+
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
 3. Make your changes and commit (`git commit -m 'feat: add amazing feature'`)
