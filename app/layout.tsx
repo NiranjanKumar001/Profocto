@@ -25,12 +25,12 @@ export const metadata: Metadata = {
     "job application",
     "career tools",
   ],
-  authors: [{ name: "Profocto Team", url: "https://profocto.tech" }],
+  authors: [{ name: "Profocto Team", url: "https://profile-elegante.vercel.app" }],
   creator: "Profocto",
   publisher: "Profocto",
-  metadataBase: new URL("https://profocto.tech"),
+  metadataBase: new URL("https://profile-elegante.vercel.app"),
   alternates: {
-    canonical: "https://profocto.tech",
+    canonical: "https://profile-elegante.vercel.app",
   },
   icons: {
     icon: [
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://profocto.tech",
+    url: "https://profile-elegante.vercel.app",
     title: "Profocto - Professional Resume Builder | Create Elegant CVs Online",
     description:
       "Design beautiful, professional resumes with Profocto's intuitive resume builder. Choose from elegant templates, edit in real-time, and export as PDF. Free online CV creator.",

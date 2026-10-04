@@ -22,7 +22,7 @@ export default function robots(): MetadataRoute.Robots {
         ],
       },
     ],
-    sitemap: 'https://profocto.tech/sitemap.xml',
-    host: 'https://profocto.tech',
+    sitemap: 'https://profile-elegante.vercel.app/sitemap.xml',
+    host: 'https://profile-elegante.vercel.app',
   }
 }

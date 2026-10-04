@@ -17,14 +17,14 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Professional Resume Builder | Create CVs Online - Profocto',
     description: 'Design your perfect resume with our powerful online builder. Real-time editing, professional templates, and instant PDF export.',
-    url: 'https://profocto.tech/builder',
+    url: 'https://profile-elegante.vercel.app/builder',
   },
   twitter: {
     title: 'Create Professional Resumes Online - Profocto Builder',
     description: 'Build stunning resumes with real-time editing and professional templates. Export as PDF instantly.',
   },
   alternates: {
-    canonical: 'https://profocto.tech/builder',
+    canonical: 'https://profile-elegante.vercel.app/builder',
   },
 }
 

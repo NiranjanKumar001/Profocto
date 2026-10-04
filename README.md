@@ -7,7 +7,7 @@
   
   A modern, feature-rich resume builder with real-time editing, multiple templates, and seamless cloud sync.
   
-  [![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen?style=for-the-badge)](https://profocto.tech)
+  [![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen?style=for-the-badge)](https://profile-elegante.vercel.app)
   [![GitHub](https://img.shields.io/badge/GitHub-Repository-blue?style=for-the-badge&logo=github)](https://github.com/NiranjanKumar001/Profocto)
   [![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
   [![Next.js](https://img.shields.io/badge/Next.js-15.x-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
@@ -30,7 +30,7 @@
 
 ## �🚀 Live Demo
 
-**🌐 Try it now:** [https://profocto.tech](https://profocto.tech)
+**🌐 Try it now:** [https://profile-elegante.vercel.app](https://profile-elegante.vercel.app)
 
 Create professional resumes in minutes with our intuitive, modern interface.
 
@@ -145,7 +145,7 @@ Create professional resumes in minutes with our intuitive, modern interface.
 ## 🎯 Quick Start
 
 ### 👤 **For Users**
-1. 🌐 **Visit**: [Profile Élegante](https://profocto.tech)
+1. 🌐 **Visit**: [Profile Élegante](https://profile-elegante.vercel.app)
 2. 🔐 **Sign In**: Use your Google account for secure authentication
 3. � **Choose Template**: Select from professional resume layouts
 4. ✏️ **Fill Information**: Add your personal details, experience, skills
@@ -214,7 +214,7 @@ NEXTAUTH_SECRET=your-secret-key-here
 # For local development:
 NEXTAUTH_URL=http://localhost:3000
 # For production:
-# NEXTAUTH_URL=https://profocto.tech
+# NEXTAUTH_URL=https://profile-elegante.vercel.app
 
 # Google OAuth (Required)
 GOOGLE_CLIENT_ID=your-google-oauth-client-id
@@ -234,7 +234,7 @@ CONVEX_DEPLOY_KEY=your-convex-deploy-key
 4. Go to "Credentials" → "Create Credentials" → "OAuth 2.0 Client IDs"
 5. Set authorized redirect URIs: 
    - `http://localhost:3000/api/auth/callback/google` (for development)
-   - `https://profocto.tech/api/auth/callback/google` (for production)
+   - `https://profile-elegante.vercel.app/api/auth/callback/google` (for production)
 
 #### **Convex Database Setup**
 1. Sign up at [Convex](https://convex.dev/)

@@ -5,10 +5,10 @@ const structuredData = {
   "@graph": [
     {
       "@type": "WebApplication",
-      "@id": "https://profocto.tech/#webapp",
+      "@id": "https://profile-elegante.vercel.app/#webapp",
       "name": "Profocto - Profile Élegante",
       "alternateName": ["Profocto", "Profile Elegante", "Resume Builder"],
-      "url": "https://profocto.tech",
+      "url": "https://profile-elegante.vercel.app",
       "description": "Professional resume builder and CV creator with elegant templates, real-time editing, and PDF export capabilities. Create stunning resumes online for free.",
       "applicationCategory": "BusinessApplication",
       "operatingSystem": "Web Browser",
@@ -31,12 +31,12 @@ const structuredData = {
       "author": {
         "@type": "Organization",
         "name": "Profocto",
-        "url": "https://profocto.tech"
+        "url": "https://profile-elegante.vercel.app"
       },
       "provider": {
         "@type": "Organization",
         "name": "Profocto",
-        "url": "https://profocto.tech"
+        "url": "https://profile-elegante.vercel.app"
       },
       "aggregateRating": {
         "@type": "AggregateRating",
@@ -48,16 +48,16 @@ const structuredData = {
     },
     {
       "@type": "Organization",
-      "@id": "https://profocto.tech/#organization",
+      "@id": "https://profile-elegante.vercel.app/#organization",
       "name": "Profocto",
-      "url": "https://profocto.tech",
-      "logo": "https://profocto.tech/assets/logo.png",
+      "url": "https://profile-elegante.vercel.app",
+      "logo": "https://profile-elegante.vercel.app/assets/logo.png",
       "description": "Profocto provides elegant and modern resume building tools to help professionals create stunning CVs and resumes online.",
       "foundingDate": "2025",
       "contactPoint": {
         "@type": "ContactPoint",
         "contactType": "customer service",
-        "url": "https://profocto.tech"
+        "url": "https://profile-elegante.vercel.app"
       },
       "sameAs": [
         "https://github.com/NiranjanKumar001/Profocto"
@@ -65,19 +65,19 @@ const structuredData = {
     },
     {
       "@type": "WebSite",
-      "@id": "https://profocto.tech/#website", 
-      "url": "https://profocto.tech",
+      "@id": "https://profile-elegante.vercel.app/#website", 
+      "url": "https://profile-elegante.vercel.app",
       "name": "Profocto - Profile Élegante Resume Builder",
       "description": "Create professional resumes and CVs with our elegant, modern resume builder. Free online tool with beautiful templates and real-time editing.",
       "publisher": {
-        "@id": "https://profocto.tech/#organization"
+        "@id": "https://profile-elegante.vercel.app/#organization"
       },
       "potentialAction": [
         {
           "@type": "SearchAction",
           "target": {
             "@type": "EntryPoint",
-            "urlTemplate": "https://profocto.tech/search?q={search_term_string}"
+            "urlTemplate": "https://profile-elegante.vercel.app/search?q={search_term_string}"
           },
           "query-input": "required name=search_term_string"
         }
@@ -86,18 +86,18 @@ const structuredData = {
     },
     {
       "@type": "SoftwareApplication",
-      "@id": "https://profocto.tech/#software",
+      "@id": "https://profile-elegante.vercel.app/#software",
       "name": "Profocto Resume Builder",
       "applicationCategory": "BusinessApplication",
       "operatingSystem": "Any",
-      "url": "https://profocto.tech",
+      "url": "https://profile-elegante.vercel.app",
       "description": "Free online resume builder with professional templates, real-time editing, and PDF export. Create elegant CVs and resumes in minutes.",
       "softwareVersion": "0.3.0",
       "datePublished": "2025-09-29",
-      "downloadUrl": "https://profocto.tech",
+      "downloadUrl": "https://profile-elegante.vercel.app",
       "screenshot": "https://ik.imagekit.io/profocto/Screenshot%202025-09-29%20122924.png?updatedAt=1759129229692",
       "author": {
-        "@id": "https://profocto.tech/#organization"
+        "@id": "https://profile-elegante.vercel.app/#organization"
       },
       "offers": {
         "@type": "Offer",
