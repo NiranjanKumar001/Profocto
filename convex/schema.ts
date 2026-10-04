@@ -7,6 +7,7 @@ export default defineSchema({
     email: v.string(),
     image: v.optional(v.string()),
     emailVerified: v.optional(v.number()),
+    createdAt: v.optional(v.number()),
   }).index("by_email", ["email"]),
 
   accounts: defineTable({

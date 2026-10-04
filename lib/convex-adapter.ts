@@ -11,6 +11,7 @@ export function ConvexAdapter(convex: ConvexHttpClient): Adapter {
         email: user.email!,
         image: user.image || undefined,
         emailVerified: user.emailVerified?.getTime(),
+        createdAt: Date.now(),
       });
       return {
         id: userId,

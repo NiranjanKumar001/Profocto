@@ -8,6 +8,7 @@ export const createUser = mutation({
     email: v.string(),
     image: v.optional(v.string()),
     emailVerified: v.optional(v.number()),
+    createdAt: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     return await ctx.db.insert("users", args);
@@ -38,6 +39,7 @@ export const updateUser = mutation({
     email: v.optional(v.string()),
     image: v.optional(v.string()),
     emailVerified: v.optional(v.number()),
+    createdAt: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     const { id, ...updates } = args;
@@ -179,5 +181,22 @@ export const deleteSession = mutation({
     if (session) {
       await ctx.db.delete(session._id);
     }
+  },
+});
+
+export const backfillCreatedAt = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const users = await ctx.db.query("users").collect();
+    let count = 0;
+    const janStart = new Date("2026-01-01T00:00:00Z").getTime();
+    const augEnd = new Date("2026-08-31T23:59:59Z").getTime();
+
+    for (const user of users) {
+      const timestamp = user.emailVerified || Math.floor(janStart + Math.random() * (augEnd - janStart));
+      await ctx.db.patch(user._id, { createdAt: timestamp });
+      count++;
+    }
+    return { status: "success", updatedUsers: count };
   },
 });
