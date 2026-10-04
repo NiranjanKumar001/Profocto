@@ -48,6 +48,9 @@ next-env.d.ts
 
 # development scripts
 dev.ps1
+convex/seedUsers.ts
+scripts/
+
 
 # setup and config files with sensitive data
 *OAUTH*.md
